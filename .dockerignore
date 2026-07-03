@@ -1,0 +1,16 @@
+# Arquivos e pastas do Git
+.git
+.gitignore
+
+# Arquivos do Docker que não precisam entrar na imagem
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Arquivos de configuração de ambiente (devem ser injetados, não copiados)
+.env
+.envrc
+
+# Documentação e arquivos de IDE
+*.md
+.vscode/

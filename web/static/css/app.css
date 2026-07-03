@@ -1,0 +1,14 @@
+/* Scroll fixo para tabelas compridas */
+.table-responsive {
+    max-height: 50vh !important;
+    overflow-y: auto !important;
+}
+
+/* Deixa o cabeçalho fixo durante a rolagem */
+.table-responsive thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f8f9fa; /* Corresponde ao .table-light do Bootstrap */
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05); /* Pequena sombra para separar do corpo ao rolar */
+}

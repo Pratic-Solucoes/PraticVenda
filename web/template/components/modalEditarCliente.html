@@ -1,0 +1,194 @@
+{{define "modalEditarCliente"}}
+<div
+    class="modal fade"
+    id="modalEditarCliente"
+    tabindex="-1"
+    aria-labelledby="modalEditarClienteLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalEditarClienteLabel">
+                    <i class="bi bi-pencil-square me-2"></i> Editar Cliente
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <form id="formEditarCliente">
+                <input type="hidden" id="edit_cliente_id" />
+                <div class="modal-body p-4">
+                    <div class="tab-content" id="editClienteTabsContent">
+                        <!-- Dados Básicos Tab -->
+                        <div
+                            class="tab-pane fade show active"
+                            id="edit-basico"
+                            role="tabpanel"
+                            aria-labelledby="edit-basico-tab"
+                        >
+                            <div class="row g-3">
+                                <div class="col-md-8">
+                                    <label
+                                        for="edit_cliente_nome"
+                                        class="form-label fw-semibold"
+                                        >Nome *</label
+                                    >
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="edit_cliente_nome"
+                                        required
+                                    />
+                                </div>
+                                <div class="col-md-4">
+                                    <label
+                                        for="edit_cliente_tipo"
+                                        class="form-label fw-semibold"
+                                        >Tipo *</label
+                                    >
+                                    <select
+                                        class="form-select"
+                                        id="edit_cliente_tipo"
+                                        required
+                                    >
+                                        <option value="PF">
+                                            Pessoa Física
+                                        </option>
+                                        <option value="PJ">
+                                            Pessoa Jurídica
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label
+                                        for="edit_cliente_cpf_cnpj"
+                                        class="form-label fw-semibold"
+                                        >CPF/CNPJ *</label
+                                    >
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="edit_cliente_cpf_cnpj"
+                                        required
+                                    />
+                                </div>
+                                <div class="col-md-6">
+                                    <label
+                                        for="edit_cliente_ie"
+                                        class="form-label fw-semibold"
+                                        >Inscrição Estadual</label
+                                    >
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="edit_cliente_ie"
+                                    />
+                                </div>
+                                <div class="col-md-6">
+                                    <label
+                                        for="edit_cliente_email"
+                                        class="form-label fw-semibold"
+                                        >E-mail de Contato *</label
+                                    >
+                                    <input
+                                        type="email"
+                                        class="form-control"
+                                        id="edit_cliente_email"
+                                        required
+                                    />
+                                </div>
+                                <div class="col-md-6">
+                                    <label
+                                        for="edit_cliente_telefone"
+                                        class="form-label fw-semibold"
+                                        >Telefone de Contato *</label
+                                    >
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="edit_cliente_telefone"
+                                        required
+                                    />
+                                </div>
+                                <div class="col-md-6">
+                                    <label
+                                        for="edit_cliente_contribuinte"
+                                        class="form-label fw-semibold"
+                                        >Indicador de Contribuinte</label
+                                    >
+                                    <select
+                                        class="form-select"
+                                        id="edit_cliente_contribuinte"
+                                    >
+                                        <option value="1">
+                                            Contribuinte ICMS
+                                        </option>
+                                        <option value="2">
+                                            Contribuinte Isento
+                                        </option>
+                                        <option value="9">
+                                            Não Contribuinte
+                                        </option>
+                                    </select>
+                                </div>
+                                <div
+                                    class="col-md-6 d-flex align-items-end pb-2"
+                                >
+                                    <div class="form-check form-switch">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            id="edit_cliente_is_consumidor_final"
+                                        />
+                                        <label
+                                            class="form-check-label fw-semibold"
+                                            for="edit_cliente_is_consumidor_final"
+                                            >Consumidor Final</label
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Endereços Tab -->
+                        <div
+                            class="tab-pane fade"
+                            id="edit-enderecos"
+                            role="tabpanel"
+                            aria-labelledby="edit-enderecos-tab"
+                        >
+                            <div id="containerEnderecos">
+                                <!-- Endereços serão inseridos aqui dinamicamente -->
+                            </div>
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary btn-sm mt-3 fw-bold"
+                                id="btnAddEndereco"
+                            >
+                                <i class="bi bi-plus-circle"></i> Adicionar
+                                Endereço
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary px-4 fw-bold">
+                        Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}

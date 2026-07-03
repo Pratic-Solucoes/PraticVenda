@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Nossos CSS Customizados -->
+    <link rel="stylesheet" href="/static/css/components/sidebar.css">
+    <link rel="stylesheet" href="/static/css/app.css?v=2">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão - Categorias de Débitos</title>
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        {{template "sidebar" .}}
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 shadow-sm border-bottom">
+                <div class="d-flex align-items-center w-100 justify-content-between">
+                    <h2 class="fs-4 m-0 text-dark">Categorias de Débitos</h2>
+                    <button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#modalCategoria">
+                        <i class="bi bi-plus-circle me-1"></i> Nova Categoria
+                    </button>
+                </div>
+            </nav>
+            <div class="container-fluid px-4 py-4 content">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0 text-center">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th class="text-start">Nome da Categoria</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabela_categorias_body">
+                                    <tr>
+                                        <td colspan="3" class="text-muted py-5 text-center">Carregando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{template "modalCategoria" .}}
+    {{template "errorModal" .}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script type="module" src="/static/js/categorias_debito/main.js"></script>
+</body>
+</html>

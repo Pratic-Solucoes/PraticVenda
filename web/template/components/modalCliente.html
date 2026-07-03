@@ -1,0 +1,48 @@
+{{define "modalCliente"}}
+<div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalClienteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalClienteLabel">
+                    <i class="bi bi-truck me-2"></i> Novo Cliente
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <form id="formNovoCliente">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label for="cliente_nome" class="form-label fw-semibold">Nome *</label>
+                        <input type="text" class="form-control" id="cliente_nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cliente_tipo" class="form-label fw-semibold">Tipo *</label>
+                        <select class="form-select" id="cliente_tipo" required>
+                            <option value="">Selecione...</option>
+                            <option value="PF">Pessoa Física</option>
+                            <option value="PJ">Pessoa Jurídica</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cliente_cpf_cnpj" class="form-label fw-semibold">CPF/CNPJ</label>
+                        <input type="text" class="form-control" id="cliente_cpf_cnpj" placeholder="Apenas números">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cliente_email" class="form-label fw-semibold">E-mail de Contato</label>
+                        <input type="email" class="form-control" id="cliente_email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cliente_telefone" class="form-label fw-semibold">Telefone</label>
+                        <input type="text" class="form-control" id="cliente_telefone">
+                    </div>
+                    <small class="text-muted">* Campos obrigatórios</small>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success px-4 fw-bold">Salvar Cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}

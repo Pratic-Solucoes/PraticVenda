@@ -1,0 +1,27 @@
+{{define "modalCategoria"}}
+<div class="modal fade" id="modalCategoria" tabindex="-1" aria-labelledby="modalCategoriaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalCategoriaLabel">
+                    <i class="bi bi-tags me-2"></i> Nova Categoria de Débito
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formNovaCategoria">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label for="categoria_nome" class="form-label fw-semibold">Nome da Categoria *</label>
+                        <input type="text" class="form-control" id="categoria_nome" required>
+                    </div>
+                    <small class="text-muted">* Campos obrigatórios</small>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success px-4 fw-bold">Salvar Categoria</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}

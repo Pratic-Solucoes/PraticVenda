@@ -1,0 +1,77 @@
+{{define "modalDebitoAvulso"}}
+<!-- Modal Criar Débito Avulso -->
+<div class="modal fade" id="modalDebitoAvulso" tabindex="-1" aria-labelledby="modalDebitoAvulsoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalDebitoAvulsoLabel">Lançar Débito Avulso</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formDebitoAvulso">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="id_fornecedor" class="form-label">Fornecedor *</label>
+              <select class="form-select" id="id_fornecedor" required>
+                  <option value="" selected disabled>Carregando fornecedores...</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="id_categoria" class="form-label">Categoria</label>
+              <select class="form-select" id="id_categoria">
+                  <option value="" selected>Sem Categoria (Opcional)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição *</label>
+            <input type="text" class="form-control" id="descricao" placeholder="Ex: Conta de Luz" required>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="nr_documento" class="form-label">Nº Documento</label>
+              <input type="text" class="form-control" id="nr_documento" placeholder="Número do boleto ou doc">
+            </div>
+            <div class="col-md-6">
+              <label for="nr_nota_fiscal" class="form-label">Nº Nota Fiscal</label>
+              <input type="text" class="form-control" id="nr_nota_fiscal" placeholder="Série e número da NFe">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label for="valor" class="form-label">Valor (R$) *</label>
+              <input type="number" step="0.01" class="form-control" id="valor" placeholder="0.00" required>
+            </div>
+            <div class="col-md-4">
+              <label for="dt_entrada" class="form-label">Data de Entrada *</label>
+              <input type="date" class="form-control" id="dt_entrada" required>
+            </div>
+            <div class="col-md-4">
+              <label for="dt_vencimento" class="form-label">Data de Vencimento *</label>
+              <input type="date" class="form-control" id="dt_vencimento" required>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="nr_parcela" class="form-label">Nº Parcela *</label>
+              <input type="number" class="form-control" id="nr_parcela" value="1" min="1" required>
+            </div>
+            <div class="col-md-6">
+              <label for="nr_total_parcelas" class="form-label">Total de Parcelas *</label>
+              <input type="number" class="form-control" id="nr_total_parcelas" value="1" min="1" required>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" form="formDebitoAvulso" class="btn btn-primary">Salvar Débito</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}

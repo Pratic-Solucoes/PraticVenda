@@ -1,0 +1,54 @@
+/* Estilização Premium para a Sidebar */
+
+#wrapper {
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    width: 280px;
+    transition: margin 0.25s ease-out;
+    /* Gradiente escuro elegante para o fundo da sidebar */
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+    z-index: 1000;
+}
+
+.sidebar-heading {
+    color: #f8fafc;
+    letter-spacing: 1px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Itens da lista (Menu) */
+#sidebar-wrapper .list-group-item {
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    color: #94a3b8 !important;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Efeito Hover (Micro-animação) */
+#sidebar-wrapper .list-group-item:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #ffffff !important;
+    padding-left: 2rem; /* Faz o texto deslizar de leve para a direita */
+}
+
+/* Item Ativo (Página atual) */
+#sidebar-wrapper .list-group-item.active {
+    background-color: #6366f1 !important; /* Cor de destaque (Índigo) */
+    color: #ffffff !important;
+    border-radius: 0 25px 25px 0; /* Arredonda só o lado direito */
+    margin-right: 1rem; /* Descola da borda direita */
+    box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.4);
+}
+
+/* Área de Conteúdo Principal */
+#page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+    background-color: #f8fafc !important; /* Fundo cinza bem claro para destacar o conteúdo branco */
+}

@@ -1,0 +1,70 @@
+{{define "modalVisualizarDebito"}}
+<!-- Modal Visualizar Débito -->
+<div class="modal fade" id="modalVisualizarDebito" tabindex="-1" aria-labelledby="modalVisualizarDebitoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalVisualizarDebitoLabel">Detalhes do Débito</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted">Fornecedor</label>
+              <p id="view_fornecedor" class="fs-5">-</p>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted">Categoria</label>
+              <p id="view_categoria" class="fs-5">-</p>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label fw-bold text-muted">Descrição</label>
+            <p id="view_descricao" class="fs-5">-</p>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted">Nº Documento</label>
+              <p id="view_nr_documento" class="fs-5">-</p>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted">Nº Nota Fiscal</label>
+              <p id="view_nr_nota_fiscal" class="fs-5">-</p>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label fw-bold text-muted">Valor (R$)</label>
+              <p id="view_valor" class="fs-5 text-danger fw-bold">-</p>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold text-muted">Data de Entrada</label>
+              <p id="view_dt_entrada" class="fs-5">-</p>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold text-muted">Data de Vencimento</label>
+              <p id="view_dt_vencimento" class="fs-5">-</p>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted">Parcela</label>
+              <p id="view_parcela" class="fs-5">-</p>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-muted">Status</label>
+              <p id="view_status" class="fs-5">-</p>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}

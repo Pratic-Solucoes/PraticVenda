@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # Serviço do Banco de Dados PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: erp_postgres
+    environment:
+      # ATENÇÃO: Substitua pelos seus valores ou use um arquivo .env
+      POSTGRES_DB: erp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: stfXJxYNAFleLsvWqRUyzsMhGosduXkk
+    volumes:
+      # Garante que os dados do banco de dados persistam ao reiniciar o contêiner
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # Serviço da Aplicação Go (API)
+  gestao-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: erp_gestao_api
+    env_file:
+      - .env # Carrega as variáveis de ambiente do seu arquivo .env
+    ports:
+      - "9000:9000" # Mapeia a porta 9000 do host para a porta 9000 do contêiner
+    depends_on:
+      - postgres # Garante que o banco de dados inicie antes da aplicação
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
