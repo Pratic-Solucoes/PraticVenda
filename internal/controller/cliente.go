@@ -92,3 +92,33 @@ func (c *ClienteController) AtualizarCliente(w http.ResponseWriter, r *http.Requ
 
 	resposta.Padrao(w, http.StatusOK, map[string]string{"mensagem": "cliente atualizado com sucesso"})
 }
+
+func (c *ClienteController) CriarEndereco(w http.ResponseWriter, r *http.Request) {
+	var idCliente int64
+	var endereco model.EnderecoCliente
+
+	idCliente, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do cliente inválido"})
+		return
+	}
+
+	if err := requisicao.ProcessarRequisicao(w, r, &endereco); err != nil {
+		return
+	}
+
+	enderecoCriado, err := c.service.Clientes.CriarEndereco(r.Context(), idCliente, &endereco)
+	if err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": err.Error()})
+		return
+	}
+
+	resposta.Padrao(w, http.StatusCreated, enderecoCriado)
+}
+
+func (c *ClienteController) EditarEndereco(w http.ResponseWriter, r *http.Request) {}
+
+func (c *ClienteController) ExcluirEndereco(w http.ResponseWriter, r *http.Request) {}
+
+func (c *ClienteController) CriarTelefone(w http.ResponseWriter, r *http.Request) {
+}

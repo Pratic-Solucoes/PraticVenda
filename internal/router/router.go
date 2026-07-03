@@ -60,6 +60,8 @@ func CarregarRotas(c *controller.Controller) *chi.Mux {
 		r.Get("/clientes/{id}", auth.Autenticar(c.Clientes.ObterCliente))
 		r.Put("/clientes/{id}", auth.Autenticar(c.Clientes.AtualizarCliente))
 
+		r.Post("/clientes/{id}/enderecos", auth.Autenticar(c.Clientes.CriarEndereco))
+
 		r.Get("/dashboard/resumo", auth.Autenticar(c.Dashboard.ResumoDashboard))
 	})
 

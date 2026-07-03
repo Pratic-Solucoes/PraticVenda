@@ -105,3 +105,30 @@ func (s *ClienteService) AtualizarCliente(ctx context.Context, id int64, c *mode
 
 	return tx.Commit()
 }
+
+func (s *ClienteService) CriarEndereco(ctx context.Context, idCliente int64, e *model.EnderecoCliente) (*model.EnderecoCliente, error) {
+	if err := e.Validar(); err != nil {
+		return nil, err
+	}
+
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+
+	if err := helpers.SetSchema(ctx, tx); err != nil {
+		return nil, err
+	}
+
+	enderecoCriado, err := s.repository.Clientes.CriarEndereco(ctx, tx, idCliente, e)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	return enderecoCriado, nil
+}

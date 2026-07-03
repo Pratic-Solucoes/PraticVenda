@@ -32,6 +32,7 @@ type Controller struct {
 		ListarClientes(w http.ResponseWriter, r *http.Request)
 		ObterCliente(w http.ResponseWriter, r *http.Request)
 		AtualizarCliente(w http.ResponseWriter, r *http.Request)
+		CriarEndereco(w http.ResponseWriter, r *http.Request)
 	}
 	Fornecedores interface {
 		CriarFornecedor(w http.ResponseWriter, r *http.Request)

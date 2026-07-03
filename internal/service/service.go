@@ -21,6 +21,7 @@ type Service struct {
 		ListarClientes(ctx context.Context, busca string) ([]model.Cliente, error)
 		ObterClientePorID(ctx context.Context, id int64) (*model.Cliente, error)
 		AtualizarCliente(ctx context.Context, id int64, c *model.Cliente) error
+		CriarEndereco(ctx context.Context, idCliente int64, e *model.EnderecoCliente) (*model.EnderecoCliente, error)
 	}
 	Fornecedores interface {
 		CriarFornecedor(ctx context.Context, f *model.Fornecedor) (*model.Fornecedor, error)

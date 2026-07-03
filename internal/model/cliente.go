@@ -64,3 +64,31 @@ func (c *Cliente) Validar() error {
 
 	return nil
 }
+
+func (e *EnderecoCliente) Validar() error {
+	var erros []error
+
+	if e.CEP == "" {
+		erros = append(erros, errors.New("CEP obrigatório"))
+	}
+	if e.Logradouro == "" {
+		erros = append(erros, errors.New("logradouro obrigatório"))
+	}
+	if e.Numero == "" {
+		erros = append(erros, errors.New("número obrigatório"))
+	}
+	if e.Bairro == "" {
+		erros = append(erros, errors.New("bairro obrigatório"))
+	}
+	if e.Municipio == "" {
+		erros = append(erros, errors.New("município obrigatório"))
+	}
+	if e.UF == "" {
+		erros = append(erros, errors.New("UF obrigatório"))
+	}
+	if len(erros) != 0 {
+		return errors.Join(erros...)
+	}
+
+	return nil
+}

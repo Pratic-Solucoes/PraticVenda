@@ -188,3 +188,17 @@ func (r *ClienteRepository) AtualizarCliente(ctx context.Context, tx *sql.Tx, ID
 
 	return nil
 }
+
+func (r *ClienteRepository) CriarEndereco(ctx context.Context, tx *sql.Tx, idCliente int64, e *model.EnderecoCliente) (*model.EnderecoCliente, error) {
+	query := `
+		INSERT INTO tb_enderecos_clientes (id_cliente, cep, logradouro, numero, bairro, municipio, uf, codigo_municipio)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		RETURNING id, created_at;
+	`
+	err := tx.QueryRowContext(ctx, query, idCliente, e.CEP, e.Logradouro, e.Numero, e.Bairro, e.Municipio, e.UF, e.CodigoMunicipio).Scan(&e.ID, &e.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	return e, nil
+}
