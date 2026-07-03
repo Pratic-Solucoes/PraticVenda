@@ -22,6 +22,7 @@ type Repository struct {
 		ObterClientePorID(ctx context.Context, tx *sql.Tx, id int64) (*model.Cliente, error)
 		AtualizarCliente(ctx context.Context, tx *sql.Tx, id int64, c *model.Cliente) error
 		CriarEndereco(ctx context.Context, tx *sql.Tx, idCliente int64, e *model.EnderecoCliente) (*model.EnderecoCliente, error)
+		EditarEndereco(ctx context.Context, tx *sql.Tx, idCliente int64, idEndereco int64, e *model.EnderecoCliente) error
 	}
 	Fornecedores interface {
 		CriarFornecedor(ctx context.Context, tx *sql.Tx, f *model.Fornecedor) (*model.Fornecedor, error)

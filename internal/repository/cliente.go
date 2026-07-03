@@ -202,3 +202,18 @@ func (r *ClienteRepository) CriarEndereco(ctx context.Context, tx *sql.Tx, idCli
 
 	return e, nil
 }
+
+func (r *ClienteRepository) EditarEndereco(ctx context.Context, tx *sql.Tx, idCliente int64, idEndereco int64, e *model.EnderecoCliente) error {
+	query := `
+		UPDATE tb_enderecos_clientes
+		SET cep = $1, logradouro = $2, numero = $3, bairro = $4, municipio = $5, uf = $6, codigo_municipio = $7, updated_at = CURRENT_TIMESTAMP
+		WHERE id_cliente = $8 AND id = $9
+	`
+
+	_, err := tx.ExecContext(ctx, query, e.CEP, e.Logradouro, e.Numero, e.Bairro, e.Municipio, e.UF, e.CodigoMunicipio, idCliente, idEndereco)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
