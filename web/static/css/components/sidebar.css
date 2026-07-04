@@ -18,7 +18,8 @@
 .sidebar-heading {
     color: #f8fafc;
     letter-spacing: 1px;
-    font-family: 'Inter', sans-serif;
+    font-family: "Franklin Gothic Heavy", "Franklin Gothic Medium", "Arial Black", sans-serif;
+    font-weight: normal;
 }
 
 /* Itens da lista (Menu) */
