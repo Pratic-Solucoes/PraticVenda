@@ -1,122 +1,326 @@
 import { getToken } from "../utils/auth.js";
-import { carregarClientes} from "./listarClientes.js";
-import { showError } from '/static/js/utils/showError.js';
+import { carregarClientes } from "./listarClientes.js";
+import { showError } from "../utils/showError.js";
+import { validaRespostaRequisicao } from "../utils/resposta.js";
+import { fecharModal } from "../utils/fecharModal.js";
+
+let clienteIdAtual = null;
+let modalEditar = null;
+let modalEndereco = null;
+let modalTelefone = null;
+
+async function requisicaoAPI(url, options = {}) {
+  const token = getToken();
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      ...options.headers,
+    },
+  });
+
+  return await validaRespostaRequisicao(res);
+}
+
+async function buscarClienteAPI(id) {
+  return requisicaoAPI(`/api/clientes/${id}`, { method: "GET" });
+}
+
+async function atualizarClienteAPI(id, payload) {
+  return requisicaoAPI(`/api/clientes/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
+async function criarEnderecoAPI(idCliente, payload) {
+  return requisicaoAPI(`/api/clientes/${idCliente}/enderecos`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+async function atualizarEnderecoAPI(idCliente, idEndereco, payload) {
+  return requisicaoAPI(`/api/clientes/${idCliente}/enderecos/${idEndereco}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
+async function criarTelefoneAPI(idCliente, payload) {
+  return requisicaoAPI(`/api/clientes/${idCliente}/telefones`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+async function atualizarTelefoneAPI(idCliente, idTelefone, payload) {
+  return requisicaoAPI(`/api/clientes/${idCliente}/telefones/${idTelefone}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
+function popularFormularioCliente(cliente) {
+  document.getElementById("edit_cliente_id").value = cliente.id;
+  document.getElementById("edit_cliente_nome").value = cliente.nome || "";
+  document.getElementById("edit_cliente_email").value = cliente.email || "";
+  document.getElementById("edit_cliente_tipo").value = cliente.tipo || "PF";
+  document.getElementById("edit_cliente_ie").value = cliente.ie || "";
+  document.getElementById("edit_cliente_contribuinte").value = cliente.contribuinte || 9;
+  document.getElementById("edit_cliente_is_consumidor_final").checked =
+    cliente.is_consumidor_final || false;
+
+  const cpfCnpjInput = document.getElementById("edit_cliente_cpf_cnpj");
+  const ieInput = document.getElementById("edit_cliente_ie");
+
+  if (cliente.tipo === "PJ") {
+    cpfCnpjInput.value = cliente.cnpj || "";
+    ieInput.disabled = false;
+  } else {
+    cpfCnpjInput.value = cliente.cpf || "";
+    ieInput.value = "";
+    ieInput.disabled = true;
+  }
+}
+
+function renderizarEnderecos(enderecos = []) {
+  const container = document.getElementById("containerEnderecosCliente");
+  const template = document.getElementById("template-endereco-item");
+  if (!container || !template) return;
+
+  container.innerHTML = "";
+
+  if (enderecos.length === 0) {
+    container.innerHTML =
+      '<p class="text-muted text-center py-3">Nenhum endereço cadastrado.</p>';
+    return;
+  }
+
+  enderecos.forEach((end) => {
+    const clone = template.content.cloneNode(true);
+    clone.querySelector(".logradouro").textContent = end.logradouro;
+    clone.querySelector(".numero").textContent = end.numero;
+    clone.querySelector(".bairro").textContent = end.bairro;
+    clone.querySelector(".municipio").textContent = end.municipio;
+    clone.querySelector(".uf").textContent = end.uf;
+    clone.querySelector(".cep").textContent = end.cep;
+    clone
+      .querySelector(".btn-editar-endereco")
+      .addEventListener("click", () => abrirModalEndereco(end));
+    container.appendChild(clone);
+  });
+}
+
+function renderizarTelefones(telefones = []) {
+  const container = document.getElementById("containerTelefonesCliente");
+  const template = document.getElementById("template-telefone-item");
+  if (!container || !template) return;
+
+  container.innerHTML = "";
+
+  if (telefones.length === 0) {
+    container.innerHTML =
+      '<p class="text-muted text-center py-3">Nenhum telefone cadastrado.</p>';
+    return;
+  }
+
+  telefones.forEach((tel) => {
+    const clone = template.content.cloneNode(true);
+    clone.querySelector(".ddd").textContent = tel.ddd;
+    clone.querySelector(".numero").textContent = tel.numero;
+    clone
+      .querySelector(".btn-editar-telefone")
+      .addEventListener("click", () => abrirModalTelefone(tel));
+    container.appendChild(clone);
+  });
+}
+
+async function carregarDadosCliente(id) {
+  const cliente = await buscarClienteAPI(id);
+  popularFormularioCliente(cliente);
+  renderizarEnderecos(cliente.enderecos || []);
+  renderizarTelefones(cliente.telefones || []);
+}
+
+function exibirModalEditar() {
+  modalEditar.show();
+}
+
+function abrirModalEndereco(endereco = {}) {
+  const form = document.getElementById("formEnderecoCliente");
+  form.reset();
+  document.getElementById("endereco_id").value = endereco.id || "";
+  document.getElementById("end_cep").value = endereco.cep || "";
+  document.getElementById("end_logradouro").value = endereco.logradouro || "";
+  document.getElementById("end_numero").value = endereco.numero || "";
+  document.getElementById("end_bairro").value = endereco.bairro || "";
+  document.getElementById("end_municipio").value = endereco.municipio || "";
+  document.getElementById("end_uf").value = endereco.uf || "";
+  document.getElementById("end_codigo_municipio").value = endereco.codigo_municipio || "";
+  modalEndereco.show();
+}
+
+function abrirModalTelefone(telefone = {}) {
+  const form = document.getElementById("formTelefoneCliente");
+  form.reset();
+  document.getElementById("telefone_id").value = telefone.id || "";
+  document.getElementById("tel_ddd").value = telefone.ddd || "";
+  document.getElementById("tel_numero").value = telefone.numero || "";
+  modalTelefone.show();
+}
+
+function montarPayloadCliente() {
+  const tipo = document.getElementById("edit_cliente_tipo").value;
+  const cpfCnpj = document.getElementById("edit_cliente_cpf_cnpj").value;
+
+  return {
+    nome: document.getElementById("edit_cliente_nome").value,
+    email: document.getElementById("edit_cliente_email").value,
+    tipo,
+    cpf: tipo === "PF" ? cpfCnpj : "",
+    cnpj: tipo === "PJ" ? cpfCnpj : "",
+    ie: document.getElementById("edit_cliente_ie").value,
+    contribuinte: parseInt(document.getElementById("edit_cliente_contribuinte").value, 10),
+    is_consumidor_final: document.getElementById("edit_cliente_is_consumidor_final").checked,
+  };
+}
+
+function montarPayloadEndereco() {
+  return {
+    cep: document.getElementById("end_cep").value,
+    logradouro: document.getElementById("end_logradouro").value,
+    numero: document.getElementById("end_numero").value,
+    bairro: document.getElementById("end_bairro").value,
+    municipio: document.getElementById("end_municipio").value,
+    uf: document.getElementById("end_uf").value,
+    codigo_municipio: document.getElementById("end_codigo_municipio").value,
+  };
+}
+
+function montarPayloadTelefone() {
+  return {
+    ddd: document.getElementById("tel_ddd").value,
+    numero: document.getElementById("tel_numero").value,
+  };
+}
+
+async function salvarDadosCadastrais(e) {
+  e.preventDefault();
+
+  try {
+    await atualizarClienteAPI(clienteIdAtual, montarPayloadCliente());
+    carregarClientes();
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+async function salvarEndereco(e) {
+  e.preventDefault();
+
+  const idEndereco = document.getElementById("endereco_id").value;
+  const payload = montarPayloadEndereco();
+
+  try {
+    if (idEndereco) {
+      await atualizarEnderecoAPI(clienteIdAtual, idEndereco, payload);
+    } else {
+      await criarEnderecoAPI(clienteIdAtual, payload);
+    }
+
+    fecharModal("modalEnderecoCliente");
+    await carregarDadosCliente(clienteIdAtual);
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+async function salvarTelefone(e) {
+  e.preventDefault();
+
+  const idTelefone = document.getElementById("telefone_id").value;
+  const payload = montarPayloadTelefone();
+
+  try {
+    if (idTelefone) {
+      await atualizarTelefoneAPI(clienteIdAtual, idTelefone, payload);
+    } else {
+      await criarTelefoneAPI(clienteIdAtual, payload);
+    }
+
+    fecharModal("modalTelefoneCliente");
+    await carregarDadosCliente(clienteIdAtual);
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+function resetarAbaInicial() {
+  const firstTab = document.getElementById("edit-basico-tab");
+  if (firstTab) {
+    bootstrap.Tab.getOrCreateInstance(firstTab).show();
+  }
+}
+
+function configurarTipoPessoa() {
+  const tipoSelect = document.getElementById("edit_cliente_tipo");
+  if (!tipoSelect) return;
+
+  tipoSelect.addEventListener("change", function () {
+    const ieInput = document.getElementById("edit_cliente_ie");
+    if (this.value === "PF") {
+      ieInput.value = "";
+      ieInput.disabled = true;
+    } else {
+      ieInput.disabled = false;
+    }
+  });
+}
 
 export function setupEditarCliente() {
-  const formEditar = document.getElementById('formEditarCliente');
+  const modalEl = document.getElementById("modalEditarCliente");
+  if (!modalEl) return;
+
+  modalEditar = bootstrap.Modal.getOrCreateInstance(modalEl);
+  modalEndereco = bootstrap.Modal.getOrCreateInstance(
+    document.getElementById("modalEnderecoCliente")
+  );
+  modalTelefone = bootstrap.Modal.getOrCreateInstance(
+    document.getElementById("modalTelefoneCliente")
+  );
 
   window.abrirModalEditarCliente = async function (id) {
-    const token = getToken();
+    clienteIdAtual = id;
+    resetarAbaInicial();
+
     try {
-      const res = await fetch(`/api/clientes/${id}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (!res.ok) {
-        showError("Erro ao buscar cliente.");
-        return
-      }
-
-      const cliente = await res.json();
-
-      document.getElementById('edit_cliente_id').value = cliente.id;
-      document.getElementById('edit_cliente_nome').value = cliente.nome;
-      document.getElementById('edit_cliente_tipo').value = cliente.tipo;
-      
-      document.getElementById('edit_cliente_email').value = cliente.email || "";
-      document.getElementById('edit_cliente_telefone').value = cliente.telefone || "";
-      document.getElementById('edit_cliente_contribuinte').value = cliente.contribuinte || 9;
-      document.getElementById('edit_cliente_is_consumidor_final').checked = cliente.is_consumidor_final || false;
-      document.getElementById('edit_cliente_ie').value = cliente.ie || "";
-
-      if (cliente.tipo == 'PF') {
-        document.getElementById('edit_cliente_cpf_cnpj').value = cliente.cpf || "";
-        document.getElementById('edit_cliente_ie').disabled = true;
-      } else {
-        document.getElementById('edit_cliente_cpf_cnpj').value = cliente.cnpj || "";
-        document.getElementById('edit_cliente_ie').disabled = false;
-      }
-
-      const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEditarCliente'));
-      modal.show();
-
+      await carregarDadosCliente(id);
+      exibirModalEditar();
     } catch (err) {
-      console.error(err);
-      showError("Erro interno ao buscar cliente.");
+      showError(err.message);
     }
   };
 
-  const tipoSelect = document.getElementById('edit_cliente_tipo');
-  if (tipoSelect) {
-      tipoSelect.addEventListener('change', function() {
-          const ieInput = document.getElementById('edit_cliente_ie');
-          if (this.value === 'PF') {
-              ieInput.value = "";
-              ieInput.disabled = true;
-          } else {
-              ieInput.disabled = false;
-          }
-      });
+  configurarTipoPessoa();
+
+  const formEditar = document.getElementById("formEditarCliente");
+  if (formEditar) formEditar.addEventListener("submit", salvarDadosCadastrais);
+
+  const formEndereco = document.getElementById("formEnderecoCliente");
+  if (formEndereco) formEndereco.addEventListener("submit", salvarEndereco);
+
+  const formTelefone = document.getElementById("formTelefoneCliente");
+  if (formTelefone) formTelefone.addEventListener("submit", salvarTelefone);
+
+  const btnNovoEndereco = document.getElementById("btnNovoEndereco");
+  if (btnNovoEndereco) {
+    btnNovoEndereco.addEventListener("click", () => abrirModalEndereco());
   }
 
-  if (formEditar) {
-    formEditar.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const token = getToken();
-      const id = document.getElementById('edit_cliente_id').value;
-      const nome = document.getElementById('edit_cliente_nome').value;
-      const tipo = document.getElementById('edit_cliente_tipo').value;
-      const cpf_cnpj = document.getElementById('edit_cliente_cpf_cnpj').value;
-      const email = document.getElementById('edit_cliente_email').value;
-      const telefone = document.getElementById('edit_cliente_telefone').value;
-      const ie = document.getElementById('edit_cliente_ie').value;
-      const contribuinte = parseInt(document.getElementById('edit_cliente_contribuinte').value, 10);
-      const is_consumidor_final = document.getElementById('edit_cliente_is_consumidor_final').checked;
-
-      const payload = {
-        nome, tipo, email, telefone, ie, contribuinte, is_consumidor_final
-      };
-
-      if (tipo === 'PF') {
-        payload.cpf = cpf_cnpj;
-        payload.cnpj = "";
-      } else if (tipo === 'PJ') {
-        payload.cnpj = cpf_cnpj;
-        payload.cpf = "";
-      }
-
-      try {
-        const res = await fetch(`/api/clientes/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) {
-          const data = await res.json();
-          showError(data.erro || "Erro ao atualizar cliente.");
-          return;
-        }
-
-        const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditarCliente'));
-        if (modal) modal.hide();
-
-        formEditar.reset();
-
-        const tbody = document.getElementById('tabela_clientes_body');
-        if (tbody) {
-            carregarClientes();
-        } else {
-            window.location.reload();
-        }
-
-      } catch (err) {
-        console.error(err);
-        showError("Erro interno ao comunicar com servidor.");
-      }
-    });
+  const btnNovoTelefone = document.getElementById("btnNovoTelefone");
+  if (btnNovoTelefone) {
+    btnNovoTelefone.addEventListener("click", () => abrirModalTelefone());
   }
 }

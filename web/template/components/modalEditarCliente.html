@@ -6,7 +6,7 @@
     aria-labelledby="modalEditarClienteLabel"
     aria-hidden="true"
 >
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="modalEditarClienteLabel">
@@ -19,22 +19,66 @@
                     aria-label="Close"
                 ></button>
             </div>
-            <form id="formEditarCliente">
+            <div class="modal-body p-4">
                 <input type="hidden" id="edit_cliente_id" />
-                <div class="modal-body p-4">
-                    <div class="tab-content" id="editClienteTabsContent">
-                        <!-- Dados Básicos Tab -->
-                        <div
-                            class="tab-pane fade show active"
-                            id="edit-basico"
-                            role="tabpanel"
-                            aria-labelledby="edit-basico-tab"
+
+                <ul class="nav nav-tabs mb-3" id="editClienteTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button
+                            class="nav-link active fw-bold"
+                            id="edit-basico-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#edit-basico"
+                            type="button"
+                            role="tab"
+                            aria-controls="edit-basico"
+                            aria-selected="true"
                         >
+                            Dados Básicos
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button
+                            class="nav-link fw-bold"
+                            id="edit-enderecos-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#edit-enderecos"
+                            type="button"
+                            role="tab"
+                            aria-controls="edit-enderecos"
+                            aria-selected="false"
+                        >
+                            Endereços
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button
+                            class="nav-link fw-bold"
+                            id="edit-telefones-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#edit-telefones"
+                            type="button"
+                            role="tab"
+                            aria-controls="edit-telefones"
+                            aria-selected="false"
+                        >
+                            Telefones
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="editClienteTabsContent">
+                    <!-- Dados Básicos -->
+                    <div
+                        class="tab-pane fade show active"
+                        id="edit-basico"
+                        role="tabpanel"
+                        aria-labelledby="edit-basico-tab"
+                    >
+                        <form id="formEditarCliente">
                             <div class="row g-3">
                                 <div class="col-md-8">
-                                    <label
-                                        for="edit_cliente_nome"
-                                        class="form-label fw-semibold"
+                                    <label for="edit_cliente_nome" class="form-label fw-semibold"
                                         >Nome *</label
                                     >
                                     <input
@@ -45,9 +89,7 @@
                                     />
                                 </div>
                                 <div class="col-md-4">
-                                    <label
-                                        for="edit_cliente_tipo"
-                                        class="form-label fw-semibold"
+                                    <label for="edit_cliente_tipo" class="form-label fw-semibold"
                                         >Tipo *</label
                                     >
                                     <select
@@ -55,12 +97,8 @@
                                         id="edit_cliente_tipo"
                                         required
                                     >
-                                        <option value="PF">
-                                            Pessoa Física
-                                        </option>
-                                        <option value="PJ">
-                                            Pessoa Jurídica
-                                        </option>
+                                        <option value="PF">Pessoa Física</option>
+                                        <option value="PJ">Pessoa Jurídica</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
@@ -77,9 +115,7 @@
                                     />
                                 </div>
                                 <div class="col-md-6">
-                                    <label
-                                        for="edit_cliente_ie"
-                                        class="form-label fw-semibold"
+                                    <label for="edit_cliente_ie" class="form-label fw-semibold"
                                         >Inscrição Estadual</label
                                     >
                                     <input
@@ -89,28 +125,13 @@
                                     />
                                 </div>
                                 <div class="col-md-6">
-                                    <label
-                                        for="edit_cliente_email"
-                                        class="form-label fw-semibold"
+                                    <label for="edit_cliente_email" class="form-label fw-semibold"
                                         >E-mail de Contato *</label
                                     >
                                     <input
                                         type="email"
                                         class="form-control"
                                         id="edit_cliente_email"
-                                        required
-                                    />
-                                </div>
-                                <div class="col-md-6">
-                                    <label
-                                        for="edit_cliente_telefone"
-                                        class="form-label fw-semibold"
-                                        >Telefone de Contato *</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="edit_cliente_telefone"
                                         required
                                     />
                                 </div>
@@ -124,20 +145,12 @@
                                         class="form-select"
                                         id="edit_cliente_contribuinte"
                                     >
-                                        <option value="1">
-                                            Contribuinte ICMS
-                                        </option>
-                                        <option value="2">
-                                            Contribuinte Isento
-                                        </option>
-                                        <option value="9">
-                                            Não Contribuinte
-                                        </option>
+                                        <option value="1">Contribuinte ICMS</option>
+                                        <option value="2">Contribuinte Isento</option>
+                                        <option value="9">Não Contribuinte</option>
                                     </select>
                                 </div>
-                                <div
-                                    class="col-md-6 d-flex align-items-end pb-2"
-                                >
+                                <div class="col-md-6 d-flex align-items-end pb-2">
                                     <div class="form-check form-switch">
                                         <input
                                             class="form-check-input"
@@ -152,39 +165,226 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Endereços Tab -->
-                        <div
-                            class="tab-pane fade"
-                            id="edit-enderecos"
-                            role="tabpanel"
-                            aria-labelledby="edit-enderecos-tab"
-                        >
-                            <div id="containerEnderecos">
-                                <!-- Endereços serão inseridos aqui dinamicamente -->
+                            <div class="mt-4 text-end">
+                                <button type="submit" class="btn btn-primary px-4 fw-bold">
+                                    Salvar Dados
+                                </button>
                             </div>
+                        </form>
+                    </div>
+
+                    <!-- Endereços -->
+                    <div
+                        class="tab-pane fade"
+                        id="edit-enderecos"
+                        role="tabpanel"
+                        aria-labelledby="edit-enderecos-tab"
+                    >
+                        <div class="d-flex justify-content-end mb-3">
                             <button
                                 type="button"
-                                class="btn btn-outline-primary btn-sm mt-3 fw-bold"
-                                id="btnAddEndereco"
+                                class="btn btn-outline-primary btn-sm fw-bold"
+                                id="btnNovoEndereco"
                             >
-                                <i class="bi bi-plus-circle"></i> Adicionar
-                                Endereço
+                                <i class="bi bi-plus-circle me-1"></i> Novo Endereço
                             </button>
+                        </div>
+                        <div id="containerEnderecosCliente"></div>
+                    </div>
+
+                    <!-- Telefones -->
+                    <div
+                        class="tab-pane fade"
+                        id="edit-telefones"
+                        role="tabpanel"
+                        aria-labelledby="edit-telefones-tab"
+                    >
+                        <div class="d-flex justify-content-end mb-3">
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary btn-sm fw-bold"
+                                id="btnNovoTelefone"
+                            >
+                                <i class="bi bi-plus-circle me-1"></i> Novo Telefone
+                            </button>
+                        </div>
+                        <div id="containerTelefonesCliente"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Template: item de endereço -->
+<template id="template-endereco-item">
+    <div class="card mb-2 border shadow-sm">
+        <div class="card-body">
+            <p class="mb-1">
+                <strong class="logradouro"></strong>, <span class="numero"></span>
+            </p>
+            <p class="mb-0 text-muted small">
+                <span class="bairro"></span> - <span class="municipio"></span>/<span
+                    class="uf"
+                ></span>
+                - CEP: <span class="cep"></span>
+            </p>
+        </div>
+        <div class="card-footer bg-transparent border-0 text-end pt-0">
+            <button type="button" class="btn btn-outline-primary btn-sm btn-editar-endereco">
+                <i class="bi bi-pencil"></i> Editar
+            </button>
+        </div>
+    </div>
+</template>
+
+<!-- Template: item de telefone -->
+<template id="template-telefone-item">
+    <div class="card mb-2 border shadow-sm">
+        <div class="card-body d-flex justify-content-between align-items-center py-2">
+            <p class="mb-0 fw-semibold">
+                (<span class="ddd"></span>) <span class="numero"></span>
+            </p>
+            <button type="button" class="btn btn-outline-primary btn-sm btn-editar-telefone">
+                <i class="bi bi-pencil"></i> Editar
+            </button>
+        </div>
+    </div>
+</template>
+
+<!-- Sub-modal: Endereço -->
+<div class="modal fade" id="modalEnderecoCliente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+            <form id="formEnderecoCliente">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Dados do Endereço</h5>
+                    <button
+                        type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body p-4">
+                    <input type="hidden" id="endereco_id" />
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="end_cep" class="form-label fw-semibold">CEP *</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="end_cep"
+                                required
+                            />
+                        </div>
+                        <div class="col-md-9">
+                            <label for="end_logradouro" class="form-label fw-semibold"
+                                >Logradouro *</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="end_logradouro"
+                                required
+                            />
+                        </div>
+                        <div class="col-md-3">
+                            <label for="end_numero" class="form-label fw-semibold">Número *</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="end_numero"
+                                required
+                            />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="end_bairro" class="form-label fw-semibold">Bairro *</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="end_bairro"
+                                required
+                            />
+                        </div>
+                        <div class="col-md-5">
+                            <label for="end_municipio" class="form-label fw-semibold"
+                                >Município *</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="end_municipio"
+                                required
+                            />
+                        </div>
+                        <div class="col-md-2">
+                            <label for="end_uf" class="form-label fw-semibold">UF *</label>
+                            <input type="text" class="form-control" id="end_uf" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="end_codigo_municipio" class="form-label fw-semibold"
+                                >Cód. Município</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="end_codigo_municipio"
+                            />
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer bg-light">
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                    >
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Cancelar
                     </button>
                     <button type="submit" class="btn btn-primary px-4 fw-bold">
-                        Salvar Alterações
+                        Salvar Endereço
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Sub-modal: Telefone -->
+<div class="modal fade" id="modalTelefoneCliente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <form id="formTelefoneCliente">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Dados do Telefone</h5>
+                    <button
+                        type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body p-4">
+                    <input type="hidden" id="telefone_id" />
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="tel_ddd" class="form-label fw-semibold">DDD *</label>
+                            <input type="text" class="form-control" id="tel_ddd" required />
+                        </div>
+                        <div class="col-md-8">
+                            <label for="tel_numero" class="form-label fw-semibold">Número *</label>
+                            <input type="text" class="form-control" id="tel_numero" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary px-4 fw-bold">
+                        Salvar Telefone
                     </button>
                 </div>
             </form>

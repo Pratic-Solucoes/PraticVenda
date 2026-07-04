@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (formFiltro) {
     formFiltro.addEventListener("submit", (e) => {
       e.preventDefault();
-      carregarClientes(inputBusca.value);
+      carregarClientes(inputBusca?.value.trim() || "");
     });
   }
 
