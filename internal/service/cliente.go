@@ -155,3 +155,24 @@ func (s *ClienteService) EditarEndereco(ctx context.Context, idCliente int64, id
 
 	return tx.Commit()
 }
+
+func (s *ClienteService) BuscarEnderecoByID(ctx context.Context, idCliente int64, idEndereco int64) (*model.EnderecoCliente, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+
+	if err := helpers.SetSchema(ctx, tx); err != nil {
+		return nil, err
+	}
+
+	endereco, err := s.repository.Clientes.BuscarEnderecoByID(ctx, tx, idCliente, idEndereco)
+	if err != nil {
+		return nil, err
+	}
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+	return endereco, nil
+}

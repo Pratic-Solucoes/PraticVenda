@@ -116,6 +116,36 @@ func (c *ClienteController) CriarEndereco(w http.ResponseWriter, r *http.Request
 	resposta.Padrao(w, http.StatusCreated, enderecoCriado)
 }
 
+func (c *ClienteController) BuscarEnderecoByID(w http.ResponseWriter, r *http.Request) {
+
+	var idCliente, idEndereco int64
+
+	idCliente, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do cliente inválido"})
+		return
+	}
+
+	idEndereco, err = strconv.ParseInt(r.PathValue("id_endereco"), 10, 64)
+	if err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do endereço inválido"})
+		return
+	}
+
+	endereco, err := c.service.Clientes.BuscarEnderecoByID(r.Context(), idCliente, idEndereco)
+	if err != nil {
+		resposta.Padrao(w, http.StatusInternalServerError, map[string]string{"erro": err.Error()})
+		return
+	}
+
+	if endereco == nil {
+		resposta.Padrao(w, http.StatusNotFound, map[string]string{"erro": "endereço não encontrado"})
+		return
+	}
+
+	resposta.Padrao(w, http.StatusOK, endereco)
+}
+
 func (c *ClienteController) EditarEndereco(w http.ResponseWriter, r *http.Request) {
 
 	var idCliente, idEndereco int64
@@ -146,7 +176,6 @@ func (c *ClienteController) EditarEndereco(w http.ResponseWriter, r *http.Reques
 	resposta.Padrao(w, http.StatusOK, map[string]string{"mensagem": "endereço atualizado com sucesso"})
 }
 
-func (c *ClienteController) ExcluirEndereco(w http.ResponseWriter, r *http.Request) {}
-
 func (c *ClienteController) CriarTelefone(w http.ResponseWriter, r *http.Request) {
+
 }

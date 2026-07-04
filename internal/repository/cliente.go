@@ -217,3 +217,23 @@ func (r *ClienteRepository) EditarEndereco(ctx context.Context, tx *sql.Tx, idCl
 
 	return nil
 }
+
+func (r *ClienteRepository) BuscarEnderecoByID(ctx context.Context, tx *sql.Tx, idCliente int64, idEndereco int64) (*model.EnderecoCliente, error) {
+	query := `
+		SELECT id, id_cliente, cep, logradouro, numero, bairro, municipio, uf, codigo_municipio, created_at
+		FROM tb_enderecos_clientes
+		WHERE id_cliente = $1 AND id = $2
+	`
+	e := &model.EnderecoCliente{}
+	err := tx.QueryRowContext(ctx, query, idCliente, idEndereco).Scan(
+		&e.ID, &e.IDCliente, &e.CEP, &e.Logradouro, &e.Numero, &e.Bairro, &e.Municipio, &e.UF, &e.CodigoMunicipio, &e.CreatedAt,
+	)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return e, nil
+}
