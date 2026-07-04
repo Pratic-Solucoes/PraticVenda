@@ -170,7 +170,7 @@ func (r *ClienteRepository) ObterClientePorID(ctx context.Context, tx *sql.Tx, i
 
 	// Buscar telefones
 	queryTelefone := `
-		SELECT id, id_cliente, ddd, numero, created_at, updated_at
+		SELECT id, id_cliente, ddd, numero, created_at
 		FROM tb_telefones_clientes
 		WHERE id_cliente = $1
 	`
@@ -184,7 +184,7 @@ func (r *ClienteRepository) ObterClientePorID(ctx context.Context, tx *sql.Tx, i
 	for rowsTel.Next() {
 		var telefone model.TelefoneCliente
 		err := rowsTel.Scan(
-			&telefone.ID, &telefone.IDCliente, &telefone.DDD, &telefone.Numero, &telefone.CreatedAt, &telefone.UpdatedAt,
+			&telefone.ID, &telefone.IDCliente, &telefone.DDD, &telefone.Numero, &telefone.CreatedAt,
 		)
 		if err != nil {
 			return nil, err
@@ -280,7 +280,7 @@ func (r *ClienteRepository) CriarTelefone(ctx context.Context, tx *sql.Tx, idCli
 func (r *ClienteRepository) EditarTelefone(ctx context.Context, tx *sql.Tx, idCliente int64, idTelefone int64, t *model.TelefoneCliente) error {
 	query := `
 		UPDATE tb_telefones_clientes
-		SET ddd = $1, numero = $2, updated_at = CURRENT_TIMESTAMP
+		SET ddd = $1, numero = $2
 		WHERE id_cliente = $3 AND id = $4
 	`
 	_, err := tx.ExecContext(ctx, query, t.DDD, t.Numero, idCliente, idTelefone)
@@ -292,13 +292,13 @@ func (r *ClienteRepository) EditarTelefone(ctx context.Context, tx *sql.Tx, idCl
 
 func (r *ClienteRepository) BuscarTelefoneByID(ctx context.Context, tx *sql.Tx, idCliente int64, idTelefone int64) (*model.TelefoneCliente, error) {
 	query := `
-		SELECT id, id_cliente, ddd, numero, created_at, updated_at
+		SELECT id, id_cliente, ddd, numero, created_at
 		FROM tb_telefones_clientes
 		WHERE id_cliente = $1 AND id = $2
 	`
 	t := &model.TelefoneCliente{}
 	err := tx.QueryRowContext(ctx, query, idCliente, idTelefone).Scan(
-		&t.ID, &t.IDCliente, &t.DDD, &t.Numero, &t.CreatedAt, &t.UpdatedAt,
+		&t.ID, &t.IDCliente, &t.DDD, &t.Numero, &t.CreatedAt,
 	)
 
 	if err != nil {
