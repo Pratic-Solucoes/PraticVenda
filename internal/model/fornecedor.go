@@ -33,6 +33,7 @@ type EnderecoFornecedor struct {
 	CodigoMunicipio string `json:"codigo_municipio" db:"codigo_municipio"`
 	IsPrincipal     bool   `json:"is_principal" db:"is_principal"`
 	CreatedAt       string `json:"created_at" db:"created_at"`
+	UpdatedAt       string `json:"updated_at" db:"updated_at"`
 }
 
 // TelefoneFornecedor representa os telefones de contato de um fornecedor
@@ -42,6 +43,7 @@ type TelefoneFornecedor struct {
 	DDD          string    `json:"ddd" db:"ddd"`
 	Numero       string    `json:"numero" db:"numero"`
 	CreatedAt    time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"`
 }
 
 // Validar verifica se os dados obrigatórios do fornecedor estão presentes

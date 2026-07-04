@@ -172,41 +172,5 @@ func (r *FornecedorRepository) AtualizarFornecedor(ctx context.Context, tx *sql.
 		return err
 	}
 
-	// Deleta endereços e telefones atuais
-	_, err = tx.ExecContext(ctx, "DELETE FROM tb_enderecos_fornecedores WHERE id_fornecedor = $1", id)
-	if err != nil {
-		return err
-	}
-	_, err = tx.ExecContext(ctx, "DELETE FROM tb_telefones_fornecedores WHERE id_fornecedor = $1", id)
-	if err != nil {
-		return err
-	}
-
-	// Insere novos endereços
-	for _, end := range f.Enderecos {
-		queryEndereco := `
-			INSERT INTO tb_enderecos_fornecedores (id_fornecedor, cep, logradouro, numero, bairro, municipio, uf, codigo_municipio, is_principal)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-		`
-		_, err = tx.ExecContext(ctx, queryEndereco,
-			id, end.CEP, end.Logradouro, end.Numero, end.Bairro, end.Municipio, end.UF, end.CodigoMunicipio, end.IsPrincipal,
-		)
-		if err != nil {
-			return err
-		}
-	}
-
-	// Insere novos telefones
-	for _, tel := range f.Telefones {
-		queryTelefone := `
-			INSERT INTO tb_telefones_fornecedores (id_fornecedor, ddd, numero)
-			VALUES ($1, $2, $3)
-		`
-		_, err = tx.ExecContext(ctx, queryTelefone, id, tel.DDD, tel.Numero)
-		if err != nil {
-			return err
-		}
-	}
-
 	return nil
 }

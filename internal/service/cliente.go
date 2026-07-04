@@ -176,3 +176,74 @@ func (s *ClienteService) BuscarEnderecoByID(ctx context.Context, idCliente int64
 	}
 	return endereco, nil
 }
+
+func (s *ClienteService) CriarTelefone(ctx context.Context, idCliente int64, t *model.TelefoneCliente) (*model.TelefoneCliente, error) {
+	if err := t.Validar(); err != nil {
+		return nil, err
+	}
+
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	defer tx.Rollback()
+
+	if err := helpers.SetSchema(ctx, tx); err != nil {
+		return nil, err
+	}
+
+	telefoneCriado, err := s.repository.Clientes.CriarTelefone(ctx, tx, idCliente, t)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+	return telefoneCriado, nil
+}
+
+func (s *ClienteService) EditarTelefone(ctx context.Context, idCliente int64, idTelefone int64, t *model.TelefoneCliente) error {
+	if err := t.Validar(); err != nil {
+		return err
+	}
+
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := helpers.SetSchema(ctx, tx); err != nil {
+		return err
+	}
+
+	err = s.repository.Clientes.EditarTelefone(ctx, tx, idCliente, idTelefone, t)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+func (s *ClienteService) BuscarTelefoneByID(ctx context.Context, idCliente int64, idTelefone int64) (*model.TelefoneCliente, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+
+	if err := helpers.SetSchema(ctx, tx); err != nil {
+		return nil, err
+	}
+
+	telefone, err := s.repository.Clientes.BuscarTelefoneByID(ctx, tx, idCliente, idTelefone)
+	if err != nil {
+		return nil, err
+	}
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+	return telefone, nil
+}

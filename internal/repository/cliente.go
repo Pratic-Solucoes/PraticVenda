@@ -237,3 +237,50 @@ func (r *ClienteRepository) BuscarEnderecoByID(ctx context.Context, tx *sql.Tx, 
 
 	return e, nil
 }
+
+func (r *ClienteRepository) CriarTelefone(ctx context.Context, tx *sql.Tx, idCliente int64, t *model.TelefoneCliente) (*model.TelefoneCliente, error) {
+	query := `
+		INSERT INTO tb_telefones_clientes (id_cliente, ddd, numero)
+		VALUES ($1, $2, $3)
+		RETURNING id, created_at;
+	`
+	err := tx.QueryRowContext(ctx, query, idCliente, t.DDD, t.Numero).Scan(&t.ID, &t.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	return t, nil
+}
+
+func (r *ClienteRepository) EditarTelefone(ctx context.Context, tx *sql.Tx, idCliente int64, idTelefone int64, t *model.TelefoneCliente) error {
+	query := `
+		UPDATE tb_telefones_clientes
+		SET ddd = $1, numero = $2, updated_at = CURRENT_TIMESTAMP
+		WHERE id_cliente = $3 AND id = $4
+	`
+	_, err := tx.ExecContext(ctx, query, t.DDD, t.Numero, idCliente, idTelefone)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *ClienteRepository) BuscarTelefoneByID(ctx context.Context, tx *sql.Tx, idCliente int64, idTelefone int64) (*model.TelefoneCliente, error) {
+	query := `
+		SELECT id, id_cliente, ddd, numero, created_at, updated_at
+		FROM tb_telefones_clientes
+		WHERE id_cliente = $1 AND id = $2
+	`
+	t := &model.TelefoneCliente{}
+	err := tx.QueryRowContext(ctx, query, idCliente, idTelefone).Scan(
+		&t.ID, &t.IDCliente, &t.DDD, &t.Numero, &t.CreatedAt, &t.UpdatedAt,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return t, nil
+}

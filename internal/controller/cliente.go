@@ -146,7 +146,7 @@ func (c *ClienteController) BuscarEnderecoByID(w http.ResponseWriter, r *http.Re
 	resposta.Padrao(w, http.StatusOK, endereco)
 }
 
-func (c *ClienteController) EditarEndereco(w http.ResponseWriter, r *http.Request) {
+func (c *ClienteController) AtualizarEndereco(w http.ResponseWriter, r *http.Request) {
 
 	var idCliente, idEndereco int64
 	var endereco model.EnderecoCliente
@@ -178,4 +178,82 @@ func (c *ClienteController) EditarEndereco(w http.ResponseWriter, r *http.Reques
 
 func (c *ClienteController) CriarTelefone(w http.ResponseWriter, r *http.Request) {
 
+	var idCliente int64
+	var telefone model.TelefoneCliente
+
+	idCliente, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do cliente inválido"})
+		return
+	}
+
+	if err := requisicao.ProcessarRequisicao(w, r, &telefone); err != nil {
+		return
+	}
+
+	telefoneCriado, err := c.service.Clientes.CriarTelefone(r.Context(), idCliente, &telefone)
+	if err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": err.Error()})
+		return
+	}
+
+	resposta.Padrao(w, http.StatusCreated, telefoneCriado)
+}
+
+func (c *ClienteController) BuscarTelefoneByID(w http.ResponseWriter, r *http.Request) {
+	var idCliente, idTelefone int64
+
+	idCliente, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do cliente inválido"})
+		return
+	}
+
+	idTelefone, err = strconv.ParseInt(r.PathValue("id_telefone"), 10, 64)
+	if err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do telefone inválido"})
+		return
+	}
+
+	telefone, err := c.service.Clientes.BuscarTelefoneByID(r.Context(), idCliente, idTelefone)
+	if err != nil {
+		resposta.Padrao(w, http.StatusInternalServerError, map[string]string{"erro": err.Error()})
+		return
+	}
+
+	if telefone == nil {
+		resposta.Padrao(w, http.StatusNotFound, map[string]string{"erro": "telefone não encontrado"})
+		return
+	}
+
+	resposta.Padrao(w, http.StatusOK, telefone)
+}
+
+func (c *ClienteController) AtualizarTelefone(w http.ResponseWriter, r *http.Request) {
+	var idCliente, idTelefone int64
+	var telefone model.TelefoneCliente
+
+	idCliente, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do cliente inválido"})
+		return
+	}
+
+	idTelefone, err = strconv.ParseInt(r.PathValue("id_telefone"), 10, 64)
+	if err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do telefone inválido"})
+		return
+	}
+
+	if err := requisicao.ProcessarRequisicao(w, r, &telefone); err != nil {
+		return
+	}
+
+	err = c.service.Clientes.EditarTelefone(r.Context(), idCliente, idTelefone, &telefone)
+	if err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": err.Error()})
+		return
+	}
+
+	resposta.Padrao(w, http.StatusOK, map[string]string{"mensagem": "telefone atualizado com sucesso"})
 }

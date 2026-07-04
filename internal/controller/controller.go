@@ -33,6 +33,11 @@ type Controller struct {
 		ObterCliente(w http.ResponseWriter, r *http.Request)
 		AtualizarCliente(w http.ResponseWriter, r *http.Request)
 		CriarEndereco(w http.ResponseWriter, r *http.Request)
+		BuscarEnderecoByID(w http.ResponseWriter, r *http.Request)
+		AtualizarEndereco(w http.ResponseWriter, r *http.Request)
+		CriarTelefone(w http.ResponseWriter, r *http.Request)
+		BuscarTelefoneByID(w http.ResponseWriter, r *http.Request)
+		AtualizarTelefone(w http.ResponseWriter, r *http.Request)
 	}
 	Fornecedores interface {
 		CriarFornecedor(w http.ResponseWriter, r *http.Request)

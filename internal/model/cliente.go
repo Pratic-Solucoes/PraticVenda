@@ -1,6 +1,8 @@
 package model
 
-import "errors"
+import (
+	"errors"
+)
 
 type TipoPessoa string
 type IndContribuinte int
@@ -41,6 +43,15 @@ type EnderecoCliente struct {
 	UF              string `json:"uf" db:"uf"`
 	CodigoMunicipio string `json:"codigo_municipio" db:"codigo_municipio"`
 	CreatedAt       string `json:"created_at" db:"created_at"`
+}
+
+type TelefoneCliente struct {
+	ID        int64  `json:"id" db:"id"`
+	IDCliente int64  `json:"id_cliente" db:"id_cliente"`
+	DDD       string `json:"ddd" db:"ddd"`
+	Numero    string `json:"numero" db:"numero"`
+	CreatedAt string `json:"created_at" db:"created_at"`
+	UpdatedAt string `json:"updated_at" db:"updated_at"`
 }
 
 func (c *Cliente) Validar() error {
@@ -85,6 +96,22 @@ func (e *EnderecoCliente) Validar() error {
 	}
 	if e.UF == "" {
 		erros = append(erros, errors.New("UF obrigatório"))
+	}
+	if len(erros) != 0 {
+		return errors.Join(erros...)
+	}
+
+	return nil
+}
+
+func (t *TelefoneCliente) Validar() error {
+	var erros []error
+
+	if t.DDD == "" {
+		erros = append(erros, errors.New("DDD obrigatório"))
+	}
+	if t.Numero == "" {
+		erros = append(erros, errors.New("número obrigatório"))
 	}
 	if len(erros) != 0 {
 		return errors.Join(erros...)
