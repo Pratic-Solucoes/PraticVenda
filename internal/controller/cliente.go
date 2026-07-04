@@ -8,6 +8,8 @@ import (
 	"gestao/pkg/resposta"
 	"net/http"
 	"strconv"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type ClienteController struct {
@@ -49,7 +51,7 @@ func (c *ClienteController) ListarClientes(w http.ResponseWriter, r *http.Reques
 }
 
 func (c *ClienteController) ObterCliente(w http.ResponseWriter, r *http.Request) {
-	idParam := r.PathValue("id")
+	idParam := chi.URLParam(r, "id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id inválido"})
@@ -71,7 +73,7 @@ func (c *ClienteController) ObterCliente(w http.ResponseWriter, r *http.Request)
 }
 
 func (c *ClienteController) AtualizarCliente(w http.ResponseWriter, r *http.Request) {
-	idParam := r.PathValue("id")
+	idParam := chi.URLParam(r, "id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id inválido"})
@@ -97,7 +99,7 @@ func (c *ClienteController) CriarEndereco(w http.ResponseWriter, r *http.Request
 	var idCliente int64
 	var endereco model.EnderecoCliente
 
-	idCliente, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	idCliente, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do cliente inválido"})
 		return
@@ -120,13 +122,13 @@ func (c *ClienteController) BuscarEnderecoByID(w http.ResponseWriter, r *http.Re
 
 	var idCliente, idEndereco int64
 
-	idCliente, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	idCliente, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do cliente inválido"})
 		return
 	}
 
-	idEndereco, err = strconv.ParseInt(r.PathValue("id_endereco"), 10, 64)
+	idEndereco, err = strconv.ParseInt(chi.URLParam(r, "id_endereco"), 10, 64)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do endereço inválido"})
 		return
@@ -151,13 +153,13 @@ func (c *ClienteController) AtualizarEndereco(w http.ResponseWriter, r *http.Req
 	var idCliente, idEndereco int64
 	var endereco model.EnderecoCliente
 
-	idCliente, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	idCliente, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do cliente inválido"})
 		return
 	}
 
-	idEndereco, err = strconv.ParseInt(r.PathValue("id_endereco"), 10, 64)
+	idEndereco, err = strconv.ParseInt(chi.URLParam(r, "id_endereco"), 10, 64)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do endereço inválido"})
 		return
@@ -181,7 +183,7 @@ func (c *ClienteController) CriarTelefone(w http.ResponseWriter, r *http.Request
 	var idCliente int64
 	var telefone model.TelefoneCliente
 
-	idCliente, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	idCliente, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do cliente inválido"})
 		return
@@ -203,13 +205,13 @@ func (c *ClienteController) CriarTelefone(w http.ResponseWriter, r *http.Request
 func (c *ClienteController) BuscarTelefoneByID(w http.ResponseWriter, r *http.Request) {
 	var idCliente, idTelefone int64
 
-	idCliente, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	idCliente, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do cliente inválido"})
 		return
 	}
 
-	idTelefone, err = strconv.ParseInt(r.PathValue("id_telefone"), 10, 64)
+	idTelefone, err = strconv.ParseInt(chi.URLParam(r, "id_telefone"), 10, 64)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do telefone inválido"})
 		return
@@ -233,13 +235,13 @@ func (c *ClienteController) AtualizarTelefone(w http.ResponseWriter, r *http.Req
 	var idCliente, idTelefone int64
 	var telefone model.TelefoneCliente
 
-	idCliente, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	idCliente, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do cliente inválido"})
 		return
 	}
 
-	idTelefone, err = strconv.ParseInt(r.PathValue("id_telefone"), 10, 64)
+	idTelefone, err = strconv.ParseInt(chi.URLParam(r, "id_telefone"), 10, 64)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id do telefone inválido"})
 		return

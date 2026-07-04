@@ -1,0 +1,190 @@
+{{define "modalEditarCliente"}}
+<div class="modal fade" id="modalEditarCliente" tabindex="-1" aria-labelledby="modalEditarClienteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarClienteLabel">Editar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit_cliente_id">
+
+                <!-- Abas de Navegação -->
+                <ul class="nav nav-tabs" id="clienteEditTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="dados-cadastrais-tab" data-bs-toggle="tab" data-bs-target="#dados-cadastrais" type="button" role="tab" aria-controls="dados-cadastrais" aria-selected="true">Dados Cadastrais</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="enderecos-tab" data-bs-toggle="tab" data-bs-target="#enderecos" type="button" role="tab" aria-controls="enderecos" aria-selected="false">Endereços</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="telefones-tab" data-bs-toggle="tab" data-bs-target="#telefones" type="button" role="tab" aria-controls="telefones" aria-selected="false">Telefones</button>
+                    </li>
+                </ul>
+
+                <!-- Conteúdo das Abas -->
+                <div class="tab-content pt-3" id="clienteEditTabsContent">
+                    <!-- Aba 1: Dados Cadastrais -->
+                    <div class="tab-pane fade show active" id="dados-cadastrais" role="tabpanel" aria-labelledby="dados-cadastrais-tab">
+                        <form id="formEditarCliente">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="edit_cliente_nome" class="form-label">Nome / Razão Social</label>
+                                    <input type="text" class="form-control" id="edit_cliente_nome" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_cliente_email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="edit_cliente_email">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="edit_cliente_tipo" class="form-label">Tipo</label>
+                                    <select id="edit_cliente_tipo" class="form-select">
+                                        <option value="PF">Pessoa Física</option>
+                                        <option value="PJ">Pessoa Jurídica</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="edit_cliente_cpf_cnpj" class="form-label">CPF / CNPJ</label>
+                                    <input type="text" class="form-control" id="edit_cliente_cpf_cnpj">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="edit_cliente_ie" class="form-label">Inscrição Estadual</label>
+                                    <input type="text" class="form-control" id="edit_cliente_ie">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="edit_cliente_contribuinte" class="form-label">Contribuinte ICMS</label>
+                                    <select id="edit_cliente_contribuinte" class="form-select">
+                                        <option value="9">9 - Não Contribuinte</option>
+                                        <option value="1">1 - Contribuinte ICMS</option>
+                                        <option value="2">2 - Contribuinte Isento</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="edit_cliente_is_consumidor_final">
+                                        <label class="form-check-label" for="edit_cliente_is_consumidor_final">
+                                            É consumidor final
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-end">
+                                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Aba 2: Endereços -->
+                    <div class="tab-pane fade" id="enderecos" role="tabpanel" aria-labelledby="enderecos-tab">
+                        <div class="d-flex justify-content-end mb-3">
+                            <button class="btn btn-success btn-sm" id="btnNovoEndereco">
+                                <i class="bi bi-plus-circle me-1"></i> Novo Endereço
+                            </button>
+                        </div>
+                        <div id="containerEnderecosCliente">
+                            <!-- Endereços serão inseridos aqui via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Aba 3: Telefones -->
+                    <div class="tab-pane fade" id="telefones" role="tabpanel" aria-labelledby="telefones-tab">
+                        <div class="d-flex justify-content-end mb-3">
+                            <button class="btn btn-success btn-sm" id="btnNovoTelefone">
+                                <i class="bi bi-plus-circle me-1"></i> Novo Telefone
+                            </button>
+                        </div>
+                        <div id="containerTelefonesCliente">
+                            <!-- Telefones serão inseridos aqui via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Template para item de endereço -->
+<template id="template-endereco-item">
+    <div class="card mb-2">
+        <div class="card-body">
+            <p class="mb-1">
+                <strong class="logradouro"></strong>, <span class="numero"></span>
+            </p>
+            <p class="mb-1 text-muted">
+                <span class="bairro"></span> - <span class="municipio"></span>/<span class="uf"></span> - CEP: <span class="cep"></span>
+            </p>
+        </div>
+        <div class="card-footer bg-transparent border-0 text-end">
+            <button class="btn btn-outline-primary btn-sm btn-editar-endereco">
+                <i class="bi bi-pencil"></i> Editar
+            </button>
+        </div>
+    </div>
+</template>
+
+<!-- Template para item de telefone -->
+<template id="template-telefone-item">
+    <div class="card mb-2">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <p class="mb-0">
+                (<span class="ddd"></span>) <span class="numero"></span>
+            </p>
+            <button class="btn btn-outline-primary btn-sm btn-editar-telefone">
+                <i class="bi bi-pencil"></i> Editar
+            </button>
+        </div>
+    </div>
+</template>
+
+
+<!-- Modal para Adicionar/Editar Endereço -->
+<div class="modal fade" id="modalEnderecoCliente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="formEnderecoCliente">
+                <div class="modal-header">
+                    <h5 class="modal-title">Dados do Endereço</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="endereco_id">
+                    <div class="row g-2">
+                        <div class="col-md-3"><label>CEP</label><input type="text" class="form-control form-control-sm" id="end_cep" required></div>
+                        <div class="col-md-9"><label>Logradouro</label><input type="text" class="form-control form-control-sm" id="end_logradouro" required></div>
+                        <div class="col-md-3"><label>Número</label><input type="text" class="form-control form-control-sm" id="end_numero" required></div>
+                        <div class="col-md-4"><label>Bairro</label><input type="text" class="form-control form-control-sm" id="end_bairro" required></div>
+                        <div class="col-md-5"><label>Município</label><input type="text" class="form-control form-control-sm" id="end_municipio" required></div>
+                        <div class="col-md-2"><label>UF</label><input type="text" class="form-control form-control-sm" id="end_uf" required></div>
+                        <div class="col-md-4"><label>Cód. Município</label><input type="text" class="form-control form-control-sm" id="end_codigo_municipio" required></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Endereço</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Adicionar/Editar Telefone -->
+<div class="modal fade" id="modalTelefoneCliente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formTelefoneCliente">
+                <div class="modal-header"><h5 class="modal-title">Dados do Telefone</h5></div>
+                <div class="modal-body">
+                    <input type="hidden" id="telefone_id">
+                    <div class="row g-2">
+                        <div class="col-md-4"><label>DDD</label><input type="text" class="form-control" id="tel_ddd" required></div>
+                        <div class="col-md-8"><label>Número</label><input type="text" class="form-control" id="tel_numero" required></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Telefone</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}

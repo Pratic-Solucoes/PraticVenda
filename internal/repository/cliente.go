@@ -28,11 +28,11 @@ func (r *ClienteRepository) CriarCliente(ctx context.Context, tx *sql.Tx, c *mod
 	var id int64
 
 	query := `
-		INSERT INTO tb_clientes (nome, tipo, email, telefone, cpf, cnpj, contribuinte, is_consumidor_final, ie)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+		INSERT INTO tb_clientes (nome, tipo, email, cpf, cnpj, contribuinte, is_consumidor_final, ie)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 		RETURNING id, created_at;
 	`
-	err := tx.QueryRowContext(ctx, query, c.Nome, c.Tipo, nullIfEmpty(c.Email), nullIfEmpty(c.Telefone),
+	err := tx.QueryRowContext(ctx, query, c.Nome, c.Tipo, nullIfEmpty(c.Email),
 		nullIfEmpty(c.CPF), nullIfEmpty(c.CNPJ), nullIfZeroInt(c.Contribuinte), c.IsConsumidorFinal, nullIfEmpty(c.IE)).Scan(
 		&id, &c.CreatedAt,
 	)
@@ -66,7 +66,7 @@ func (r *ClienteRepository) CriarCliente(ctx context.Context, tx *sql.Tx, c *mod
 
 func (r *ClienteRepository) ListarClientes(ctx context.Context, tx *sql.Tx, busca string) ([]model.Cliente, error) {
 	query := `
-		SELECT id, nome, tipo, email, telefone, cpf, cnpj
+		SELECT id, nome, tipo, email, cpf, cnpj
 		FROM tb_clientes
 	`
 	var rows *sql.Rows
@@ -90,16 +90,15 @@ func (r *ClienteRepository) ListarClientes(ctx context.Context, tx *sql.Tx, busc
 	var clientes []model.Cliente
 	for rows.Next() {
 		var c model.Cliente
-		var email, telefone, cpf, cnpj sql.NullString
+		var email, cpf, cnpj sql.NullString
 
 		if err := rows.Scan(
-			&c.ID, &c.Nome, &c.Tipo, &email, &telefone, &cpf, &cnpj,
+			&c.ID, &c.Nome, &c.Tipo, &email, &cpf, &cnpj,
 		); err != nil {
 			return nil, err
 		}
 
 		c.Email = email.String
-		c.Telefone = telefone.String
 		c.CPF = cpf.String
 		c.CNPJ = cnpj.String
 
@@ -115,16 +114,16 @@ func (r *ClienteRepository) ListarClientes(ctx context.Context, tx *sql.Tx, busc
 
 func (r *ClienteRepository) ObterClientePorID(ctx context.Context, tx *sql.Tx, id int64) (*model.Cliente, error) {
 	query := `
-		SELECT id, nome, tipo, email, telefone, cpf, cnpj, contribuinte, is_consumidor_final, ie, created_at, updated_at
+		SELECT id, nome, tipo, email, cpf, cnpj, contribuinte, is_consumidor_final, ie, created_at, updated_at
 		FROM tb_clientes
 		WHERE id = $1
 	`
 	c := &model.Cliente{}
 	var contribuinte sql.NullInt64
-	var email, telefone, cpf, cnpj, ie sql.NullString
+	var email, cpf, cnpj, ie sql.NullString
 
 	err := tx.QueryRowContext(ctx, query, id).Scan(
-		&c.ID, &c.Nome, &c.Tipo, &email, &telefone, &cpf, &cnpj, &contribuinte, &c.IsConsumidorFinal, &ie, &c.CreatedAt, &c.UpdatedAt,
+		&c.ID, &c.Nome, &c.Tipo, &email, &cpf, &cnpj, &contribuinte, &c.IsConsumidorFinal, &ie, &c.CreatedAt, &c.UpdatedAt,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -134,7 +133,6 @@ func (r *ClienteRepository) ObterClientePorID(ctx context.Context, tx *sql.Tx, i
 	}
 
 	c.Email = email.String
-	c.Telefone = telefone.String
 	c.CPF = cpf.String
 	c.CNPJ = cnpj.String
 	c.IE = ie.String
@@ -170,6 +168,33 @@ func (r *ClienteRepository) ObterClientePorID(ctx context.Context, tx *sql.Tx, i
 		return nil, err
 	}
 
+	// Buscar telefones
+	queryTelefone := `
+		SELECT id, id_cliente, ddd, numero, created_at, updated_at
+		FROM tb_telefones_clientes
+		WHERE id_cliente = $1
+	`
+	rowsTel, err := tx.QueryContext(ctx, queryTelefone, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rowsTel.Close()
+
+	c.Telefones = make([]model.TelefoneCliente, 0)
+	for rowsTel.Next() {
+		var telefone model.TelefoneCliente
+		err := rowsTel.Scan(
+			&telefone.ID, &telefone.IDCliente, &telefone.DDD, &telefone.Numero, &telefone.CreatedAt, &telefone.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		c.Telefones = append(c.Telefones, telefone)
+	}
+	if err = rowsTel.Err(); err != nil {
+		return nil, err
+	}
+
 	return c, nil
 }
 
@@ -177,10 +202,10 @@ func (r *ClienteRepository) AtualizarCliente(ctx context.Context, tx *sql.Tx, ID
 	// query para atualizar os dados do cliente
 	query := `
 		UPDATE tb_clientes
-		SET nome = $1, tipo = $2, email = $3, telefone = $4, cpf = $5, cnpj = $6, contribuinte = $7, is_consumidor_final = $8, ie = $9, updated_at = CURRENT_TIMESTAMP
-		WHERE id = $10
+		SET nome = $1, tipo = $2, email = $3, cpf = $4, cnpj = $5, contribuinte = $6, is_consumidor_final = $7, ie = $8, updated_at = CURRENT_TIMESTAMP
+		WHERE id = $9
 	`
-	_, err := tx.ExecContext(ctx, query, c.Nome, c.Tipo, nullIfEmpty(c.Email), nullIfEmpty(c.Telefone),
+	_, err := tx.ExecContext(ctx, query, c.Nome, c.Tipo, nullIfEmpty(c.Email),
 		nullIfEmpty(c.CPF), nullIfEmpty(c.CNPJ), nullIfZeroInt(c.Contribuinte), c.IsConsumidorFinal, nullIfEmpty(c.IE), ID_Cliente)
 	if err != nil {
 		return err

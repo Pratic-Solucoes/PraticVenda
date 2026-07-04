@@ -21,13 +21,13 @@ type Cliente struct {
 	Nome              string            `json:"nome,omitempty"`
 	Tipo              TipoPessoa        `json:"tipo,omitempty"`
 	Email             string            `json:"email,omitempty"`
-	Telefone          string            `json:"telefone,omitempty"`
 	CPF               string            `json:"cpf,omitempty"`
 	CNPJ              string            `json:"cnpj,omitempty"`
 	Contribuinte      IndContribuinte   `json:"contribuinte,omitempty"`
 	IsConsumidorFinal bool              `json:"is_consumidor_final,omitempty"`
 	IE                string            `json:"ie,omitempty"`
 	Enderecos         []EnderecoCliente `json:"enderecos"`
+	Telefones         []TelefoneCliente `json:"telefones,omitempty"`
 	CreatedAt         string            `json:"created_at,omitempty"`
 	UpdatedAt         string            `json:"updated_at,omitempty"`
 }
