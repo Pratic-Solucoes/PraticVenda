@@ -156,6 +156,7 @@ func (c *ViewController) RenderizarPdvPage(w http.ResponseWriter, r *http.Reques
 	tmpl, err := template.ParseFiles(
 		"web/template/pages/pdv.html",
 		"web/template/components/sidebar.html",
+		"web/template/components/errorModal.html",
 	)
 	if err != nil {
 		fmt.Printf("Erro ao renderizar página de PDV: %v\n", err)
