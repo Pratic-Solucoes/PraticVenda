@@ -14,6 +14,7 @@ type Controller struct {
 		RenderizarFornecedoresPage(w http.ResponseWriter, r *http.Request)
 		RenderizarCategoriasPage(w http.ResponseWriter, r *http.Request)
 		RenderizarConfiguracaoUsuarioPage(w http.ResponseWriter, r *http.Request)
+		RenderizarPdvPage(w http.ResponseWriter, r *http.Request)
 	}
 	Login interface {
 		Login(w http.ResponseWriter, r *http.Request)

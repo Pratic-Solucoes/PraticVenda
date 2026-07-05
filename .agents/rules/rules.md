@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Diretrizes Gerais de Comportamento
 - Nunca gere código de backend a menos que eu peça explicitamente no chat ou composer.
 - Para o frontend, você tem autonomia para sugerir e criar componentes completos, seguindo estritamente o design pattern definido na seção de Frontend deste arquivo.
