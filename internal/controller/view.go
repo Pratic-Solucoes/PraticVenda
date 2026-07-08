@@ -34,7 +34,7 @@ func (c *ViewController) RenderizarDashboardPage(w http.ResponseWriter, r *http.
 	tmpl, err := template.ParseFiles(
 		"web/template/pages/dashboard.html",
 		"web/template/components/sidebar.html",
-		"web/template/components/modalDebitoAvulso.html",
+		"web/template/components/modalContaPagarAvulso.html",
 		"web/template/components/modalFornecedor.html",
 		"web/template/components/errorModal.html",
 	)
