@@ -1,14 +1,14 @@
 import { getToken } from '../utils/auth.js';
-import { carregarDebitos } from './listarDebitos.js';
+import { carregarContasPagar } from './listarContasPagar.js';
 
-export function setupPagarDebito() {
-    window.pagarDebito = async function (id) {
+export function setupPagarContaPagar() {
+    window.pagarContaPagar = async function (id) {
         if (!confirm("Tem certeza que deseja dar baixa (pagar) este débito?")) return;
 
         const token = getToken();
 
         try {
-            const res = await fetch(`/api/debitos/${id}/pagar`, {
+            const res = await fetch(`/api/contas-pagar/${id}/pagar`, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -20,7 +20,7 @@ export function setupPagarDebito() {
             }
 
             alert("Débito pago com sucesso!");
-            carregarDebitos();
+            carregarContasPagar();
         } catch (err) {
             console.error(err);
             alert("Erro interno.");

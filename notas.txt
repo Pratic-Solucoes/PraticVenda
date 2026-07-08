@@ -1,0 +1,685 @@
+API Docs
+
+Criar Empresa
+
+{
+  "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+  "name": "string",
+  "legalName": "string",
+  "federalTaxNumber": "string",
+  "stateTaxNumber": "string",
+  "cityTaxNumber": "string",
+  "email": "string",
+  "phone": "string",
+  "mobilePhone": "string",
+  "address": {
+    "street": "string",
+    "district": "string",
+    "postalCode": "string",
+    "number": "string",
+    "additionalInformation": "string",
+    "city": {
+      "code": "string",
+      "name": "string",
+      "state": "ro"
+    },
+    "country": {
+      "name": "string",
+      "code": 0
+    },
+    "cityName": "string"
+  },
+  "taxRegime": "simplesNacional",
+  "specialTaxRegime": "municipalMicroenterprise",
+  "simplesNacionalTaxRegime": "federalAndMunicipalBySimplesNacional",
+  "economicActivities": [
+    {
+      "code": "string",
+      "type": "main"
+    }
+  ]
+}
+
+Criar Produto
+
+{
+  "code": "string",
+  "name": "string",
+  "price": 0.1,
+  "invoiceModel": "productInvoice",
+  "warrantyDays": 0,
+  "serviceInvoiceSettings": {
+    "fiscalDescription": "string",
+    "cityServiceCode": "string",
+    "federalServiceCode": "string",
+    "nationalTaxationCode": "string",
+    "cnaeCode": "string",
+    "useSpecificNumering": true,
+    "series": "string",
+    "nextNumber": 0,
+    "nextBatchNumber": 0,
+    "nbsCode": "string",
+    "simplesNacionalAnnex": "string"
+  },
+  "productInvoiceSettings": {
+    "gtinCode": "string",
+    "cfopIn": "string",
+    "cfopInterstate": "string",
+    "cfopTaxpayerInterstate": "string",
+    "cfopInternational": "string",
+    "cest": "string",
+    "ncm": "string",
+    "unitOfMeasurement": "string",
+    "taxUnitOfMeasurement": "string",
+    "exportationTaxUnitOfMeasurement": "string",
+    "additionalInformation": "string",
+    "fiscalDescription": "string",
+    "useSpecificNumering": true,
+    "series": "string",
+    "nextNumber": 0
+  }
+}
+
+Criar Venda
+
+{
+  "transactionId": "string",
+  "customer": {
+    "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+    "name": "string",
+    "legalName": "string",
+    "federalTaxNumber": "string",
+    "cityTaxNumber": "string",
+    "stateTaxNumber": "string",
+    "email": "string",
+    "phone": "string",
+    "mobilePhone": "string",
+    "address": {
+      "street": "string",
+      "district": "string",
+      "postalCode": "string",
+      "number": "string",
+      "additionalInformation": "string",
+      "city": {
+        "code": "string",
+        "name": "string",
+        "state": "ro"
+      },
+      "country": {
+        "name": "string",
+        "code": 0
+      },
+      "cityName": "string"
+    }
+  },
+  "amount": 0.1,
+  "discountAmount": 0.1,
+  "freightAmount": 0.1,
+  "freight": {
+    "carrier": {
+      "name": "string",
+      "legalName": "string",
+      "federalTaxNumber": "string",
+      "cityTaxNumber": "string",
+      "stateTaxNumber": "string",
+      "email": "string",
+      "phone": "string",
+      "mobilePhone": "string",
+      "address": {
+        "street": "string",
+        "district": "string",
+        "postalCode": "string",
+        "number": "string",
+        "additionalInformation": "string",
+        "city": {
+          "code": "string",
+          "name": "string",
+          "state": "ro"
+        },
+        "country": {
+          "name": "string",
+          "code": 0
+        },
+        "cityName": "string"
+      }
+    },
+    "modality": "byIssuer",
+    "volumeQuantity": 0,
+    "volumeNumeration": "string",
+    "species": "string",
+    "brand": "string",
+    "grossWeight": 0.1,
+    "netWeight": 0.1
+  },
+  "date": "2019-08-24T14:15:22Z",
+  "warrantyDate": "2019-08-24T14:15:22Z",
+  "sendEmailToCustomer": true,
+  "status": "created",
+  "autoIssueMode": "disabled",
+  "paymentMethod": "billetBank",
+  "profileType": "producer",
+  "items": [
+    {
+      "description": "string",
+      "quantity": 0.1,
+      "price": 0.1,
+      "amount": 0.1,
+      "discountAmount": 0.1,
+      "freightAmount": 0.1,
+      "product": {
+        "name": "string",
+        "code": "string",
+        "price": 0.1,
+        "profile": "producer",
+        "invoiceModel": "productInvoice"
+      }
+    }
+  ],
+  "invoices": [
+    {
+      "issuedOn": "2019-08-24T14:15:22Z",
+      "receiver": {
+        "name": "string",
+        "federalTaxNumber": "string",
+        "stateTaxNumber": "string",
+        "suframaTaxNumber": "string",
+        "cityTaxNumber": "string",
+        "email": "string",
+        "phoneNumber": "string",
+        "address": {
+          "street": "string",
+          "district": "string",
+          "postalCode": "string",
+          "number": "string",
+          "additionalInformation": "string",
+          "city": {
+            "name": "string",
+            "state": "string",
+            "code": 0
+          },
+          "country": "string"
+        }
+      },
+      "additionalInformation": "string",
+      "effectiveDate": "2019-08-24T14:15:22Z",
+      "number": 0,
+      "status": "created"
+    }
+  ],
+  "event": {
+    "name": "string",
+    "startDate": "2019-08-24T14:15:22Z",
+    "endDate": "2019-08-24T14:15:22Z",
+    "identifier": "string",
+    "address": {
+      "street": "string",
+      "district": "string",
+      "postalCode": "string",
+      "number": "string",
+      "additionalInformation": "string",
+      "city": {
+        "name": "string",
+        "state": "string",
+        "code": 0
+      },
+      "country": "string"
+    }
+  }
+}
+
+Criar Nota fiscalDescription
+{
+  "integrationId": "string",
+  "issuedOn": "2019-08-24T14:15:22Z",
+  "effectiveDate": "2019-08-24T14:15:22Z",
+  "number": 0,
+  "status": "created",
+  "additionalInformation": "string",
+  "sendEmailToCustomer": true,
+  "series": "string",
+  "printingType": "none",
+  "operationType": "incoming",
+  "purposeType": "normal",
+  "issueType": "normal",
+  "operationNature": "string",
+  "operationDate": "2019-08-24T14:15:22Z",
+  "destination": "internal",
+  "presenceType": "none",
+  "receiver": {
+    "name": "string",
+    "federalTaxNumber": "string",
+    "stateTaxNumber": "string",
+    "suframaTaxNumber": "string",
+    "cityTaxNumber": "string",
+    "email": "string",
+    "phoneNumber": "string",
+    "address": {
+      "street": "string",
+      "district": "string",
+      "postalCode": "string",
+      "number": "string",
+      "additionalInformation": "string",
+      "city": {
+        "name": "string",
+        "state": "string",
+        "code": 0
+      },
+      "country": "string"
+    }
+  },
+  "transport": {
+    "freightModality": "byIssuer",
+    "carrier": {
+      "stateTaxNumber": "string",
+      "transportRetention": "string",
+      "name": "string",
+      "federalTaxNumber": "string",
+      "email": "string",
+      "phone": "string",
+      "address": {
+        "street": "string",
+        "district": "string",
+        "postalCode": "string",
+        "number": "string",
+        "additionalInformation": "string",
+        "city": {
+          "name": "string",
+          "state": "string",
+          "code": 0
+        },
+        "country": "string"
+      }
+    },
+    "trailer": {
+      "plate": "string",
+      "state": "ro",
+      "rntc": "string"
+    },
+    "volume": {
+      "quantity": 0,
+      "species": "string",
+      "brand": "string",
+      "volumeNumeration": "string",
+      "netWeight": 0.1,
+      "grossWeight": 0.1
+    },
+    "vehicle": {
+      "plate": "string",
+      "state": "string",
+      "rntc": "string"
+    },
+    "icmsRetention": {
+      "serviceAmount": 0.1,
+      "baseTax": 0.1,
+      "rate": 0.1,
+      "amount": 0.1,
+      "cfop": "string",
+      "cityGeneratorFactCode": 0
+    },
+    "wagon": "string",
+    "ferry": "string"
+  },
+  "billing": {
+    "number": "string",
+    "originalAmount": 0.1,
+    "discountAmount": 0.1,
+    "netAmount": 0.1
+  },
+  "duplicates": [
+    {
+      "number": "string",
+      "dueDate": "2019-08-24T14:15:22Z",
+      "amount": 0.1
+    }
+  ],
+  "payments": [
+    {
+      "method": "money",
+      "amount": 0.1,
+      "card": {
+        "federalTaxNumber": "string",
+        "flag": "visa",
+        "authorizationCode": "string",
+        "isIntegratedPayment": true
+      }
+    }
+  ],
+  "items": [
+    {
+      "code": "string",
+      "gtinCode": "string",
+      "description": "string",
+      "ncm": "string",
+      "cest": "string",
+      "cfop": 0,
+      "unit": "string",
+      "quantity": 0.1,
+      "unitAmount": 0.1,
+      "totalAmount": 0.1,
+      "unitTax": "string",
+      "quantityTax": 0.1,
+      "unitTaxAmount": 0.1,
+      "freightAmount": 0.1,
+      "insuranceAmount": 0.1,
+      "discountAmount": 0.1,
+      "othersAmount": 0.1,
+      "makeupTotal": true,
+      "numberOrderBuy": "string",
+      "itemNumberOrderBuy": 0,
+      "taxBenefitCode": "string",
+      "taxes": {
+        "totalTax": 0.1,
+        "icms": {
+          "origin": 0,
+          "cst": 0,
+          "csosn": 0,
+          "baseTaxModality": 0,
+          "baseTax": 0.1,
+          "baseTaxSt": 0.1,
+          "baseTaxStModality": 0,
+          "baseTaxStReduction": 0.1,
+          "baseTaxStAmount": 0.1,
+          "baseTaxReduction": 0.1,
+          "stRate": 0.1,
+          "stAmount": 0.1,
+          "stMarginAmount": 0.1,
+          "rate": 0.1,
+          "amount": 0.1,
+          "reductionRate": 0.1,
+          "snCreditRate": 0.1,
+          "snCreditAmount": 0.1,
+          "stRetentionAmount": 0.1,
+          "baseStRetentionAmount": 0.1,
+          "taxOperationBaseRate": 0.1,
+          "ufSt": "ro",
+          "stReason": "string",
+          "amountOperation": 0.1,
+          "defermentRate": 0.1,
+          "baseDeferred": 0.1,
+          "exemptAmount": 0.1,
+          "exemptReason": 0,
+          "exemptDeduction": 0,
+          "fcpRate": 0.1,
+          "fcpAmount": 0.1,
+          "fcpStRate": 0.1,
+          "fcpStAmount": 0.1,
+          "fcpStRetRate": 0.1,
+          "fcpStRetAmount": 0.1,
+          "baseTaxFcpStAmount": 0.1,
+          "baseFcpRetentionAmount": 0.1,
+          "stpRate": 0.1,
+          "baseTaxEffectiveReduction": 0.1,
+          "baseTaxEffective": 0.1,
+          "effectiveRate": 0.1,
+          "effectiveAmount": 0.1,
+          "substituteAmount": 0.1
+        },
+        "ipi": {
+          "classification": "string",
+          "producerFederalTaxNumber": "string",
+          "stampCode": "string",
+          "stampQuantity": 0,
+          "classificationCode": "string",
+          "cst": 0,
+          "baseTax": 0.1,
+          "rate": 0.1,
+          "unitQuantity": 0.1,
+          "unitAmount": 0.1,
+          "amount": 0.1
+        },
+        "ii": {
+          "baseTax": 0.1,
+          "customsExpenditureAmount": 0.1,
+          "amount": 0.1,
+          "iofAmount": 0.1
+        },
+        "pis": {
+          "cst": 0,
+          "baseTax": 0.1,
+          "rate": 0.1,
+          "amount": 0.1,
+          "productQuantity": 0.1
+        },
+        "cofins": {
+          "cst": 0,
+          "baseTax": 0.1,
+          "rate": 0.1,
+          "amount": 0.1,
+          "productQuantity": 0.1
+        },
+        "icmsDestination": {
+          "destBaseTax": 0.1,
+          "fcpAdicRate": 0.1,
+          "internalOperationRate": 0.1,
+          "destinationRate": 0.1,
+          "fcpDestinationAmount": 0.1,
+          "destinationAmount": 0.1,
+          "issuerStateAmount": 0.1,
+          "fcpBaseTax": 0.1
+        },
+        "is": {
+          "cst": 0,
+          "classification": 0,
+          "baseTax": 0.1,
+          "rate": 0.1,
+          "specificRate": 0.1,
+          "unitTax": "string",
+          "quantityTax": 0.1,
+          "amount": 0.1
+        },
+        "ibsCbs": {
+          "cst": 0,
+          "classification": 0,
+          "ibsAmount": 0.1,
+          "baseTax": 0.1,
+          "ibsStateRate": 0.1,
+          "ibsStateDef": {
+            "rate": 0.1,
+            "amount": 0.1
+          },
+          "ibsStateDevTax": {
+            "amount": 0.1
+          },
+          "ibsStateRed": {
+            "rate": 0.1,
+            "effectiveRate": 0.1
+          },
+          "ibsStateAmount": 0.1,
+          "ibsCityRate": 0.1,
+          "ibsCityDef": {
+            "rate": 0.1,
+            "amount": 0.1
+          },
+          "ibsCityDevTax": {
+            "amount": 0.1
+          },
+          "ibsCityRed": {
+            "rate": 0.1,
+            "effectiveRate": 0.1
+          },
+          "ibsCityAmount": 0.1,
+          "cbsRate": 0.1,
+          "cbsDef": {
+            "rate": 0.1,
+            "amount": 0.1
+          },
+          "cbsDevTax": {
+            "amount": 0.1
+          },
+          "cbsRed": {
+            "rate": 0.1,
+            "effectiveRate": 0.1
+          },
+          "cbsAmount": 0.1,
+          "regCst": 0,
+          "regClassification": 0,
+          "regStateIbsRate": 0.1,
+          "regStateIbsAmount": 0.1,
+          "regCityIbsRate": 0.1,
+          "regCityIbsAmount": 0.1,
+          "regCbsRate": 0.1,
+          "regCbsAmount": 0.1,
+          "ibsPresCred": {
+            "code": 0,
+            "rate": 0.1,
+            "amount": 0.1,
+            "suspensiveAmount": 0.1
+          },
+          "cbsPresCred": {
+            "code": 0,
+            "rate": 0.1,
+            "amount": 0.1,
+            "suspensiveAmount": 0.1
+          },
+          "govPurchaseStateIbsRate": 0.1,
+          "govPurchaseStateIbsAmount": 0.1,
+          "govPurchaseCityIbsRate": 0.1,
+          "govPurchaseCityIbsAmount": 0.1,
+          "govPurchaseCbsRate": 0.1,
+          "govPurchaseCbsAmount": 0.1,
+          "singleStageIbsAmount": 0.1,
+          "singleStageCbsAmount": 0.1,
+          "singleStageStandard": {
+            "quantityTax": 0.1,
+            "ibsAdRemRate": 0.1,
+            "cbsAdRemRate": 0.1,
+            "ibsAmount": 0.1,
+            "cbsAmount": 0.1
+          },
+          "singleStageReten": {
+            "quantityTax": 0.1,
+            "ibsAdRemRate": 0.1,
+            "cbsAdRemRate": 0.1,
+            "ibsAmount": 0.1,
+            "cbsAmount": 0.1
+          },
+          "singleStageRet": {
+            "quantityTax": 0.1,
+            "ibsAdRemRate": 0.1,
+            "cbsAdRemRate": 0.1,
+            "ibsAmount": 0.1,
+            "cbsAmount": 0.1
+          },
+          "singleStageDefIbsRate": 0.1,
+          "singleStageDefIbsAmount": 0.1,
+          "singleStageDefCbsRate": 0.1,
+          "singleStageDefCbsAmount": 0.1,
+          "credTransferIbsAmount": 0.1,
+          "credTransferCbsAmount": 0.1,
+          "presCredIbsZfmType": "none",
+          "presCredIbsZfmAmount": 0.1
+        }
+      },
+      "specificProduct": {
+        "fuel": {
+          "anpCode": "string",
+          "description": "string",
+          "consumptionUF": "ro"
+        },
+        "vehicle": {
+          "operationType": "others",
+          "chassis": "string",
+          "colorCode": "string",
+          "colorDescription": "string",
+          "power": "string",
+          "cylinderCapacity": "string",
+          "netWeight": "string",
+          "grossWeight": "string",
+          "serialNumber": "string",
+          "fuelType": "string",
+          "engineNumber": "string",
+          "maxTractionCapacity": "string",
+          "distanceType": "string",
+          "modelYear": 0,
+          "manufactureYear": 0,
+          "paintType": "string",
+          "vehicleType": "string",
+          "vehicleSpecies": 0,
+          "vinCondition": "normal",
+          "condition": "finished",
+          "modelCode": "string",
+          "denatranColorCode": "string",
+          "seats": 0,
+          "restrictionType": "none"
+        },
+        "medication": {
+          "anvisaCode": "string",
+          "exemptionReason": "string",
+          "maxConsumerPrice": 0.1
+        }
+      },
+      "trackings": [
+        {
+          "batchNumber": "string",
+          "batchQuantity": 0.1,
+          "manufacturingDate": "2019-08-24T14:15:22Z",
+          "expirationDate": "2019-08-24T14:15:22Z",
+          "aggregationCode": "string"
+        }
+      ]
+    }
+  ],
+  "referencedDocuments": [
+    {
+      "accessKey": "string"
+    }
+  ],
+  "total": {
+    "invoiceAmount": 0.1,
+    "pisAmount": 0.1,
+    "cofinsAmount": 0.1,
+    "discountAmount": 0.1,
+    "othersAmount": 0.1,
+    "totalTax": 0.1,
+    "ipiAmount": 0.1,
+    "importTaxAmount": 0.1,
+    "productAmount": 0.1,
+    "freightAmount": 0.1,
+    "insuranceAmount": 0.1,
+    "icmsBaseTax": 0.1,
+    "icmsAmount": 0.1,
+    "icmsStBaseTax": 0.1,
+    "icmsStAmount": 0.1,
+    "icmsExemptAmount": 0.1,
+    "fcpStRetAmount": 0.1,
+    "fcpStAmount": 0.1,
+    "fcpAmount": 0.1,
+    "ipiReturnedAmount": 0.1,
+    "icmsSenderAmount": 0.1,
+    "icmsDestinationAmount": 0.1,
+    "fcpDestinationAmount": 0.1,
+    "isAmount": 0.1,
+    "ibsCbsBaseTax": 0.1,
+    "ibsStateDefAmount": 0.1,
+    "ibsStateDevTaxAmount": 0.1,
+    "ibsStateAmount": 0.1,
+    "ibsCityDefAmount": 0.1,
+    "ibsCityDevTaxAmount": 0.1,
+    "ibsCityAmount": 0.1,
+    "ibsAmount": 0.1,
+    "ibsPresCredAmount": 0.1,
+    "ibsPresCredSuspensiveAmount": 0.1,
+    "cbsDefAmount": 0.1,
+    "cbsDevTaxAmount": 0.1,
+    "cbsAmount": 0.1,
+    "cbsPresCredAmount": 0.1,
+    "cbsPresCredSuspensiveAmount": 0.1,
+    "ibsSingleStageStandardAmount": 0.1,
+    "cbsSingleStageStandardAmount": 0.1,
+    "ibsSingleStageRetenAmount": 0.1,
+    "cbsSingleStageRetenAmount": 0.1,
+    "ibsSingleStageRetAmount": 0.1,
+    "cbsSingleStageRetAmount": 0.1,
+    "ibsCbsIsAmount": 0.1
+  },
+  "accessKey": "string",
+  "code": "string",
+  "isFinalCustomer": true,
+  "debitType": "creditTransferToCooperatives",
+  "creditType": "finesAndInterest",
+  "govPurchase": {
+    "type": "union",
+    "rate": 0.1
+  },
+  "govOperationType": "supply"
+}

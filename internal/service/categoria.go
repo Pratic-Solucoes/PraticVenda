@@ -14,7 +14,7 @@ type CategoriaService struct {
 	db         *sql.DB
 }
 
-func (s *CategoriaService) CriarCategoria(ctx context.Context, c *model.CategoriaDebito) (*model.CategoriaDebito, error) {
+func (s *CategoriaService) CriarCategoria(ctx context.Context, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error) {
 	if c.Nome == "" {
 		return nil, errors.New("o nome da categoria é obrigatório")
 	}
@@ -41,7 +41,7 @@ func (s *CategoriaService) CriarCategoria(ctx context.Context, c *model.Categori
 	return categoriaCriada, nil
 }
 
-func (s *CategoriaService) ListarCategorias(ctx context.Context) ([]*model.CategoriaDebito, error) {
+func (s *CategoriaService) ListarCategorias(ctx context.Context) ([]*model.CategoriaContaPagar, error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err

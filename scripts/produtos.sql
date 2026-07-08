@@ -9,6 +9,8 @@ CREATE TABLE tb_produtos (
     preco_venda DECIMAL(12,2) DEFAULT 0.00 NOT NULL,
     unidade_estoque VARCHAR(10) DEFAULT 'UN' NOT NULL, -- Ex: 'UN', 'KG', 'CX', 'L'
     unidade_venda VARCHAR(10) DEFAULT 'UN' NOT NULL,   -- Geralmente igual à unidade de estoque no seu modelo simples
+    peso_bruto DECIMAL(12,2) DEFAULT 0.00 NOT NULL,
+    peso_liquido DECIMAL(12,2) DEFAULT 0.00 NOT NULL,
     ativo BOOLEAN DEFAULT TRUE NOT NULL,
     criado_em TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     atualizado_em TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL

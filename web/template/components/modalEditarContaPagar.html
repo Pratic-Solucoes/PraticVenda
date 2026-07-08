@@ -1,15 +1,15 @@
-{{define "modalEditarDebito"}}
+{{define "modalEditarContaPagar"}}
 <!-- Modal Editar Débito -->
-<div class="modal fade" id="modalEditarDebito" tabindex="-1" aria-labelledby="modalEditarDebitoLabel" aria-hidden="true">
+<div class="modal fade" id="modalEditarContaPagar" tabindex="-1" aria-labelledby="modalEditarContaPagarLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalEditarDebitoLabel">Editar Débito</h5>
+        <h5 class="modal-title" id="modalEditarContaPagarLabel">Editar Débito</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="formEditarDebito">
-          <input type="hidden" id="edit_id_debito">
+        <form id="formEditarContaPagar">
+          <input type="hidden" id="edit_id_conta_pagar">
           <div class="row mb-3">
             <div class="col-md-6">
               <label for="edit_id_fornecedor" class="form-label">Fornecedor *</label>
@@ -70,7 +70,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" form="formEditarDebito" class="btn btn-warning fw-bold text-dark">Salvar Alterações</button>
+        <button type="submit" form="formEditarContaPagar" class="btn btn-warning fw-bold text-dark">Salvar Alterações</button>
       </div>
     </div>
   </div>

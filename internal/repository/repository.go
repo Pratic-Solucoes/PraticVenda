@@ -34,15 +34,15 @@ type Repository struct {
 		ObterFornecedorPorID(ctx context.Context, tx *sql.Tx, id int64) (*model.Fornecedor, error)
 		AtualizarFornecedor(ctx context.Context, tx *sql.Tx, id int64, f *model.Fornecedor) error
 	}
-	Debitos interface {
-		LancarDebito(ctx context.Context, tx *sql.Tx, debito *model.DebitoAvulsoCriar) error
-		ListarDebitos(ctx context.Context, tx *sql.Tx, busca, vencimento, status string) ([]*model.Debito, error)
-		PagarDebito(ctx context.Context, tx *sql.Tx, id int64) error
-		EditarDebito(ctx context.Context, tx *sql.Tx, id int64, debito *model.DebitoAvulsoCriar) error
+	ContasPagar interface {
+		CriarContaPagar(ctx context.Context, tx *sql.Tx, contaPagar *model.ContaPagarCriar) error
+		ListarContasPagar(ctx context.Context, tx *sql.Tx, busca, vencimento, status string) ([]*model.ContaPagar, error)
+		PagarContaPagar(ctx context.Context, tx *sql.Tx, id int64) error
+		EditarContaPagar(ctx context.Context, tx *sql.Tx, id int64, contaPagar *model.ContaPagarCriar) error
 	}
 	Categorias interface {
-		CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaDebito) (*model.CategoriaDebito, error)
-		ListarCategorias(ctx context.Context, tx *sql.Tx) ([]*model.CategoriaDebito, error)
+		CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error)
+		ListarCategorias(ctx context.Context, tx *sql.Tx) ([]*model.CategoriaContaPagar, error)
 	}
 	Dashboard *DashboardRepository
 }
@@ -62,7 +62,7 @@ func NewRepository(db *sql.DB) *Repository {
 			db: db,
 		},
 		Categorias: NovoCategoriaRepository(db),
-		Debitos: &DebitoRepository{
+		ContasPagar: &ContaPagarRepository{
 			db: db,
 		},
 		Dashboard: NewDashboardRepository(db),

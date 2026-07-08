@@ -8,7 +8,7 @@ create table if not exists tb_empresas(
     data_atualizacao timestamp default current_timestamp 
 );
 
-create table if not exists tb_categorias_debito(
+create table if not exists tb_categorias_contas_pagar(
     id BIGSERIAL PRIMARY KEY,
     nome varchar(255) not null
 )
@@ -124,7 +124,7 @@ CREATE TABLE if not exists tb_telefones_fornecedores (
     CONSTRAINT fk_telefone_fornecedor FOREIGN KEY (id_fornecedor) REFERENCES tb_fornecedores(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS tb_debitos (
+CREATE TABLE IF NOT EXISTS tb_contas_pagar (
     id BIGSERIAL PRIMARY KEY,
     id_fornecedor BIGINT NOT NULL,
     id_categoria BIGINT,
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS tb_debitos (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
     FOREIGN KEY (id_fornecedor) REFERENCES tb_fornecedores(id),
-    FOREIGN KEY (id_categoria) REFERENCES tb_categorias_debito(id)
+    FOREIGN KEY (id_categoria) REFERENCES tb_categorias_contas_pagar(id)
 );
 
 

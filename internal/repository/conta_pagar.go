@@ -8,18 +8,18 @@ import (
 	"gestao/internal/model"
 )
 
-type DebitoRepository struct {
+type ContaPagarRepository struct {
 	db *sql.DB
 }
 
 var (
-	DEBITO_QUITADO        = errors.New("débito quitado")
-	DEBITO_NAO_ENCONTRADO = errors.New("débito não encontrado")
+	CONTA_PAGAR_QUITADA       = errors.New("conta a pagar já quitada")
+	CONTA_PAGAR_NAO_ENCONTRADA = errors.New("conta a pagar não encontrada")
 )
 
-func (r *DebitoRepository) LancarDebito(ctx context.Context, tx *sql.Tx, debito *model.DebitoAvulsoCriar) error {
+func (r *ContaPagarRepository) CriarContaPagar(ctx context.Context, tx *sql.Tx, contaPagar *model.ContaPagarCriar) error {
 	query := `
-		INSERT INTO tb_debitos (
+		INSERT INTO tb_contas_pagar (
 			id_fornecedor, id_categoria, descricao,
 			nr_documento, nr_nota_fiscal, valor, dt_entrada, dt_vencimento,
 			nr_parcela, nr_total_parcelas, status
@@ -32,22 +32,22 @@ func (r *DebitoRepository) LancarDebito(ctx context.Context, tx *sql.Tx, debito 
 	defer stmt.Close()
 
 	_, err = stmt.ExecContext(ctx,
-		debito.IDFornecedor, debito.IDCategoria, debito.Descricao,
-		debito.NrDocumento, debito.NrNotaFiscal, debito.Valor, debito.DtEntrada, debito.DtVencimento,
-		debito.NrParcela, debito.NrTotalParcelas,
+		contaPagar.IDFornecedor, contaPagar.IDCategoria, contaPagar.Descricao,
+		contaPagar.NrDocumento, contaPagar.NrNotaFiscal, contaPagar.Valor, contaPagar.DtEntrada, contaPagar.DtVencimento,
+		contaPagar.NrParcela, contaPagar.NrTotalParcelas,
 	)
 	return err
 }
 
-func (r *DebitoRepository) ListarDebitos(ctx context.Context, tx *sql.Tx, busca, vencimento, status string) ([]*model.Debito, error) {
+func (r *ContaPagarRepository) ListarContasPagar(ctx context.Context, tx *sql.Tx, busca, vencimento, status string) ([]*model.ContaPagar, error) {
 	query := `
 		SELECT d.id, d.id_fornecedor, d.id_categoria, d.descricao, d.nr_documento, d.nr_nota_fiscal,
 		       d.valor, d.dt_entrada, d.dt_vencimento, d.nr_parcela, d.nr_total_parcelas, d.status, d.created_at, d.updated_at,
 		       f.id, f.razao_social, f.cnpj,
 		       c.id, c.nome
-		FROM tb_debitos d
+		FROM tb_contas_pagar d
 		JOIN tb_fornecedores f ON d.id_fornecedor = f.id
-		LEFT JOIN tb_categorias_debito c ON d.id_categoria = c.id
+		LEFT JOIN tb_categorias_contas_pagar c ON d.id_categoria = c.id
 		WHERE 1=1
 	`
 	var args []interface{}
@@ -78,9 +78,9 @@ func (r *DebitoRepository) ListarDebitos(ctx context.Context, tx *sql.Tx, busca,
 	}
 	defer rows.Close()
 
-	var debitos []*model.Debito
+	var contasPagar []*model.ContaPagar
 	for rows.Next() {
-		d := &model.Debito{}
+		d := &model.ContaPagar{}
 		f := &model.Fornecedor{}
 
 		var cId sql.NullInt64
@@ -98,20 +98,20 @@ func (r *DebitoRepository) ListarDebitos(ctx context.Context, tx *sql.Tx, busca,
 
 		d.Fornecedor = f
 		if cId.Valid {
-			d.Categoria = &model.CategoriaDebito{
+			d.Categoria = &model.CategoriaContaPagar{
 				ID:   cId.Int64,
 				Nome: cNome.String,
 			}
 		}
-		debitos = append(debitos, d)
+		contasPagar = append(contasPagar, d)
 	}
 
-	return debitos, nil
+	return contasPagar, nil
 }
 
-func (r *DebitoRepository) PagarDebito(ctx context.Context, tx *sql.Tx, id int64) error {
+func (r *ContaPagarRepository) PagarContaPagar(ctx context.Context, tx *sql.Tx, id int64) error {
 
-	query := `SELECT status from tb_debitos WHERE id = $1`
+	query := `SELECT status from tb_contas_pagar WHERE id = $1`
 	stmt, err := tx.QueryContext(ctx, query, id)
 	if err != nil {
 		return err
@@ -126,10 +126,10 @@ func (r *DebitoRepository) PagarDebito(ctx context.Context, tx *sql.Tx, id int64
 	stmt.Close()
 
 	if status != "PENDENTE" {
-		return DEBITO_QUITADO
+		return CONTA_PAGAR_QUITADA
 	}
 
-	query = "UPDATE tb_debitos SET status = 'PAGO' WHERE id = $1"
+	query = "UPDATE tb_contas_pagar SET status = 'PAGO' WHERE id = $1"
 
 	result, err := tx.ExecContext(ctx, query, id)
 	if err != nil {
@@ -142,14 +142,14 @@ func (r *DebitoRepository) PagarDebito(ctx context.Context, tx *sql.Tx, id int64
 	}
 
 	if rowsAffected == 0 {
-		return DEBITO_NAO_ENCONTRADO
+		return CONTA_PAGAR_NAO_ENCONTRADA
 	}
 	return nil
 }
 
-func (r *DebitoRepository) EditarDebito(ctx context.Context, tx *sql.Tx, id int64, debito *model.DebitoAvulsoCriar) error {
+func (r *ContaPagarRepository) EditarContaPagar(ctx context.Context, tx *sql.Tx, id int64, contaPagar *model.ContaPagarCriar) error {
 
-	query := `SELECT status from tb_debitos WHERE id = $1`
+	query := `SELECT status from tb_contas_pagar WHERE id = $1`
 	stmt, err := tx.QueryContext(ctx, query, id)
 	if err != nil {
 		return err
@@ -164,20 +164,20 @@ func (r *DebitoRepository) EditarDebito(ctx context.Context, tx *sql.Tx, id int6
 	stmt.Close()
 
 	if status != "PENDENTE" {
-		return DEBITO_QUITADO
+		return CONTA_PAGAR_QUITADA
 	}
 
 	query = `
-		UPDATE tb_debitos SET
+		UPDATE tb_contas_pagar SET
 			id_fornecedor = $1, id_categoria = $2, descricao = $3,
 			nr_documento = $4, nr_nota_fiscal = $5, valor = $6, dt_entrada = $7, dt_vencimento = $8,
 			nr_parcela = $9, nr_total_parcelas = $10
 		WHERE id = $11
 	`
 	result, err := tx.ExecContext(ctx, query,
-		debito.IDFornecedor, debito.IDCategoria, debito.Descricao,
-		debito.NrDocumento, debito.NrNotaFiscal, debito.Valor, debito.DtEntrada, debito.DtVencimento,
-		debito.NrParcela, debito.NrTotalParcelas, id)
+		contaPagar.IDFornecedor, contaPagar.IDCategoria, contaPagar.Descricao,
+		contaPagar.NrDocumento, contaPagar.NrNotaFiscal, contaPagar.Valor, contaPagar.DtEntrada, contaPagar.DtVencimento,
+		contaPagar.NrParcela, contaPagar.NrTotalParcelas, id)
 	if err != nil {
 		return err
 	}
@@ -188,7 +188,7 @@ func (r *DebitoRepository) EditarDebito(ctx context.Context, tx *sql.Tx, id int6
 	}
 
 	if rowsAffected == 0 {
-		return DEBITO_NAO_ENCONTRADO
+		return CONTA_PAGAR_NAO_ENCONTRADA
 	}
 	return nil
 }

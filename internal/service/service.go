@@ -34,15 +34,15 @@ type Service struct {
 		ObterFornecedorPorID(ctx context.Context, id int64) (*model.Fornecedor, error)
 		AtualizarFornecedor(ctx context.Context, id int64, f *model.Fornecedor) error
 	}
-	Debitos interface {
-		LancarDebito(ctx context.Context, debito *model.DebitoAvulsoCriar) error
-		ListarDebitos(ctx context.Context, busca, vencimento, status string) ([]*model.Debito, error)
-		PagarDebito(ctx context.Context, id int64) error
-		EditarDebito(ctx context.Context, id int64, debito *model.DebitoAvulsoCriar) error
+	ContasPagar interface {
+		CriarContaPagar(ctx context.Context, contaPagar *model.ContaPagarCriar) error
+		ListarContasPagar(ctx context.Context, busca, vencimento, status string) ([]*model.ContaPagar, error)
+		PagarContaPagar(ctx context.Context, id int64) error
+		EditarContaPagar(ctx context.Context, id int64, contaPagar *model.ContaPagarCriar) error
 	}
 	Categorias interface {
-		CriarCategoria(ctx context.Context, c *model.CategoriaDebito) (*model.CategoriaDebito, error)
-		ListarCategorias(ctx context.Context) ([]*model.CategoriaDebito, error)
+		CriarCategoria(ctx context.Context, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error)
+		ListarCategorias(ctx context.Context) ([]*model.CategoriaContaPagar, error)
 	}
 	Dashboard *DashboardService
 }
@@ -69,7 +69,7 @@ func NewService(repository *repository.Repository, db *sql.DB) *Service {
 			repository: repository,
 			db:         db,
 		},
-		Debitos: &DebitoService{
+		ContasPagar: &ContaPagarService{
 			repository: repository,
 			db:         db,
 		},

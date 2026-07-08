@@ -14,8 +14,8 @@ func NovoCategoriaRepository(db *sql.DB) *CategoriaRepository {
 	return &CategoriaRepository{db: db}
 }
 
-func (r *CategoriaRepository) CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaDebito) (*model.CategoriaDebito, error) {
-	query := `INSERT INTO tb_categorias_debito (nome) VALUES ($1) RETURNING id;`
+func (r *CategoriaRepository) CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error) {
+	query := `INSERT INTO tb_categorias_contas_pagar (nome) VALUES ($1) RETURNING id;`
 
 	err := tx.QueryRowContext(ctx, query, c.Nome).Scan(&c.ID)
 	if err != nil {
@@ -24,17 +24,17 @@ func (r *CategoriaRepository) CriarCategoria(ctx context.Context, tx *sql.Tx, c 
 	return c, nil
 }
 
-func (r *CategoriaRepository) ListarCategorias(ctx context.Context, tx *sql.Tx) ([]*model.CategoriaDebito, error) {
-	query := `SELECT id, nome FROM tb_categorias_debito ORDER BY nome ASC`
+func (r *CategoriaRepository) ListarCategorias(ctx context.Context, tx *sql.Tx) ([]*model.CategoriaContaPagar, error) {
+	query := `SELECT id, nome FROM tb_categorias_contas_pagar ORDER BY nome ASC`
 	rows, err := tx.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var categorias []*model.CategoriaDebito
+	var categorias []*model.CategoriaContaPagar
 	for rows.Next() {
-		c := &model.CategoriaDebito{}
+		c := &model.CategoriaContaPagar{}
 		if err := rows.Scan(&c.ID, &c.Nome); err != nil {
 			return nil, err
 		}

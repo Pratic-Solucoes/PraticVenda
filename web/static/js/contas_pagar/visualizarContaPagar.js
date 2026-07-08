@@ -1,8 +1,8 @@
 import { state } from './state.js';
 
-export function setupVisualizarDebito() {
+export function setupVisualizarContaPagar() {
     window.abrirModalVisualizacao = function (id) {
-        const debito = state.debitosCarregados.find(d => d.id === id);
+        const debito = state.contasPagarCarregadas.find(d => d.id === id);
         if (!debito) return;
 
         document.getElementById('view_fornecedor').textContent = debito.fornecedor ? debito.fornecedor.razao_social : '-';
@@ -16,7 +16,7 @@ export function setupVisualizarDebito() {
         document.getElementById('view_parcela').textContent = `${debito.nr_parcela} / ${debito.nr_total_parcelas}`;
         document.getElementById('view_status').textContent = debito.status;
 
-        const modalEl = document.getElementById('modalVisualizarDebito');
+        const modalEl = document.getElementById('modalVisualizarContaPagar');
         const modal = new bootstrap.Modal(modalEl);
         modal.show();
     };

@@ -9,7 +9,7 @@ type Controller struct {
 	View interface {
 		RenderizarLoginPage(w http.ResponseWriter, r *http.Request)
 		RenderizarDashboardPage(w http.ResponseWriter, r *http.Request)
-		RenderizarDebitosPage(w http.ResponseWriter, r *http.Request)
+		RenderizarContasPagarPage(w http.ResponseWriter, r *http.Request)
 		RenderizarClientesPage(w http.ResponseWriter, r *http.Request)
 		RenderizarFornecedoresPage(w http.ResponseWriter, r *http.Request)
 		RenderizarCategoriasPage(w http.ResponseWriter, r *http.Request)
@@ -46,11 +46,11 @@ type Controller struct {
 		ObterFornecedor(w http.ResponseWriter, r *http.Request)
 		AtualizarFornecedor(w http.ResponseWriter, r *http.Request)
 	}
-	Debitos interface {
-		CriarDebitoAvulso(w http.ResponseWriter, r *http.Request)
-		ListarDebitos(w http.ResponseWriter, r *http.Request)
-		PagarDebito(w http.ResponseWriter, r *http.Request)
-		EditarDebito(w http.ResponseWriter, r *http.Request)
+	ContasPagar interface {
+		CriarContaPagar(w http.ResponseWriter, r *http.Request)
+		ListarContasPagar(w http.ResponseWriter, r *http.Request)
+		PagarContaPagar(w http.ResponseWriter, r *http.Request)
+		EditarContaPagar(w http.ResponseWriter, r *http.Request)
 	}
 	Categorias interface {
 		CriarCategoria(w http.ResponseWriter, r *http.Request)
@@ -69,7 +69,7 @@ func NewController(service *service.Service) *Controller {
 		Clientes:     &ClienteController{service: service},
 		Fornecedores: &FornecedorController{service: service},
 		Categorias:   &CategoriaController{service: service},
-		Debitos:      &DebitoController{service: service},
+		ContasPagar:  &ContaPagarController{service: service},
 		Dashboard:    &DashboardController{service: service.Dashboard},
 	}
 }

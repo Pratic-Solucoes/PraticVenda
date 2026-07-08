@@ -18,7 +18,7 @@ func NewDashboardRepository(db *sql.DB) *DashboardRepository {
 func (r *DashboardRepository) GetTotalDebitosAtrasados(ctx context.Context, tx *sql.Tx) (float64, error) {
 	query := `
 		SELECT COALESCE(SUM(valor), 0)
-		FROM tb_debitos
+		FROM tb_contas_pagar
 		WHERE status = 'PENDENTE' AND dt_vencimento < CURRENT_DATE
 	`
 	var total float64
@@ -30,7 +30,7 @@ func (r *DashboardRepository) GetTotalDebitosAtrasados(ctx context.Context, tx *
 func (r *DashboardRepository) GetTotalDebitosSemana(ctx context.Context, tx *sql.Tx, inicioSemana, fimSemana time.Time) (float64, error) {
 	query := `
 		SELECT COALESCE(SUM(valor), 0)
-		FROM tb_debitos
+		FROM tb_contas_pagar
 		WHERE status = 'PENDENTE'
 		  AND dt_vencimento >= $1
 		  AND dt_vencimento <= $2
@@ -51,8 +51,8 @@ func (r *DashboardRepository) GetDespesasPorCategoria(ctx context.Context, tx *s
 		SELECT
 			COALESCE(c.nome, 'Sem Categoria') as categoria,
 			SUM(d.valor) as total
-		FROM tb_debitos d
-		LEFT JOIN tb_categorias_debito c ON d.id_categoria = c.id
+		FROM tb_contas_pagar d
+		LEFT JOIN tb_categorias_contas_pagar c ON d.id_categoria = c.id
 		WHERE d.dt_vencimento >= $1 AND d.dt_vencimento <= $2
 		GROUP BY c.nome
 		ORDER BY total DESC

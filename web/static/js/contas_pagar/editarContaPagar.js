@@ -1,13 +1,13 @@
 import { getToken } from '../utils/auth.js';
 import { state } from './state.js';
-import { carregarDebitos } from './listarDebitos.js';
+import { carregarContasPagar } from './listarContasPagar.js';
 
-export function setupEditarDebito() {
+export function setupEditarContaPagar() {
     window.abrirModalEdicao = function (id) {
-        const debito = state.debitosCarregados.find(d => d.id === id);
+        const debito = state.contasPagarCarregadas.find(d => d.id === id);
         if (!debito) return;
 
-        document.getElementById('edit_id_debito').value = debito.id;
+        document.getElementById('edit_id_conta_pagar').value = debito.id;
         document.getElementById('edit_id_fornecedor').value = debito.id_fornecedor;
         document.getElementById('edit_id_categoria').value = debito.id_categoria || '';
         document.getElementById('edit_descricao').value = debito.descricao;
@@ -19,18 +19,18 @@ export function setupEditarDebito() {
         document.getElementById('edit_nr_parcela').value = debito.nr_parcela;
         document.getElementById('edit_nr_total_parcelas').value = debito.nr_total_parcelas;
 
-        const modalEl = document.getElementById('modalEditarDebito');
+        const modalEl = document.getElementById('modalEditarContaPagar');
         const modal = new bootstrap.Modal(modalEl);
         modal.show();
     };
 
-    const formEditarDebito = document.getElementById('formEditarDebito');
-    if (formEditarDebito) {
-        formEditarDebito.addEventListener('submit', async (e) => {
+    const formEditarContaPagar = document.getElementById('formEditarContaPagar');
+    if (formEditarContaPagar) {
+        formEditarContaPagar.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const token = getToken();
-            const id = document.getElementById('edit_id_debito').value;
+            const id = document.getElementById('edit_id_conta_pagar').value;
             const id_fornecedor = parseInt(document.getElementById('edit_id_fornecedor').value, 10);
             let id_categoria = parseInt(document.getElementById('edit_id_categoria').value, 10);
             if (isNaN(id_categoria)) id_categoria = null;
@@ -52,7 +52,7 @@ export function setupEditarDebito() {
             }
 
             try {
-                const res = await fetch(`/api/debitos/${id}`, {
+                const res = await fetch(`/api/contas-pagar/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -68,11 +68,11 @@ export function setupEditarDebito() {
                 }
 
                 alert("Débito atualizado com sucesso!");
-                const modalEl = document.getElementById('modalEditarDebito');
+                const modalEl = document.getElementById('modalEditarContaPagar');
                 const modal = bootstrap.Modal.getInstance(modalEl);
                 if (modal) modal.hide();
 
-                carregarDebitos();
+                carregarContasPagar();
             } catch (err) {
                 console.error(err);
                 alert("Erro interno ao comunicar com o servidor.");

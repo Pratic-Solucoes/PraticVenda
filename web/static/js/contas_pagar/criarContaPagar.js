@@ -1,11 +1,11 @@
 import { getToken } from '../utils/auth.js';
-import { carregarDebitos } from './listarDebitos.js';
+import { carregarContasPagar } from './listarContasPagar.js';
 
-export function setupCriarNovoDebito() {
-    const formDebito = document.getElementById('formDebitoAvulso');
-    if (!formDebito) return;
+export function setupCriarContaPagar() {
+    const formContaPagar = document.getElementById('formContaPagarAvulso');
+    if (!formContaPagar) return;
 
-    formDebito.addEventListener('submit', async (e) => {
+    formContaPagar.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const token = getToken();
@@ -33,7 +33,7 @@ export function setupCriarNovoDebito() {
         }
 
         try {
-            const res = await fetch('/api/debitos', {
+            const res = await fetch('/api/contas-pagar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -49,14 +49,14 @@ export function setupCriarNovoDebito() {
             }
 
             alert("Pagamento avulso cadastrado com sucesso!");
-            const modalEl = document.getElementById('modalDebitoAvulso');
+            const modalEl = document.getElementById('modalContaPagarAvulso');
             const modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
 
-            formDebito.reset();
+            formContaPagar.reset();
             const tabelaDebitos = document.getElementById('tabela_debitos_body');
             if (tabelaDebitos) {
-                carregarDebitos();
+                carregarContasPagar();
             } else {
                 window.location.reload();
             }

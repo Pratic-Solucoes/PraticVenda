@@ -30,10 +30,10 @@ func CarregarRotas(c *controller.Controller) *chi.Mux {
 	r.Get("/", c.View.RenderizarLoginPage)
 	r.Get("/dashboard", c.View.RenderizarDashboardPage)
 	r.Get("/configuracao-usuario", c.View.RenderizarConfiguracaoUsuarioPage)
-	r.Get("/debitos", c.View.RenderizarDebitosPage)
+	r.Get("/contas-pagar", c.View.RenderizarContasPagarPage)
 	r.Get("/clientes", c.View.RenderizarClientesPage)
 	r.Get("/fornecedores", c.View.RenderizarFornecedoresPage)
-	r.Get("/categorias-debito", c.View.RenderizarCategoriasPage)
+	r.Get("/categorias-contas-pagar", c.View.RenderizarCategoriasPage)
 	r.Get("/pdv", c.View.RenderizarPdvPage)
 
 	// rotas funcionalidades
@@ -51,10 +51,10 @@ func CarregarRotas(c *controller.Controller) *chi.Mux {
 		r.Get("/categorias", auth.Autenticar(c.Categorias.ListarCategorias))
 		r.Post("/categorias", auth.Autenticar(c.Categorias.CriarCategoria))
 
-		r.Get("/debitos", auth.Autenticar(c.Debitos.ListarDebitos))
-		r.Post("/debitos", auth.Autenticar(c.Debitos.CriarDebitoAvulso))
-		r.Put("/debitos/{id}", auth.Autenticar(c.Debitos.EditarDebito))
-		r.Put("/debitos/{id}/pagar", auth.Autenticar(c.Debitos.PagarDebito))
+		r.Get("/contas-pagar", auth.Autenticar(c.ContasPagar.ListarContasPagar))
+		r.Post("/contas-pagar", auth.Autenticar(c.ContasPagar.CriarContaPagar))
+		r.Put("/contas-pagar/{id}", auth.Autenticar(c.ContasPagar.EditarContaPagar))
+		r.Put("/contas-pagar/{id}/pagar", auth.Autenticar(c.ContasPagar.PagarContaPagar))
 
 		r.Get("/clientes", auth.Autenticar(c.Clientes.ListarClientes))
 		r.Post("/clientes", auth.Autenticar(c.Clientes.CriarCliente))

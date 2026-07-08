@@ -4,8 +4,8 @@ import (
 	"errors"
 )
 
-// Debito representa a entidade principal de débito no banco de dados
-type Debito struct {
+// ContaPagar representa a entidade principal de conta a pagar no banco de dados
+type ContaPagar struct {
 	ID              int64   `json:"id" db:"id"`
 	IDFornecedor    int64   `json:"id_fornecedor" db:"id_fornecedor"`
 	IDCategoria     *int64  `json:"id_categoria,omitempty" db:"id_categoria"`
@@ -22,18 +22,18 @@ type Debito struct {
 	UpdatedAt       string  `json:"updated_at" db:"updated_at"`
 
 	// Relacionamentos opcionais
-	Fornecedor *Fornecedor      `json:"fornecedor,omitempty"`
-	Categoria  *CategoriaDebito `json:"categoria,omitempty"`
+	Fornecedor *Fornecedor          `json:"fornecedor,omitempty"`
+	Categoria  *CategoriaContaPagar `json:"categoria,omitempty"`
 }
 
-// CategoriaDebito representa a categoria do débito (baseado no SQL cria_tb_categorias_debito)
-type CategoriaDebito struct {
-	ID        int64  `json:"id" db:"id"`
-	Nome      string `json:"nome" db:"nome"`
+// CategoriaContaPagar representa a categoria da conta a pagar (baseado no SQL tb_categorias_contas_pagar)
+type CategoriaContaPagar struct {
+	ID   int64  `json:"id" db:"id"`
+	Nome string `json:"nome" db:"nome"`
 }
 
-// DebitoAvulsoCriar é um DTO (Data Transfer Object) usado apenas para receber dados de criação
-type DebitoAvulsoCriar struct {
+// ContaPagarCriar é um DTO (Data Transfer Object) usado apenas para receber dados de criação
+type ContaPagarCriar struct {
 	IDFornecedor    int64   `json:"id_fornecedor"`
 	IDCategoria     *int64  `json:"id_categoria,omitempty"`
 	Descricao       string  `json:"descricao"`
@@ -47,7 +47,7 @@ type DebitoAvulsoCriar struct {
 }
 
 // Validar verifica se os dados obrigatórios para criação foram preenchidos corretamente
-func (d *DebitoAvulsoCriar) Validar() error {
+func (d *ContaPagarCriar) Validar() error {
 	var erros []error
 	if d.IDFornecedor == 0 {
 		erros = append(erros, errors.New("o id do fornecedor não foi informado"))

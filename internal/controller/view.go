@@ -51,22 +51,22 @@ func (c *ViewController) RenderizarDashboardPage(w http.ResponseWriter, r *http.
 	}
 }
 
-func (c *ViewController) RenderizarDebitosPage(w http.ResponseWriter, r *http.Request) {
+func (c *ViewController) RenderizarContasPagarPage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles(
-		"web/template/pages/debitos.html",
+		"web/template/pages/contas_pagar.html",
 		"web/template/components/sidebar.html",
-		"web/template/components/modalDebitoAvulso.html",
-		"web/template/components/modalEditarDebito.html",
-		"web/template/components/modalVisualizarDebito.html",
+		"web/template/components/modalContaPagarAvulso.html",
+		"web/template/components/modalEditarContaPagar.html",
+		"web/template/components/modalVisualizarContaPagar.html",
 	)
 	if err != nil {
-		fmt.Printf("Erro ao renderizar página de débitos: %v\n", err)
+		fmt.Printf("Erro ao renderizar página de contas a pagar: %v\n", err)
 		http.Error(w, "Erro interno ao renderizar página", http.StatusInternalServerError)
 		return
 	}
 
 	if err := tmpl.Execute(w, nil); err != nil {
-		fmt.Printf("Erro ao executar template de débitos: %v\n", err)
+		fmt.Printf("Erro ao executar template de contas a pagar: %v\n", err)
 		http.Error(w, "Erro interno", http.StatusInternalServerError)
 		return
 	}
@@ -116,7 +116,7 @@ func (c *ViewController) RenderizarFornecedoresPage(w http.ResponseWriter, r *ht
 
 func (c *ViewController) RenderizarCategoriasPage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles(
-		"web/template/pages/categorias_debito.html",
+		"web/template/pages/categorias_contas_pagar.html",
 		"web/template/components/sidebar.html",
 		"web/template/components/modalCategoria.html",
 		"web/template/components/errorModal.html",

@@ -13,7 +13,7 @@ type CategoriaController struct {
 }
 
 func (c *CategoriaController) CriarCategoria(w http.ResponseWriter, r *http.Request) {
-	var categoria model.CategoriaDebito
+	var categoria model.CategoriaContaPagar
 	if err := requisicao.ProcessarRequisicao(w, r, &categoria); err != nil {
 		return
 	}
@@ -35,7 +35,7 @@ func (c *CategoriaController) ListarCategorias(w http.ResponseWriter, r *http.Re
 	}
 
 	if categorias == nil {
-		categorias = []*model.CategoriaDebito{}
+		categorias = []*model.CategoriaContaPagar{}
 	}
 
 	resposta.Padrao(w, http.StatusOK, categorias)
