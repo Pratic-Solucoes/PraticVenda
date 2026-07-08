@@ -40,7 +40,7 @@ func (c *ViewController) RenderizarDashboardPage(w http.ResponseWriter, r *http.
 	)
 	if err != nil {
 		fmt.Printf("Erro ao renderizar dashboard: %v\n", err)
-		http.Error(w, "Erro ao renderizar dashboard", http.StatusInternalServerError)
+		http.Error(w, "Erro ao renderizar dashboard: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
