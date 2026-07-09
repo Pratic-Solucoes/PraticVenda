@@ -20,8 +20,9 @@ create table if not exists tb_condicoes_pagamento(
 
 create table if not exists tb_contas_receber(
     id bigserial primary key,
-    id_pagador bigint not null,
+    id_cliente bigint not null,
     id_categoria bigint not null,
+    tipo_origem varchar(50) not null,
     id_origem bigint,
     id_grupo_parcelas UUID,
     descricao varchar(255),
@@ -30,10 +31,13 @@ create table if not exists tb_contas_receber(
     dt_vencimento DATE NOT NULL,
     nr_parcela INT NOT NULL,
     nr_total_parcelas INT NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE' CHECK (status IN ('PENDENTE', 'PAGO_PARCIAL', 'PAGO', 'CANCELADO', 'ATRASADO')),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE' CHECK (status IN ('PENDENTE', 'PAGO_PARCIAL', 'PAGO', 'CANCELADO')),
+    dt_emissao TIMESTAMP NOT NULL,
     dt_pagamento TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_cliente) REFERENCES tb_clientes(id),
+    FOREIGN KEY (id_categoria) REFERENCES tb_categorias_contas_receber(id)
 )
 
 CREATE TABLE IF NOT EXISTS tb_contas_pagar (
@@ -50,7 +54,7 @@ CREATE TABLE IF NOT EXISTS tb_contas_pagar (
     dt_vencimento DATE NOT NULL,
     nr_parcela INT NOT NULL,
     nr_total_parcelas INT NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE' CHECK (status IN ('PENDENTE', 'PAGO_PARCIAL', 'PAGO', 'CANCELADO', 'ATRASADO')),
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE' CHECK (status IN ('PENDENTE', 'PAGO_PARCIAL', 'PAGO', 'CANCELADO')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     dt_pagamento TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

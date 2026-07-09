@@ -80,7 +80,7 @@ function renderTabelaContasPagar(debitos) {
             <td>
                 <button class="btn btn-sm btn-outline-primary" title="Visualizar" onclick="window.abrirModalVisualizacao(${d.id})"><i class="bi bi-eye"></i></button>
                 <button class="btn btn-sm btn-outline-warning" title="Editar" onclick="window.abrirModalEdicao(${d.id})" ${d.status === 'PAGO' ? 'disabled' : ''}><i class="bi bi-pencil"></i></button>
-                ${d.status === 'PENDENTE' ? `<button class="btn btn-sm btn-outline-success" title="Dar Baixa" onclick="window.pagarContaPagar(${d.id})"><i class="bi bi-check2-circle"></i></button>` : ''}
+                ${(d.status === 'PENDENTE' || d.status === 'PAGO_PARCIAL') ? `<button class="btn btn-sm btn-outline-success" title="Dar Baixa" onclick="window.abrirModalPagamento(${d.id})"><i class="bi bi-check2-circle"></i></button>` : ''}
             </td>
         `;
         tabelaDebitos.appendChild(tr);

@@ -55,7 +55,14 @@ func (c *ContaPagarController) PagarContaPagar(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	if err := c.service.ContasPagar.PagarContaPagar(r.Context(), id); err != nil {
+	var req struct {
+		ValorPagamento float64 `json:"valor_pagamento"`
+	}
+	if err := requisicao.ProcessarRequisicao(w, r, &req); err != nil {
+		return
+	}
+
+	if err := c.service.ContasPagar.PagarContaPagar(r.Context(), id, req.ValorPagamento); err != nil {
 		resposta.Padrao(w, http.StatusInternalServerError, map[string]string{"erro": "Erro ao pagar conta a pagar: " + err.Error()})
 		return
 	}

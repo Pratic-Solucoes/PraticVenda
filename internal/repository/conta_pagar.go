@@ -13,7 +13,7 @@ type ContaPagarRepository struct {
 }
 
 var (
-	CONTA_PAGAR_QUITADA       = errors.New("conta a pagar já quitada")
+	CONTA_PAGAR_QUITADA        = errors.New("conta a pagar já quitada")
 	CONTA_PAGAR_NAO_ENCONTRADA = errors.New("conta a pagar não encontrada")
 )
 
@@ -38,6 +38,44 @@ func (r *ContaPagarRepository) CriarContaPagar(ctx context.Context, tx *sql.Tx, 
 		contaPagar.DtEntrada, contaPagar.DtVencimento, contaPagar.NrParcela, contaPagar.NrTotalParcelas,
 	)
 	return err
+}
+
+func (r *ContaPagarRepository) BuscarPorID(ctx context.Context, tx *sql.Tx, ID int64) (*model.ContaPagar, error) {
+	query := `
+				SELECT d.id, d.id_fornecedor, d.id_categoria, d.id_grupo_parcelas, d.descricao, d.nr_documento, d.nr_nota_fiscal,
+					d.valor_original, d.saldo_restante, d.dt_entrada, d.dt_vencimento, d.nr_parcela, d.nr_total_parcelas, d.status, d.created_at, d.dt_pagamento, d.updated_at
+				FROM tb_contas_pagar d
+				WHERE d.id = $1
+			`
+
+	var conta *model.ContaPagar
+
+	err := tx.QueryRowContext(ctx, query, ID).Scan(
+		&conta.ID,
+		&conta.IDFornecedor,
+		&conta.IDCategoria,
+		&conta.IDGrupoParcelas,
+		&conta.Descricao,
+		&conta.NrDocumento,
+		&conta.NrNotaFiscal,
+		&conta.ValorOriginal,
+		&conta.SaldoRestante,
+		&conta.DtEntrada,
+		&conta.DtVencimento,
+		&conta.NrParcela,
+		&conta.NrTotalParcelas,
+		&conta.Status,
+		&conta.CreatedAt,
+		&conta.DtPagamento,
+		&conta.UpdatedAt,
+	)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, CONTA_PAGAR_NAO_ENCONTRADA
+		}
+		return nil, err
+	}
+	return conta, nil
 }
 
 func (r *ContaPagarRepository) ListarContasPagar(ctx context.Context, tx *sql.Tx, busca, vencimento, status string) ([]*model.ContaPagar, error) {
@@ -103,15 +141,16 @@ func (r *ContaPagarRepository) ListarContasPagar(ctx context.Context, tx *sql.Tx
 
 // REFATORAÇÃO: O método PagarContaPagar original pagava a conta inteira sem registrar transação.
 // Agora, ele vai realizar o pagamento integral baixando o saldo_restante para 0 e criando uma entrada na tabela tb_movimento_financeiro.
-// Obs: No futuro, você pode criar uma função 'PagarContaParcial(ctx, tx, id, valor_pagamento)' 
-//      e reutilizar essa estrutura atualizando saldo_restante -= valor_pagamento.
-func (r *ContaPagarRepository) PagarContaPagar(ctx context.Context, tx *sql.Tx, id int64) error {
+// Obs: No futuro, você pode criar uma função 'PagarContaParcial(ctx, tx, id, valor_pagamento)'
+//
+//	e reutilizar essa estrutura atualizando saldo_restante -= valor_pagamento.
+func (r *ContaPagarRepository) PagarContaPagar(ctx context.Context, tx *sql.Tx, id int64, valorPagamento float64) error {
 
-	// 1. Pega os dados atuais da conta
-	queryConta := `SELECT status, saldo_restante FROM tb_contas_pagar WHERE id = $1`
+	// 1. Pega os dados atuais da conta (com FOR UPDATE para concorrência)
+	queryConta := `SELECT status, saldo_restante FROM tb_contas_pagar WHERE id = $1 FOR UPDATE`
 	var status string
 	var saldoRestante float64
-	
+
 	err := tx.QueryRowContext(ctx, queryConta, id).Scan(&status, &saldoRestante)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -124,16 +163,22 @@ func (r *ContaPagarRepository) PagarContaPagar(ctx context.Context, tx *sql.Tx, 
 		return CONTA_PAGAR_QUITADA
 	}
 
+	novoSaldo := saldoRestante - valorPagamento
+	novoStatus := "PAGO_PARCIAL"
+	if novoSaldo <= 0 {
+		novoSaldo = 0
+		novoStatus = "PAGO"
+	}
+
 	// 2. Insere na tabela de fluxo de caixa (tb_movimento_financeiro)
-	// Vamos supor que ele está pagando o valor integral do saldo restante
 	queryMovimento := `
 		INSERT INTO tb_movimento_financeiro (
 			tipo_movimento, id_conta_pagar, dt_movimento, valor_movimento
 		) VALUES (
-			'SAIDA', $1, CURRENT_DATE, $2
+			'CONTA_PAGAR', $1, CURRENT_DATE, $2
 		)
 	`
-	_, err = tx.ExecContext(ctx, queryMovimento, id, saldoRestante)
+	_, err = tx.ExecContext(ctx, queryMovimento, id, valorPagamento)
 	if err != nil {
 		return fmt.Errorf("erro ao registrar movimento financeiro: %w", err)
 	}
@@ -141,10 +186,10 @@ func (r *ContaPagarRepository) PagarContaPagar(ctx context.Context, tx *sql.Tx, 
 	// 3. Atualiza a conta a pagar
 	queryUpdateConta := `
 		UPDATE tb_contas_pagar 
-		SET status = 'PAGO', saldo_restante = 0, dt_pagamento = CURRENT_TIMESTAMP
-		WHERE id = $1
+		SET status = $1, saldo_restante = $2, dt_pagamento = CURRENT_TIMESTAMP
+		WHERE id = $3
 	`
-	_, err = tx.ExecContext(ctx, queryUpdateConta, id)
+	_, err = tx.ExecContext(ctx, queryUpdateConta, novoStatus, novoSaldo, id)
 	if err != nil {
 		return fmt.Errorf("erro ao atualizar conta a pagar: %w", err)
 	}

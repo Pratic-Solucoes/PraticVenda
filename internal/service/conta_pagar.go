@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"gestao/internal/model"
 	"gestao/internal/repository"
 	"gestao/pkg/helpers"
@@ -57,7 +58,7 @@ func (s *ContaPagarService) ListarContasPagar(ctx context.Context, busca, vencim
 	return contasPagar, nil
 }
 
-func (s *ContaPagarService) PagarContaPagar(ctx context.Context, id int64) error {
+func (s *ContaPagarService) PagarContaPagar(ctx context.Context, id int64, valorPagamento float64) error {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -68,7 +69,24 @@ func (s *ContaPagarService) PagarContaPagar(ctx context.Context, id int64) error
 		return err
 	}
 
-	err = s.repository.ContasPagar.PagarContaPagar(ctx, tx, id)
+	conta, err := s.repository.ContasPagar.BuscarPorID(ctx, tx, id)
+	if err != nil {
+		return err
+	}
+
+	if conta.Status == "PAGO" {
+		return repository.CONTA_PAGAR_QUITADA
+	}
+
+	if valorPagamento <= 0 {
+		return errors.New("valor do pagamento deve ser maior que zero")
+	}
+
+	if valorPagamento > conta.SaldoRestante {
+		return errors.New("valor do pagamento não pode ser maior que o saldo restante")
+	}
+
+	err = s.repository.ContasPagar.PagarContaPagar(ctx, tx, id, valorPagamento)
 	if err != nil {
 		return err
 	}

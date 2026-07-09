@@ -37,8 +37,9 @@ type Repository struct {
 	ContasPagar interface {
 		CriarContaPagar(ctx context.Context, tx *sql.Tx, contaPagar *model.ContaPagarCriar) error
 		ListarContasPagar(ctx context.Context, tx *sql.Tx, busca, vencimento, status string) ([]*model.ContaPagar, error)
-		PagarContaPagar(ctx context.Context, tx *sql.Tx, id int64) error
+		PagarContaPagar(ctx context.Context, tx *sql.Tx, id int64, valorPagamento float64) error
 		EditarContaPagar(ctx context.Context, tx *sql.Tx, id int64, contaPagar *model.ContaPagarCriar) error
+		BuscarPorID(ctx context.Context, tx *sql.Tx, ID int64) (*model.ContaPagar, error)
 	}
 	CategoriasContasPagar interface {
 		CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error)

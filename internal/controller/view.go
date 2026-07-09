@@ -58,6 +58,7 @@ func (c *ViewController) RenderizarContasPagarPage(w http.ResponseWriter, r *htt
 		"web/template/components/modalContaPagarAvulso.html",
 		"web/template/components/modalEditarContaPagar.html",
 		"web/template/components/modalVisualizarContaPagar.html",
+		"web/template/components/modalPagarConta.html",
 	)
 	if err != nil {
 		fmt.Printf("Erro ao renderizar página de contas a pagar: %v\n", err)
