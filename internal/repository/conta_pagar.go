@@ -83,7 +83,7 @@ func (r *ContaPagarRepository) ListarContasPagar(ctx context.Context, tx *sql.Tx
 		SELECT d.id, d.id_fornecedor, d.id_categoria, d.id_grupo_parcelas, d.descricao, d.nr_documento, d.nr_nota_fiscal,
 		       d.valor_original, d.saldo_restante, d.dt_entrada, d.dt_vencimento, d.nr_parcela, d.nr_total_parcelas, d.status, d.created_at, d.dt_pagamento, d.updated_at,
 		       f.id, f.razao_social, f.cnpj,
-		       c.id, c.nome
+		       c.id, c.descricao
 		FROM tb_contas_pagar d
 		JOIN tb_fornecedores f ON d.id_fornecedor = f.id
 		JOIN tb_categorias_contas_pagar c ON d.id_categoria = c.id
