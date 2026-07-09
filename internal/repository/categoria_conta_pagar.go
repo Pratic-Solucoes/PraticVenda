@@ -15,7 +15,7 @@ func NovoCategoriaContaPagarRepository(db *sql.DB) *CategoriaContaPagarRepositor
 }
 
 func (r *CategoriaContaPagarRepository) CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error) {
-	query := `INSERT INTO tb_categorias_contas_pagar (nome) VALUES ($1) RETURNING id;`
+	query := `INSERT INTO tb_categorias_contas_pagar (descricao) VALUES ($1) RETURNING id;`
 
 	err := tx.QueryRowContext(ctx, query, c.Nome).Scan(&c.ID)
 	if err != nil {
@@ -25,7 +25,7 @@ func (r *CategoriaContaPagarRepository) CriarCategoria(ctx context.Context, tx *
 }
 
 func (r *CategoriaContaPagarRepository) ListarCategorias(ctx context.Context, tx *sql.Tx) ([]*model.CategoriaContaPagar, error) {
-	query := `SELECT id, nome FROM tb_categorias_contas_pagar ORDER BY nome ASC`
+	query := `SELECT id, descricao FROM tb_categorias_contas_pagar ORDER BY descricao ASC`
 	rows, err := tx.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
