@@ -21,7 +21,7 @@ export function setupCriarContaPagar() {
             descricao: document.getElementById('descricao').value,
             nr_documento: document.getElementById('nr_documento').value,
             nr_nota_fiscal: document.getElementById('nr_nota_fiscal').value,
-            valor: parseFloat(document.getElementById('valor').value),
+            valor_original: parseFloat(document.getElementById('valor').value),
             dt_entrada: document.getElementById('dt_entrada').value,
             dt_vencimento: document.getElementById('dt_vencimento').value,
             nr_parcela: parseInt(document.getElementById('nr_parcela').value, 10),

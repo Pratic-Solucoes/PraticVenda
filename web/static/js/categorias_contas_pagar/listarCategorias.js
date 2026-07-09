@@ -20,7 +20,7 @@ export async function carregarCategorias() {
     tbody.innerHTML = `<tr><td colspan="3" class="text-muted py-5 text-center">Carregando...</td></tr>`;
     
     try {
-        const res = await fetch('/api/categorias', {
+        const res = await fetch('/api/contas-pagar/categorias', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

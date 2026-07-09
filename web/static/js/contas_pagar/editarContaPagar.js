@@ -13,7 +13,7 @@ export function setupEditarContaPagar() {
         document.getElementById('edit_descricao').value = debito.descricao;
         document.getElementById('edit_nr_documento').value = debito.nr_documento || '';
         document.getElementById('edit_nr_nota_fiscal').value = debito.nr_nota_fiscal || '';
-        document.getElementById('edit_valor').value = debito.valor;
+        document.getElementById('edit_valor').value = debito.valor_original;
         document.getElementById('edit_dt_entrada').value = debito.dt_entrada.substring(0, 10);
         document.getElementById('edit_dt_vencimento').value = debito.dt_vencimento.substring(0, 10);
         document.getElementById('edit_nr_parcela').value = debito.nr_parcela;
@@ -40,7 +40,7 @@ export function setupEditarContaPagar() {
                 descricao: document.getElementById('edit_descricao').value,
                 nr_documento: document.getElementById('edit_nr_documento').value,
                 nr_nota_fiscal: document.getElementById('edit_nr_nota_fiscal').value,
-                valor: parseFloat(document.getElementById('edit_valor').value),
+                valor_original: parseFloat(document.getElementById('edit_valor').value),
                 dt_entrada: document.getElementById('edit_dt_entrada').value,
                 dt_vencimento: document.getElementById('edit_dt_vencimento').value,
                 nr_parcela: parseInt(document.getElementById('edit_nr_parcela').value, 10),

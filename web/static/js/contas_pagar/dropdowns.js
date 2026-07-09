@@ -35,7 +35,7 @@ export async function carregarDropdowns() {
         }
 
         // Fetch categorias
-        const resC = await fetch('/api/categorias', {
+        const resC = await fetch('/api/contas-pagar/categorias', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (resC.ok) {

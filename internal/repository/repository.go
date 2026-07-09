@@ -40,7 +40,7 @@ type Repository struct {
 		PagarContaPagar(ctx context.Context, tx *sql.Tx, id int64) error
 		EditarContaPagar(ctx context.Context, tx *sql.Tx, id int64, contaPagar *model.ContaPagarCriar) error
 	}
-	Categorias interface {
+	CategoriasContasPagar interface {
 		CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error)
 		ListarCategorias(ctx context.Context, tx *sql.Tx) ([]*model.CategoriaContaPagar, error)
 	}
@@ -61,7 +61,7 @@ func NewRepository(db *sql.DB) *Repository {
 		Clientes: &ClienteRepository{
 			db: db,
 		},
-		Categorias: NovoCategoriaRepository(db),
+		CategoriasContasPagar: NovoCategoriaContaPagarRepository(db),
 		ContasPagar: &ContaPagarRepository{
 			db: db,
 		},

@@ -9,12 +9,12 @@ import (
 	"gestao/pkg/helpers"
 )
 
-type CategoriaService struct {
+type CategoriaContaPagarService struct {
 	repository *repository.Repository
 	db         *sql.DB
 }
 
-func (s *CategoriaService) CriarCategoria(ctx context.Context, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error) {
+func (s *CategoriaContaPagarService) CriarCategoria(ctx context.Context, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error) {
 	if c.Nome == "" {
 		return nil, errors.New("o nome da categoria é obrigatório")
 	}
@@ -29,7 +29,7 @@ func (s *CategoriaService) CriarCategoria(ctx context.Context, c *model.Categori
 		return nil, err
 	}
 
-	categoriaCriada, err := s.repository.Categorias.CriarCategoria(ctx, tx, c)
+	categoriaCriada, err := s.repository.CategoriasContasPagar.CriarCategoria(ctx, tx, c)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (s *CategoriaService) CriarCategoria(ctx context.Context, c *model.Categori
 	return categoriaCriada, nil
 }
 
-func (s *CategoriaService) ListarCategorias(ctx context.Context) ([]*model.CategoriaContaPagar, error) {
+func (s *CategoriaContaPagarService) ListarCategorias(ctx context.Context) ([]*model.CategoriaContaPagar, error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (s *CategoriaService) ListarCategorias(ctx context.Context) ([]*model.Categ
 		return nil, err
 	}
 
-	categorias, err := s.repository.Categorias.ListarCategorias(ctx, tx)
+	categorias, err := s.repository.CategoriasContasPagar.ListarCategorias(ctx, tx)
 	if err != nil {
 		return nil, err
 	}

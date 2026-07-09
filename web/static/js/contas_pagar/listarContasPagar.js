@@ -37,7 +37,7 @@ export async function carregarContasPagar() {
         const dados = await res.json();
         state.contasPagarCarregadas = dados;
 
-        const totalDebitos = dados.reduce((total, d) => total + d.valor, 0);
+        const totalDebitos = dados.reduce((total, d) => total + d.valor_original, 0);
         const totalDebitosElement = document.getElementById('total_debitos');
         if (totalDebitosElement) {
             totalDebitosElement.textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalDebitos);
@@ -62,7 +62,7 @@ function renderTabelaContasPagar(debitos) {
     tabelaDebitos.innerHTML = '';
     debitos.forEach(d => {
         const dataVencimento = d.dt_vencimento ? d.dt_vencimento.substring(0, 10).split('-').reverse().join('/') : '-';
-        const valorFormatado = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(d.valor);
+        const valorFormatado = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(d.valor_original);
 
         let badgeClass = 'bg-secondary';
         if (d.status === 'PENDENTE') badgeClass = 'bg-warning text-dark';

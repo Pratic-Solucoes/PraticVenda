@@ -8,17 +8,17 @@ import (
 	"net/http"
 )
 
-type CategoriaController struct {
+type CategoriaContaPagarController struct {
 	service *service.Service
 }
 
-func (c *CategoriaController) CriarCategoria(w http.ResponseWriter, r *http.Request) {
+func (c *CategoriaContaPagarController) CriarCategoria(w http.ResponseWriter, r *http.Request) {
 	var categoria model.CategoriaContaPagar
 	if err := requisicao.ProcessarRequisicao(w, r, &categoria); err != nil {
 		return
 	}
 
-	categoriaCriada, err := c.service.Categorias.CriarCategoria(r.Context(), &categoria)
+	categoriaCriada, err := c.service.CategoriasContasPagar.CriarCategoria(r.Context(), &categoria)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": err.Error()})
 		return
@@ -27,8 +27,8 @@ func (c *CategoriaController) CriarCategoria(w http.ResponseWriter, r *http.Requ
 	resposta.Padrao(w, http.StatusCreated, categoriaCriada)
 }
 
-func (c *CategoriaController) ListarCategorias(w http.ResponseWriter, r *http.Request) {
-	categorias, err := c.service.Categorias.ListarCategorias(r.Context())
+func (c *CategoriaContaPagarController) ListarCategorias(w http.ResponseWriter, r *http.Request) {
+	categorias, err := c.service.CategoriasContasPagar.ListarCategorias(r.Context())
 	if err != nil {
 		resposta.Padrao(w, http.StatusInternalServerError, map[string]string{"erro": "erro ao buscar categorias: " + err.Error()})
 		return

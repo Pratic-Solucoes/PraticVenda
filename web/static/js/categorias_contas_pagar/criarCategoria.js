@@ -11,7 +11,7 @@ export function setupCriarCategoria() {
         const nome = document.getElementById('categoria_nome').value;
 
         try {
-            const res = await fetch('/api/categorias', {
+            const res = await fetch('/api/contas-pagar/categorias', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

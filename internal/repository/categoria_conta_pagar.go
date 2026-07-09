@@ -6,15 +6,15 @@ import (
 	"gestao/internal/model"
 )
 
-type CategoriaRepository struct {
+type CategoriaContaPagarRepository struct {
 	db *sql.DB
 }
 
-func NovoCategoriaRepository(db *sql.DB) *CategoriaRepository {
-	return &CategoriaRepository{db: db}
+func NovoCategoriaContaPagarRepository(db *sql.DB) *CategoriaContaPagarRepository {
+	return &CategoriaContaPagarRepository{db: db}
 }
 
-func (r *CategoriaRepository) CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error) {
+func (r *CategoriaContaPagarRepository) CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error) {
 	query := `INSERT INTO tb_categorias_contas_pagar (nome) VALUES ($1) RETURNING id;`
 
 	err := tx.QueryRowContext(ctx, query, c.Nome).Scan(&c.ID)
@@ -24,7 +24,7 @@ func (r *CategoriaRepository) CriarCategoria(ctx context.Context, tx *sql.Tx, c 
 	return c, nil
 }
 
-func (r *CategoriaRepository) ListarCategorias(ctx context.Context, tx *sql.Tx) ([]*model.CategoriaContaPagar, error) {
+func (r *CategoriaContaPagarRepository) ListarCategorias(ctx context.Context, tx *sql.Tx) ([]*model.CategoriaContaPagar, error) {
 	query := `SELECT id, nome FROM tb_categorias_contas_pagar ORDER BY nome ASC`
 	rows, err := tx.QueryContext(ctx, query)
 	if err != nil {

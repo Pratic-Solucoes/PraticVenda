@@ -52,7 +52,7 @@ type Controller struct {
 		PagarContaPagar(w http.ResponseWriter, r *http.Request)
 		EditarContaPagar(w http.ResponseWriter, r *http.Request)
 	}
-	Categorias interface {
+	CategoriasContasPagar interface {
 		CriarCategoria(w http.ResponseWriter, r *http.Request)
 		ListarCategorias(w http.ResponseWriter, r *http.Request)
 	}
@@ -68,7 +68,7 @@ func NewController(service *service.Service) *Controller {
 		Usuarios:     &UsuarioController{service: service},
 		Clientes:     &ClienteController{service: service},
 		Fornecedores: &FornecedorController{service: service},
-		Categorias:   &CategoriaController{service: service},
+		CategoriasContasPagar:   &CategoriaContaPagarController{service: service},
 		ContasPagar:  &ContaPagarController{service: service},
 		Dashboard:    &DashboardController{service: service.Dashboard},
 	}

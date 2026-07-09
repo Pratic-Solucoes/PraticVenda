@@ -40,7 +40,7 @@ type Service struct {
 		PagarContaPagar(ctx context.Context, id int64) error
 		EditarContaPagar(ctx context.Context, id int64, contaPagar *model.ContaPagarCriar) error
 	}
-	Categorias interface {
+	CategoriasContasPagar interface {
 		CriarCategoria(ctx context.Context, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error)
 		ListarCategorias(ctx context.Context) ([]*model.CategoriaContaPagar, error)
 	}
@@ -65,7 +65,7 @@ func NewService(repository *repository.Repository, db *sql.DB) *Service {
 			repository: repository,
 			db:         db,
 		},
-		Categorias: &CategoriaService{
+		CategoriasContasPagar: &CategoriaContaPagarService{
 			repository: repository,
 			db:         db,
 		},
