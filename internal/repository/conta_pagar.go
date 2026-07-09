@@ -42,10 +42,10 @@ func (r *ContaPagarRepository) CriarContaPagar(ctx context.Context, tx *sql.Tx, 
 
 func (r *ContaPagarRepository) BuscarPorID(ctx context.Context, tx *sql.Tx, ID int64) (*model.ContaPagar, error) {
 	query := `
-				SELECT d.id, d.id_fornecedor, d.id_categoria, d.id_grupo_parcelas, d.descricao, d.nr_documento, d.nr_nota_fiscal,
-					d.valor_original, d.saldo_restante, d.dt_entrada, d.dt_vencimento, d.nr_parcela, d.nr_total_parcelas, d.status, d.created_at, d.dt_pagamento, d.updated_at
-				FROM tb_contas_pagar d
-				WHERE d.id = $1
+				SELECT id, id_fornecedor, id_categoria, id_grupo_parcelas, descricao, nr_documento, nr_nota_fiscal,
+					valor_original, saldo_restante, dt_entrada, dt_vencimento, nr_parcela, nr_total_parcelas, status, created_at, dt_pagamento, updated_at
+				FROM tb_contas_pagar
+				WHERE id = $1
 			`
 
 	var conta *model.ContaPagar
