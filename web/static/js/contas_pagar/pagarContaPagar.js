@@ -37,7 +37,7 @@ export function setupPagarContaPagar() {
             }
 
             const token = getToken();
-            const btnSubmit = formPagarConta.querySelector('button[type="submit"]');
+            const btnSubmit = document.querySelector('button[form="formPagarConta"]');
             const originalText = btnSubmit.innerHTML;
             btnSubmit.innerHTML = 'Processando...';
             btnSubmit.disabled = true;

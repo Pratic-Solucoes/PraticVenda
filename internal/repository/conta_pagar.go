@@ -48,7 +48,7 @@ func (r *ContaPagarRepository) BuscarPorID(ctx context.Context, tx *sql.Tx, ID i
 				WHERE id = $1
 			`
 
-	var conta *model.ContaPagar
+	conta := &model.ContaPagar{}
 
 	err := tx.QueryRowContext(ctx, query, ID).Scan(
 		&conta.ID,
