@@ -1,149 +1,176 @@
 {{define "sidebar"}}
-<div class="sidebar d-flex" id="wrapper">
-    <div id="sidebar-wrapper">
-        <!-- Espaço para Logo -->
-        <div class="sidebar-logo-container">
-            <!-- Usuário vai colocar a tag img com src da logo aqui -->
-            <img src="" alt="P" class="sidebar-logo-placeholder" id="sidebarLogo" />
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <div class="s-logo fw-bold">P</div>
+        <div style="flex: 1; overflow: hidden;">
+            <div class="s-title">Pratic Venda</div>
+            <span class="s-sub">Painel Administrativo</span>
+        </div>
+        <button id="btn-toggle-sidebar" title="Recolher Menu">
+            <i class="bi bi-list"></i>
+        </button>
+    </div>
+
+    <div class="sidebar-nav">
+        <!-- Dashboard -->
+        <div class="nav-item-wrap" data-tooltip="Dashboard" data-nav-label="Dashboard">
+            <a href="/dashboard" class="nav-link-item">
+                <i class="bi bi-speedometer2 nav-icon"></i>
+                <span class="nav-label">Dashboard</span>
+            </a>
         </div>
 
-        <div class="list-group list-group-flush w-100">
-            <!-- Dashboard -->
-            <a href="/dashboard" class="list-group-item" title="Dashboard" data-bs-toggle="tooltip" data-bs-placement="right">
-                <i class="bi bi-speedometer2"></i>
+        <!-- PDV -->
+        <div class="nav-item-wrap" data-tooltip="PDV" data-nav-label="PDV">
+            <a href="/pdv" class="nav-link-item text-primary">
+                <i class="bi bi-cart4 nav-icon"></i>
+                <span class="nav-label">PDV</span>
             </a>
+        </div>
 
-            <!-- PDV -->
-            <a href="/pdv" class="list-group-item text-primary" title="PDV" data-bs-toggle="tooltip" data-bs-placement="right">
-                <i class="bi bi-cart4"></i>
-            </a>
+        <div class="nav-section-title">Módulos</div>
 
-            <!-- Financeiro (Abre Submenu) -->
-            <a href="#" class="list-group-item submenu-toggle" data-target="financeiroMenu" title="Financeiro" data-bs-toggle="tooltip" data-bs-placement="right">
-                <i class="bi bi-bank"></i>
-            </a>
+        <!-- Financeiro (Abre Submenu) -->
+        <div class="nav-item-wrap" data-tooltip="Financeiro" data-nav-label="Financeiro">
+            <div class="nav-link-item submenu-toggle" data-target="financeiroMenu" aria-expanded="false">
+                <i class="bi bi-bank nav-icon"></i>
+                <span class="nav-label">Financeiro</span>
+                <i class="bi bi-chevron-right nav-chevron"></i>
+            </div>
+            <div class="sidebar-submenu" id="financeiroMenu">
+                <a href="/contas-pagar" class="nav-link-item">Contas a Pagar</a>
+                <a href="#" class="nav-link-item">Contas a Receber</a>
+                <a href="/formas-pagamento" class="nav-link-item">Formas de Pagamento</a>
+            </div>
+        </div>
 
-            <!-- Cadastros (Abre Submenu) -->
-            <a href="#" class="list-group-item submenu-toggle" data-target="cadastrosMenu" title="Cadastros" data-bs-toggle="tooltip" data-bs-placement="right">
-                <i class="bi bi-card-list"></i>
-            </a>
+        <!-- Cadastros (Abre Submenu) -->
+        <div class="nav-item-wrap" data-tooltip="Cadastros" data-nav-label="Cadastros">
+            <div class="nav-link-item submenu-toggle" data-target="cadastrosMenu" aria-expanded="false">
+                <i class="bi bi-card-list nav-icon"></i>
+                <span class="nav-label">Cadastros</span>
+                <i class="bi bi-chevron-right nav-chevron"></i>
+            </div>
+            <div class="sidebar-submenu" id="cadastrosMenu">
+                <a href="/clientes" class="nav-link-item">Clientes</a>
+                <a href="/fornecedores" class="nav-link-item">Fornecedores</a>
+                <a href="#" class="nav-link-item">Produtos</a>
+            </div>
+        </div>
 
-            <!-- Categorias (Abre Submenu) -->
-            <a href="#" class="list-group-item submenu-toggle" data-target="categoriasMenu" title="Categorias" data-bs-toggle="tooltip" data-bs-placement="right">
-                <i class="bi bi-tags"></i>
-            </a>
+        <!-- Categorias (Abre Submenu) -->
+        <div class="nav-item-wrap" data-tooltip="Categorias" data-nav-label="Categorias">
+            <div class="nav-link-item submenu-toggle" data-target="categoriasMenu" aria-expanded="false">
+                <i class="bi bi-tags nav-icon"></i>
+                <span class="nav-label">Categorias</span>
+                <i class="bi bi-chevron-right nav-chevron"></i>
+            </div>
+            <div class="sidebar-submenu" id="categoriasMenu">
+                <a href="/categorias-contas-pagar" class="nav-link-item">Categorias de Débitos</a>
+                <a href="#" class="nav-link-item">Categorias de Crédito</a>
+            </div>
+        </div>
 
-            <!-- Configurações (Abre Submenu) -->
-            <a href="#" class="list-group-item submenu-toggle" data-target="configuracoesMenu" title="Configurações" data-bs-toggle="tooltip" data-bs-placement="right">
-                <i class="bi bi-gear"></i>
-            </a>
-
-            <div class="mt-auto w-100 pb-4">
-                <!-- Sair -->
-                <a href="/logout" class="list-group-item text-danger" title="Sair" data-bs-toggle="tooltip" data-bs-placement="right">
-                    <i class="bi bi-box-arrow-left"></i>
-                </a>
+        <!-- Configurações (Abre Submenu) -->
+        <div class="nav-item-wrap" data-tooltip="Configurações" data-nav-label="Configurações">
+            <div class="nav-link-item submenu-toggle" data-target="configuracoesMenu" aria-expanded="false">
+                <i class="bi bi-gear nav-icon"></i>
+                <span class="nav-label">Configurações</span>
+                <i class="bi bi-chevron-right nav-chevron"></i>
+            </div>
+            <div class="sidebar-submenu" id="configuracoesMenu">
+                <a href="/configuracao-usuario" class="nav-link-item">Configuração do Usuário</a>
             </div>
         </div>
     </div>
 
-    <!-- Submenus Flyout (Escondidos por padrão) -->
-    <!-- Financeiro -->
-    <div class="sidebar-submenu" id="financeiroMenu">
-        <div class="sidebar-submenu-header">
-            <span>Financeiro</span>
-            <i class="bi bi-x-lg submenu-close" style="cursor:pointer"></i>
-        </div>
-        <div class="list-group list-group-flush">
-            <a href="/contas-pagar" class="list-group-item"><i class="bi bi-cash-coin"></i> Contas a Pagar</a>
-            <a href="#" class="list-group-item"><i class="bi bi-graph-up-arrow"></i> Contas a Receber</a>
-            <a href="/formas-pagamento" class="list-group-item"><i class="bi bi-credit-card"></i> Formas de Pagamento</a>
-        </div>
-    </div>
+    <!-- Botão Expandir no modo Collapsed -->
+    <button class="btn-expandir-sidebar" id="btn-expand-sidebar" title="Expandir Menu">
+        <i class="bi bi-list"></i>
+    </button>
 
-    <!-- Cadastros -->
-    <div class="sidebar-submenu" id="cadastrosMenu">
-        <div class="sidebar-submenu-header">
-            <span>Cadastros</span>
-            <i class="bi bi-x-lg submenu-close" style="cursor:pointer"></i>
-        </div>
-        <div class="list-group list-group-flush">
-            <a href="/clientes" class="list-group-item"><i class="bi bi-people"></i> Clientes</a>
-            <a href="/fornecedores" class="list-group-item"><i class="bi bi-truck"></i> Fornecedores</a>
-            <a href="#" class="list-group-item"><i class="bi bi-box"></i> Produtos</a>
-        </div>
+    <div class="sidebar-footer">
+        <span class="user-name text-truncate">TESTE</span>
+        <a href="/logout" class="btn-logout" title="Sair"><i class="bi bi-box-arrow-right"></i></a>
     </div>
-
-    <!-- Categorias -->
-    <div class="sidebar-submenu" id="categoriasMenu">
-        <div class="sidebar-submenu-header">
-            <span>Categorias</span>
-            <i class="bi bi-x-lg submenu-close" style="cursor:pointer"></i>
-        </div>
-        <div class="list-group list-group-flush">
-            <a href="/categorias-contas-pagar" class="list-group-item"><i class="bi bi-cash-coin"></i> Categorias de Débitos</a>
-            <a href="#" class="list-group-item"><i class="bi bi-graph-up-arrow"></i> Categorias de Crédito</a>
-        </div>
-    </div>
-
-    <!-- Configurações -->
-    <div class="sidebar-submenu" id="configuracoesMenu">
-        <div class="sidebar-submenu-header">
-            <span>Configurações</span>
-            <i class="bi bi-x-lg submenu-close" style="cursor:pointer"></i>
-        </div>
-        <div class="list-group list-group-flush">
-            <a href="/configuracao-usuario" class="list-group-item"><i class="bi bi-gear"></i> Configuração do Usuário</a>
-        </div>
-    </div>
-</div>
+</nav>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Inicializa Tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
+        const sidebar = document.getElementById('sidebar');
+        const btnToggle = document.getElementById('btn-toggle-sidebar');
+        const btnExpand = document.getElementById('btn-expand-sidebar');
+        const toggles = document.querySelectorAll('.submenu-toggle');
+        
+        // Verifica se a página atual corresponde ao link e marca como ativo
+        const currentPath = window.location.pathname;
+        const links = document.querySelectorAll('.sidebar-nav a.nav-link-item');
+        
+        links.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+                
+                // Se estiver dentro de um submenu, abre ele
+                const submenu = link.closest('.sidebar-submenu');
+                if (submenu) {
+                    submenu.classList.add('open');
+                    const toggleBtn = document.querySelector(`[data-target="${submenu.id}"]`);
+                    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+                }
+            }
         });
 
-        const toggles = document.querySelectorAll('.submenu-toggle');
-        const submenus = document.querySelectorAll('.sidebar-submenu');
-        const closes = document.querySelectorAll('.submenu-close');
-
-        // Esconder todos submenus
-        function hideAllSubmenus() {
-            submenus.forEach(menu => menu.classList.remove('show'));
+        // Toggle Sidebar
+        function toggleSidebar() {
+            sidebar.classList.toggle('collapsed');
+            // Salvar estado no localStorage para persistir entre navegações
+            if (sidebar.classList.contains('collapsed')) {
+                localStorage.setItem('sidebarCollapsed', 'true');
+            } else {
+                localStorage.setItem('sidebarCollapsed', 'false');
+            }
         }
 
+        if (btnToggle) btnToggle.addEventListener('click', toggleSidebar);
+        if (btnExpand) btnExpand.addEventListener('click', toggleSidebar);
+
+        // Restaurar estado da Sidebar
+        if (localStorage.getItem('sidebarCollapsed') === 'true') {
+            sidebar.classList.add('collapsed');
+        }
+
+        // Submenus Toggle
         toggles.forEach(toggle => {
             toggle.addEventListener('click', function(e) {
                 e.preventDefault();
+                
+                // Se estiver colapsado e clicar no item, devemos abrir o flyout (aqui podemos apenas expandir a sidebar para simplificar ou implementar o flyout via JS)
+                if (sidebar.classList.contains('collapsed')) {
+                    toggleSidebar(); // Expande ao clicar no submenu se estiver colapsado
+                }
+
                 const targetId = this.getAttribute('data-target');
                 const targetMenu = document.getElementById(targetId);
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
                 
-                // Se já estiver aberto, fecha
-                if (targetMenu.classList.contains('show')) {
-                    targetMenu.classList.remove('show');
+                // Fecha outros
+                document.querySelectorAll('.sidebar-submenu.open').forEach(menu => {
+                    if (menu.id !== targetId) {
+                        menu.classList.remove('open');
+                        const otherToggle = document.querySelector(`[data-target="${menu.id}"]`);
+                        if (otherToggle) otherToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // Toggle atual
+                if (isExpanded) {
+                    this.setAttribute('aria-expanded', 'false');
+                    targetMenu.classList.remove('open');
                 } else {
-                    // Esconde outros e abre este
-                    hideAllSubmenus();
-                    targetMenu.classList.add('show');
+                    this.setAttribute('aria-expanded', 'true');
+                    targetMenu.classList.add('open');
                 }
             });
-        });
-
-        closes.forEach(btn => {
-            btn.addEventListener('click', function() {
-                hideAllSubmenus();
-            });
-        });
-
-        // Fechar submenu se clicar fora dele e da sidebar
-        document.addEventListener('click', function(event) {
-            const wrapper = document.getElementById('wrapper');
-            if (!wrapper.contains(event.target)) {
-                hideAllSubmenus();
-            }
         });
     });
 </script>

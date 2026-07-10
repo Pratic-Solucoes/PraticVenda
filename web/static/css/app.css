@@ -1,13 +1,4 @@
-/* Variáveis Globais de Cores (Nova Identidade Visual) */
-:root {
-    --brand-dark-blue: #022b4f;
-    --brand-table-header: #183457;
-    --brand-bg-light: #f4f6f9;
-}
-
-body {
-    background-color: var(--brand-bg-light);
-}
+/* Estilos extras específicos (além do styleLayout.css) */
 
 /* Scroll fixo para tabelas compridas */
 .table-responsive {
@@ -15,28 +6,11 @@ body {
     overflow-y: auto !important;
 }
 
-/* Estilo para Tabelas Premium (Novo Padrão) */
+/* Tornando cabeçalho pegajoso para as tabelas principais */
 .table-premium thead th {
-    background-color: var(--brand-table-header) !important;
-    color: #ffffff !important;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    border-bottom: none;
     position: sticky;
     top: 0;
     z-index: 1;
-}
-
-.table-premium tbody tr {
-    background-color: #ffffff;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.table-premium tbody td {
-    vertical-align: middle;
-    color: #333333;
-    padding: 0.8rem 0.5rem;
-    white-space: nowrap;
 }
 
 /* Compactar as tabelas menores se necessário */

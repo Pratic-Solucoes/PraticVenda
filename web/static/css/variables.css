@@ -1,0 +1,44 @@
+/* ══════════════════════════════════════════
+   VARIÁVEIS GLOBAIS (CORES E MEDIDAS)
+══════════════════════════════════════════ */
+:root {
+    /* Fontes */
+    --font-base: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-size-base: 14px;
+
+    /* Cores - Tons de Azul (Brand) */
+    --azul: #254d7f;
+    --azul-010: #f4f6f9;
+    --azul-025: #f0f4f8;
+    --azul-050: #e2e8f0;
+    --azul-100: #cbd5e1;
+    --azul-200: #94a3b8;
+    --azul-300: #64748b;
+    --azul-400: #475569;
+    --azul-500: #254d7f;
+    --azul-600: #1e3f66;
+    --azul-700: #183457;
+    --azul-escuro: #0f172a;
+    --azul-escuro-sombra: #0b1120;
+
+    /* Dourado / Gold */
+    --gold: linear-gradient(135deg, #d4af37, #f3e5ab, #d4af37);
+    --gold-solid: #d4af37;
+
+    /* Cores de Status / Feedback */
+    --cor-success: #1e6b3c;
+    --cor-danger: #a83a3a;
+    --cor-warning: #8a6d00;
+    --cor-info: #1a5a7f;
+    --cor-muted: #6c757d;
+
+    /* Medidas e Sidebar */
+    --sidebar-width: 250px;
+    --sidebar-collapsed: 70px;
+    --sidebar-border: rgba(255, 255, 255, 0.05);
+    --sidebar-text: #cbd5e1;
+    --sidebar-item-active: rgba(255, 255, 255, 0.1);
+
+    /* Animações e Transições */
+    --transition: 0.3s ease;
+}
