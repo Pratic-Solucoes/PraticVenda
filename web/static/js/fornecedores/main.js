@@ -1,6 +1,7 @@
 import { checkAuth } from '../utils/auth.js';
 import { carregarFornecedores } from './listarFornecedores.js';
 import { setupEditarFornecedor } from './editarFornecedor.js';
+import { setupCriarFornecedorModal } from './criarFornecedorModal.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     if (!checkAuth()) return;
@@ -85,4 +86,5 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     setupEditarFornecedor();
+    setupCriarFornecedorModal();
 });

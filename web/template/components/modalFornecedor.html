@@ -1,0 +1,37 @@
+{{define "modalFornecedor"}}
+<!-- Modal Criar Fornecedor Rápido -->
+<div class="modal fade" id="modalFornecedor" tabindex="-1" aria-labelledby="modalFornecedorLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalFornecedorLabel">Cadastrar Fornecedor Rápido</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formModalFornecedor">
+          <div class="mb-3">
+            <label for="modal_fornecedor_razao_social" class="form-label">Razão Social *</label>
+            <input type="text" class="form-control" id="modal_fornecedor_razao_social" required>
+          </div>
+          <div class="mb-3">
+            <label for="modal_fornecedor_cnpj" class="form-label">CNPJ *</label>
+            <input type="text" class="form-control" id="modal_fornecedor_cnpj" required>
+          </div>
+          <div class="mb-3">
+            <label for="modal_fornecedor_inscricao_estadual" class="form-label">Inscrição Estadual</label>
+            <input type="text" class="form-control" id="modal_fornecedor_inscricao_estadual">
+          </div>
+          <div class="mb-3">
+            <label for="modal_fornecedor_email" class="form-label">E-mail de Contato *</label>
+            <input type="email" class="form-control" id="modal_fornecedor_email" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" form="formModalFornecedor" class="btn btn-primary">Salvar Fornecedor</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}

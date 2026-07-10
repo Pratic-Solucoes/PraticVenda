@@ -35,6 +35,7 @@ func (c *ViewController) RenderizarDashboardPage(w http.ResponseWriter, r *http.
 		"web/template/pages/dashboard.html",
 		"web/template/components/sidebar.html",
 		"web/template/components/modalContaPagarAvulso.html",
+		"web/template/components/modalFornecedor.html",
 		"web/template/components/errorModal.html",
 	)
 	if err != nil {
