@@ -1,24 +1,46 @@
+/* Variáveis Globais de Cores (Nova Identidade Visual) */
+:root {
+    --brand-dark-blue: #022b4f;
+    --brand-table-header: #183457;
+    --brand-bg-light: #f4f6f9;
+}
+
+body {
+    background-color: var(--brand-bg-light);
+}
+
 /* Scroll fixo para tabelas compridas */
 .table-responsive {
     max-height: 50vh !important;
     overflow-y: auto !important;
 }
 
-/* Deixa o cabeçalho fixo durante a rolagem */
-.table-responsive thead th {
+/* Estilo para Tabelas Premium (Novo Padrão) */
+.table-premium thead th {
+    background-color: var(--brand-table-header) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: none;
     position: sticky;
     top: 0;
     z-index: 1;
-    background-color: #f8f9fa; /* Corresponde ao .table-light do Bootstrap */
-    box-shadow: 0 1px 1px rgba(0,0,0,0.05); /* Pequena sombra para separar do corpo ao rolar */
 }
 
-/* Compactar as tabelas para parecerem mais profissionais e mostrar mais informações */
-.table-sm > :not(caption) > * > * {
-    padding: 0.3rem 0.3rem; /* Menor padding vertical e horizontal */
-    font-size: 0.9rem; /* Fonte ligeiramente menor */
-    vertical-align: middle;
+.table-premium tbody tr {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e9ecef;
 }
-.table td, .table th {
-    white-space: nowrap; /* Evita quebra de linha desnecessária, mantendo compacto */
+
+.table-premium tbody td {
+    vertical-align: middle;
+    color: #333333;
+    padding: 0.8rem 0.5rem;
+    white-space: nowrap;
+}
+
+/* Compactar as tabelas menores se necessário */
+.table-sm > :not(caption) > * > * {
+    padding: 0.4rem 0.4rem;
+    font-size: 0.9rem;
 }

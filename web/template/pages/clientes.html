@@ -13,16 +13,26 @@
         <div class="d-flex" id="wrapper">
             {{template "sidebar" .}}
             <div id="page-content-wrapper">
-                <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 shadow-sm border-bottom">
-                    <div class="d-flex align-items-center w-100 justify-content-between">
-                        <h2 class="fs-4 m-0 text-dark">Cadastro de Clientes</h2>
-                        <button class="btn btn-primary fw-bold" id="btnNovoCliente">
-                            <i class="bi bi-plus-circle me-1"></i> Novo Cliente
-                        </button>
+                <nav class="navbar navbar-expand-lg navbar-light bg-white py-2 px-4 shadow-sm border-bottom">
+                    <div class="d-flex align-items-center w-100 justify-content-end">
+                        <div class="d-flex align-items-center text-secondary" style="cursor: pointer;">
+                            <i class="bi bi-person-circle fs-5 me-2"></i>
+                            <span class="fw-bold">TESTE</span>
+                            <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+                        </div>
+                        <div class="ms-4 text-secondary" style="cursor: pointer;">
+                            <i class="bi bi-bell fs-5"></i>
+                        </div>
                     </div>
                 </nav>
 
                 <div class="container-fluid px-4 py-4 content">
+                    
+                    <!-- Cabeçalho da Seção -->
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-person-badge-fill me-2 fs-5" style="color: #d97706;"></i> 
+                        <h4 class="m-0 fw-bold" style="color: var(--brand-dark-blue); font-size: 1.1rem;">Clientes</h4>
+                    </div>
                     
                     <!-- Painel de Cadastro/Edição Inline -->
                     <div class="collapse mb-4" id="collapseFormCliente">
@@ -123,29 +133,33 @@
                         </div>
                     </div>
 
-                    <!-- Barra de Filtros -->
-                    <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <!-- Bloco Principal -->
+                    <div class="card shadow-sm border-0 rounded-3 mb-4">
                         <div class="card-body p-4">
-                            <form class="row g-3 align-items-end" id="formFiltroClientes">
-                                <div class="col-md-10">
-                                    <label for="filtro_busca" class="form-label text-muted fw-bold">Buscar Cliente</label>
-                                    <input type="text" class="form-control form-control-sm" id="filtro_busca" placeholder="Nome, CPF ou CNPJ" />
+                            <!-- Barra de Pesquisa e Ações -->
+                            <div class="row g-3 align-items-end mb-4">
+                                <div class="col-md-8">
+                                    <label for="filtro_busca" class="form-label text-muted fw-bold mb-1" style="font-size: 0.9rem;">Pesquisar</label>
+                                    <input type="text" class="form-control" id="filtro_busca" placeholder="Pesquisar por nome..." />
                                 </div>
-                                <div class="col-md-2">
-                                    <button type="submit" class="btn btn-outline-secondary w-100 fw-bold">
-                                        <i class="bi bi-search me-1"></i> Filtrar
+                                <div class="col-md-4 d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn btn-success fw-bold text-white px-3" id="btnNovoCliente" style="background-color: #2e7d32; border:none; font-size: 0.9rem;">
+                                        + Novo Cliente
+                                    </button>
+                                    <button type="button" class="btn btn-secondary fw-bold px-3 text-white" id="btnFecharPesquisa" style="background-color: #6c757d; border:none; font-size: 0.9rem;">
+                                        <i class="bi bi-x"></i> Fechar
                                     </button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Tabela de Clientes -->
-                    <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card shadow-sm border-0 rounded-3">
                         <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table class="table table-hover table-sm align-middle mb-0 text-center" id="tabela_clientes">
-                                    <thead class="table-light">
+                                <table class="table table-hover table-premium mb-0 text-center" id="tabela_clientes">
+                                    <thead>
                                         <tr>
                                             <th>ID</th>
                                             <th class="text-start">Nome</th>

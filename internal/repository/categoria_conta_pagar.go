@@ -40,5 +40,10 @@ func (r *CategoriaContaPagarRepository) ListarCategorias(ctx context.Context, tx
 		}
 		categorias = append(categorias, c)
 	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return categorias, nil
 }
