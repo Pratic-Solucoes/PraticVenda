@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <!-- Nossos CSS Customizados -->
-    <link rel="stylesheet" href="/static/css/components/sidebar.css">
+    <link rel="stylesheet" href="/static/css/styleLayout.css">
     <link rel="stylesheet" href="/static/css/app.css?v=2">
     
     <meta charset="UTF-8">
@@ -15,18 +15,34 @@
     <title>Gestão - Categorias de Débitos</title>
 </head>
 <body>
-    <div class="d-flex" id="wrapper">
+    <div id="app-wrapper">
         {{template "sidebar" .}}
-        <div id="page-content-wrapper">
-            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 shadow-sm border-bottom">
-                <div class="d-flex align-items-center w-100 justify-content-between">
+        <div id="main-content">
+            <!-- Topbar -->
+            <div id="topbar">
+                <div class="topbar-title">Gestão Vendas</div>
+                
+                <div class="topbar-notif-wrap ms-auto">
+                    <div class="topbar-notif">
+                        <i class="bi bi-bell"></i>
+                        <span class="badge-notif">2</span>
+                    </div>
+                </div>
+                
+                <div class="topbar-user-wrap">
+                    <i class="bi bi-person-circle topbar-user-icon"></i>
+                    <span class="topbar-user-name">TESTE</span>
+                    <i class="bi bi-chevron-down topbar-user-chevron"></i>
+                </div>
+            </div>
+
+            <div id="page-content">
+                <div class="d-flex align-items-center justify-content-between mb-4">
                     <h2 class="fs-4 m-0 text-dark">Categorias de Débitos</h2>
                     <button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#modalCategoria">
                         <i class="bi bi-plus-circle me-1"></i> Nova Categoria
                     </button>
                 </div>
-            </nav>
-            <div class="container-fluid px-4 py-4 content">
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body p-0">
                         <div class="table-responsive">
