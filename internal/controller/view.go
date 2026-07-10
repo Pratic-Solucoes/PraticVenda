@@ -35,7 +35,6 @@ func (c *ViewController) RenderizarDashboardPage(w http.ResponseWriter, r *http.
 		"web/template/pages/dashboard.html",
 		"web/template/components/sidebar.html",
 		"web/template/components/modalContaPagarAvulso.html",
-		"web/template/components/modalFornecedor.html",
 		"web/template/components/errorModal.html",
 	)
 	if err != nil {
@@ -77,8 +76,6 @@ func (c *ViewController) RenderizarClientesPage(w http.ResponseWriter, r *http.R
 	tmpl, err := template.ParseFiles(
 		"web/template/pages/clientes.html",
 		"web/template/components/sidebar.html",
-		"web/template/components/modalCliente.html",
-		"web/template/components/modalEditarCliente.html",
 		"web/template/components/errorModal.html",
 	)
 	if err != nil {
@@ -98,8 +95,6 @@ func (c *ViewController) RenderizarFornecedoresPage(w http.ResponseWriter, r *ht
 	tmpl, err := template.ParseFiles(
 		"web/template/pages/fornecedores.html",
 		"web/template/components/sidebar.html",
-		"web/template/components/modalFornecedor.html",
-		"web/template/components/modalEditarFornecedor.html",
 		"web/template/components/errorModal.html",
 	)
 	if err != nil {
