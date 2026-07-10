@@ -35,3 +35,26 @@ func (s *FormaPagamentoService) Criar(ctx context.Context, fp *model.FormaPagame
 
 	return fpCriado, nil
 }
+
+func (s *FormaPagamentoService) Listar(ctx context.Context) ([]model.FormaPagamento, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := helpers.SetSchema(ctx, tx); err != nil {
+		return nil, err
+	}
+
+	fps, err := s.repository.FormasPagamento.Listar(ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+
+	return fps, nil
+}

@@ -46,6 +46,7 @@ type Service struct {
 	}
 	FormasPagamento interface {
 		Criar(ctx context.Context, fp *model.FormaPagamento) (*model.FormaPagamento, error)
+		Listar(ctx context.Context) ([]model.FormaPagamento, error)
 	}
 	Dashboard *DashboardService
 }

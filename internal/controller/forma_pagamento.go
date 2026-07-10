@@ -29,3 +29,15 @@ func (c *FormaPagamentoController) Criar(w http.ResponseWriter, r *http.Request)
 	resposta.Padrao(w, http.StatusCreated, fp)
 
 }
+
+func (c *FormaPagamentoController) Listar(w http.ResponseWriter, r *http.Request) {
+
+	fp, err := c.service.FormasPagamento.Listar(r.Context())
+	if err != nil {
+		http.Error(w, "erro ao listar formas de pagamento: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	resposta.Padrao(w, http.StatusOK, fp)
+
+}

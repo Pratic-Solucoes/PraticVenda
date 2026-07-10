@@ -43,6 +43,7 @@ type Repository struct {
 	}
 	FormasPagamento interface {
 		Criar(ctx context.Context, tx *sql.Tx, fp *model.FormaPagamento) (*model.FormaPagamento, error)
+		Listar(ctx context.Context, tx *sql.Tx) ([]model.FormaPagamento, error)
 	}
 	CategoriasContasPagar interface {
 		CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error)
