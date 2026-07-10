@@ -38,7 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Handle Form toggle
   function abrirFormularioNovo() {
-    formClienteTitulo.innerHTML = '<i class="bi bi-truck me-2"></i> Novo Cliente';
+    if (window.resetarClienteIdAtual) window.resetarClienteIdAtual();
+    formClienteTitulo.innerHTML = '<i class="bi bi-person-plus-fill me-2"></i> Novo Cliente';
     formEditarCliente.reset();
     editClienteId.value = "";
     

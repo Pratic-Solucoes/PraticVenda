@@ -316,6 +316,10 @@ export function setupEditarCliente() {
     }
   };
 
+  window.resetarClienteIdAtual = function() {
+    clienteIdAtual = null;
+  };
+
   configurarTipoPessoa();
 
   const formEditar = document.getElementById("formEditarCliente");
