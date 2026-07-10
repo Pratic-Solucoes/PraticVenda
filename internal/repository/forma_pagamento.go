@@ -12,19 +12,15 @@ type FormaPagamentoRepository struct {
 
 func (r *FormaPagamentoRepository) Criar(ctx context.Context, tx *sql.Tx, fp *model.FormaPagamento) (*model.FormaPagamento, error) {
 
-	query := `insert into tb_formas_pagamento(descricao) values ($1)`
+	query := `insert into tb_formas_pagamento(descricao) values ($1) returning id`
 
-	result, err := tx.ExecContext(ctx, query, fp.Descricao)
+	var id uint64
+	err := tx.QueryRowContext(ctx, query, fp.Descricao).Scan(&id)
 	if err != nil {
 		return nil, err
 	}
 
-	id, err := result.LastInsertId()
-	if err != nil {
-		return nil, err
-	}
-
-	fp.ID = uint64(id)
+	fp.ID = id
 
 	return fp, nil
 }
