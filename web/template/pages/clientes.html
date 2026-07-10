@@ -53,33 +53,33 @@
                                     <!-- Dados Básicos -->
                                     <div class="tab-pane fade show active" id="edit-basico" role="tabpanel">
                                         <form id="formEditarCliente">
-                                            <div class="row g-3">
+                                            <div class="row g-2">
                                                 <div class="col-md-8">
-                                                    <label for="edit_cliente_nome" class="form-label fw-semibold">Nome *</label>
-                                                    <input type="text" class="form-control" id="edit_cliente_nome" required />
+                                                    <label for="edit_cliente_nome" class="form-label form-label-sm fw-semibold mb-1">Nome *</label>
+                                                    <input type="text" class="form-control form-control-sm" id="edit_cliente_nome" required />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label for="edit_cliente_tipo" class="form-label fw-semibold">Tipo *</label>
-                                                    <select class="form-select" id="edit_cliente_tipo" required>
+                                                    <label for="edit_cliente_tipo" class="form-label form-label-sm fw-semibold mb-1">Tipo *</label>
+                                                    <select class="form-select form-select-sm" id="edit_cliente_tipo" required>
                                                         <option value="PF">Pessoa Física</option>
                                                         <option value="PJ">Pessoa Jurídica</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="edit_cliente_cpf_cnpj" class="form-label fw-semibold">CPF/CNPJ *</label>
-                                                    <input type="text" class="form-control" id="edit_cliente_cpf_cnpj" required />
+                                                    <label for="edit_cliente_cpf_cnpj" class="form-label form-label-sm fw-semibold mb-1">CPF/CNPJ *</label>
+                                                    <input type="text" class="form-control form-control-sm" id="edit_cliente_cpf_cnpj" required />
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="edit_cliente_ie" class="form-label fw-semibold">Inscrição Estadual</label>
-                                                    <input type="text" class="form-control" id="edit_cliente_ie" />
+                                                    <label for="edit_cliente_ie" class="form-label form-label-sm fw-semibold mb-1">Inscrição Estadual</label>
+                                                    <input type="text" class="form-control form-control-sm" id="edit_cliente_ie" />
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="edit_cliente_email" class="form-label fw-semibold">E-mail de Contato *</label>
-                                                    <input type="email" class="form-control" id="edit_cliente_email" required />
+                                                    <label for="edit_cliente_email" class="form-label form-label-sm fw-semibold mb-1">E-mail de Contato *</label>
+                                                    <input type="email" class="form-control form-control-sm" id="edit_cliente_email" required />
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="edit_cliente_contribuinte" class="form-label fw-semibold">Indicador de Contribuinte</label>
-                                                    <select class="form-select" id="edit_cliente_contribuinte">
+                                                    <label for="edit_cliente_contribuinte" class="form-label form-label-sm fw-semibold mb-1">Indicador de Contribuinte</label>
+                                                    <select class="form-select form-select-sm" id="edit_cliente_contribuinte">
                                                         <option value="1">Contribuinte ICMS</option>
                                                         <option value="2">Contribuinte Isento</option>
                                                         <option value="9">Não Contribuinte</option>
@@ -129,7 +129,7 @@
                             <form class="row g-3 align-items-end" id="formFiltroClientes">
                                 <div class="col-md-10">
                                     <label for="filtro_busca" class="form-label text-muted fw-bold">Buscar Cliente</label>
-                                    <input type="text" class="form-control" id="filtro_busca" placeholder="Nome, CPF ou CNPJ" />
+                                    <input type="text" class="form-control form-control-sm" id="filtro_busca" placeholder="Nome, CPF ou CNPJ" />
                                 </div>
                                 <div class="col-md-2">
                                     <button type="submit" class="btn btn-outline-secondary w-100 fw-bold">
@@ -201,14 +201,14 @@
                         </div>
                         <div class="modal-body p-4">
                             <input type="hidden" id="endereco_id" />
-                            <div class="row g-3">
-                                <div class="col-md-3"><label for="end_cep" class="form-label fw-semibold">CEP *</label><input type="text" class="form-control" id="end_cep" required /></div>
-                                <div class="col-md-9"><label for="end_logradouro" class="form-label fw-semibold">Logradouro *</label><input type="text" class="form-control" id="end_logradouro" required /></div>
-                                <div class="col-md-3"><label for="end_numero" class="form-label fw-semibold">Número *</label><input type="text" class="form-control" id="end_numero" required /></div>
-                                <div class="col-md-4"><label for="end_bairro" class="form-label fw-semibold">Bairro *</label><input type="text" class="form-control" id="end_bairro" required /></div>
-                                <div class="col-md-5"><label for="end_municipio" class="form-label fw-semibold">Município *</label><input type="text" class="form-control" id="end_municipio" required /></div>
-                                <div class="col-md-2"><label for="end_uf" class="form-label fw-semibold">UF *</label><input type="text" class="form-control" id="end_uf" required /></div>
-                                <div class="col-md-4"><label for="end_codigo_municipio" class="form-label fw-semibold">Cód. Município</label><input type="text" class="form-control" id="end_codigo_municipio" /></div>
+                            <div class="row g-2">
+                                <div class="col-md-3"><label for="end_cep" class="form-label form-label-sm fw-semibold mb-1">CEP *</label><input type="text" class="form-control form-control-sm" id="end_cep" required /></div>
+                                <div class="col-md-9"><label for="end_logradouro" class="form-label form-label-sm fw-semibold mb-1">Logradouro *</label><input type="text" class="form-control form-control-sm" id="end_logradouro" required /></div>
+                                <div class="col-md-3"><label for="end_numero" class="form-label form-label-sm fw-semibold mb-1">Número *</label><input type="text" class="form-control form-control-sm" id="end_numero" required /></div>
+                                <div class="col-md-4"><label for="end_bairro" class="form-label form-label-sm fw-semibold mb-1">Bairro *</label><input type="text" class="form-control form-control-sm" id="end_bairro" required /></div>
+                                <div class="col-md-5"><label for="end_municipio" class="form-label form-label-sm fw-semibold mb-1">Município *</label><input type="text" class="form-control form-control-sm" id="end_municipio" required /></div>
+                                <div class="col-md-2"><label for="end_uf" class="form-label form-label-sm fw-semibold mb-1">UF *</label><input type="text" class="form-control form-control-sm" id="end_uf" required /></div>
+                                <div class="col-md-4"><label for="end_codigo_municipio" class="form-label form-label-sm fw-semibold mb-1">Cód. Município</label><input type="text" class="form-control form-control-sm" id="end_codigo_municipio" /></div>
                             </div>
                         </div>
                         <div class="modal-footer bg-light">
@@ -229,9 +229,9 @@
                         </div>
                         <div class="modal-body p-4">
                             <input type="hidden" id="telefone_id" />
-                            <div class="row g-3">
-                                <div class="col-md-4"><label for="tel_ddd" class="form-label fw-semibold">DDD *</label><input type="text" class="form-control" id="tel_ddd" required /></div>
-                                <div class="col-md-8"><label for="tel_numero" class="form-label fw-semibold">Número *</label><input type="text" class="form-control" id="tel_numero" required /></div>
+                            <div class="row g-2">
+                                <div class="col-md-4"><label for="tel_ddd" class="form-label form-label-sm fw-semibold mb-1">DDD *</label><input type="text" class="form-control form-control-sm" id="tel_ddd" required /></div>
+                                <div class="col-md-8"><label for="tel_numero" class="form-label form-label-sm fw-semibold mb-1">Número *</label><input type="text" class="form-control form-control-sm" id="tel_numero" required /></div>
                             </div>
                         </div>
                         <div class="modal-footer bg-light">
@@ -248,3 +248,4 @@
         <script type="module" src="/static/js/clientes/main.js"></script>
     </body>
 </html>
+
