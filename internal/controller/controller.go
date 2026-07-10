@@ -15,6 +15,7 @@ type Controller struct {
 		RenderizarCategoriasPage(w http.ResponseWriter, r *http.Request)
 		RenderizarConfiguracaoUsuarioPage(w http.ResponseWriter, r *http.Request)
 		RenderizarPdvPage(w http.ResponseWriter, r *http.Request)
+		RenderizarFormasPagamentoPage(w http.ResponseWriter, r *http.Request)
 	}
 	Login interface {
 		Login(w http.ResponseWriter, r *http.Request)
@@ -56,6 +57,9 @@ type Controller struct {
 		CriarCategoria(w http.ResponseWriter, r *http.Request)
 		ListarCategorias(w http.ResponseWriter, r *http.Request)
 	}
+	FormasPagamento interface {
+		Criar(w http.ResponseWriter, r *http.Request)
+	}
 	Dashboard interface {
 		ResumoDashboard(w http.ResponseWriter, r *http.Request)
 	}
@@ -63,13 +67,14 @@ type Controller struct {
 
 func NewController(service *service.Service) *Controller {
 	return &Controller{
-		View:         &ViewController{},
-		Login:        &LoginController{service: service},
-		Usuarios:     &UsuarioController{service: service},
-		Clientes:     &ClienteController{service: service},
-		Fornecedores: &FornecedorController{service: service},
-		CategoriasContasPagar:   &CategoriaContaPagarController{service: service},
-		ContasPagar:  &ContaPagarController{service: service},
-		Dashboard:    &DashboardController{service: service.Dashboard},
+		View:                  &ViewController{},
+		Login:                 &LoginController{service: service},
+		Usuarios:              &UsuarioController{service: service},
+		Clientes:              &ClienteController{service: service},
+		Fornecedores:          &FornecedorController{service: service},
+		CategoriasContasPagar: &CategoriaContaPagarController{service: service},
+		ContasPagar:           &ContaPagarController{service: service},
+		FormasPagamento:       &FormaPagamentoController{service: service},
+		Dashboard:             &DashboardController{service: service.Dashboard},
 	}
 }

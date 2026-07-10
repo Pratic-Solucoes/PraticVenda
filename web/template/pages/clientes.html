@@ -1,82 +1,139 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-            crossorigin="anonymous"
-        />
-        <!-- Bootstrap Icons -->
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        />
-
-        <!-- Nossos CSS Customizados -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
         <link rel="stylesheet" href="/static/css/components/sidebar.css" />
         <link rel="stylesheet" href="/static/css/app.css?v=2" />
-
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Gestão - Clientes</title>
     </head>
-
     <body>
         <div class="d-flex" id="wrapper">
-            <!-- Sidebar via Template -->
             {{template "sidebar" .}}
-
-            <!-- Page Content -->
             <div id="page-content-wrapper">
-                <!-- Navbar de Topo -->
-                <nav
-                    class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 shadow-sm border-bottom"
-                >
-                    <div
-                        class="d-flex align-items-center w-100 justify-content-between"
-                    >
+                <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 shadow-sm border-bottom">
+                    <div class="d-flex align-items-center w-100 justify-content-between">
                         <h2 class="fs-4 m-0 text-dark">Cadastro de Clientes</h2>
-
-                        <!-- Botão para disparar o Modal -->
-                        <button
-                            class="btn btn-primary fw-bold"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalCliente"
-                        >
+                        <button class="btn btn-primary fw-bold" id="btnNovoCliente">
                             <i class="bi bi-plus-circle me-1"></i> Novo Cliente
                         </button>
                     </div>
                 </nav>
 
                 <div class="container-fluid px-4 py-4 content">
+                    
+                    <!-- Painel de Cadastro/Edição Inline -->
+                    <div class="collapse mb-4" id="collapseFormCliente">
+                        <div class="card shadow-sm border-0 rounded-4 border-start border-primary border-4">
+                            <div class="card-header bg-white border-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 text-primary fw-bold" id="formClienteTitulo">
+                                    <i class="bi bi-truck me-2"></i> Novo Cliente
+                                </h5>
+                                <button type="button" class="btn-close" aria-label="Close" id="btnFecharFormCliente"></button>
+                            </div>
+                            <div class="card-body p-4">
+                                <input type="hidden" id="edit_cliente_id" />
+                                
+                                <!-- Tabs do Formulário -->
+                                <ul class="nav nav-tabs mb-3" id="editClienteTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active fw-bold" id="edit-basico-tab" data-bs-toggle="tab" data-bs-target="#edit-basico" type="button" role="tab" aria-selected="true">Dados Básicos</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link fw-bold" id="edit-enderecos-tab" data-bs-toggle="tab" data-bs-target="#edit-enderecos" type="button" role="tab" aria-selected="false">Endereços</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link fw-bold" id="edit-telefones-tab" data-bs-toggle="tab" data-bs-target="#edit-telefones" type="button" role="tab" aria-selected="false">Telefones</button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content" id="editClienteTabsContent">
+                                    <!-- Dados Básicos -->
+                                    <div class="tab-pane fade show active" id="edit-basico" role="tabpanel">
+                                        <form id="formEditarCliente">
+                                            <div class="row g-3">
+                                                <div class="col-md-8">
+                                                    <label for="edit_cliente_nome" class="form-label fw-semibold">Nome *</label>
+                                                    <input type="text" class="form-control" id="edit_cliente_nome" required />
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="edit_cliente_tipo" class="form-label fw-semibold">Tipo *</label>
+                                                    <select class="form-select" id="edit_cliente_tipo" required>
+                                                        <option value="PF">Pessoa Física</option>
+                                                        <option value="PJ">Pessoa Jurídica</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="edit_cliente_cpf_cnpj" class="form-label fw-semibold">CPF/CNPJ *</label>
+                                                    <input type="text" class="form-control" id="edit_cliente_cpf_cnpj" required />
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="edit_cliente_ie" class="form-label fw-semibold">Inscrição Estadual</label>
+                                                    <input type="text" class="form-control" id="edit_cliente_ie" />
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="edit_cliente_email" class="form-label fw-semibold">E-mail de Contato *</label>
+                                                    <input type="email" class="form-control" id="edit_cliente_email" required />
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="edit_cliente_contribuinte" class="form-label fw-semibold">Indicador de Contribuinte</label>
+                                                    <select class="form-select" id="edit_cliente_contribuinte">
+                                                        <option value="1">Contribuinte ICMS</option>
+                                                        <option value="2">Contribuinte Isento</option>
+                                                        <option value="9">Não Contribuinte</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 d-flex align-items-end pb-2">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="edit_cliente_is_consumidor_final" />
+                                                        <label class="form-check-label fw-semibold" for="edit_cliente_is_consumidor_final">Consumidor Final</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-4 text-end border-top pt-3">
+                                                <button type="button" class="btn btn-light me-2" id="btnCancelarCliente">Cancelar</button>
+                                                <button type="submit" class="btn btn-success px-4 fw-bold">Salvar Dados</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- Endereços -->
+                                    <div class="tab-pane fade" id="edit-enderecos" role="tabpanel">
+                                        <div class="d-flex justify-content-end mb-3">
+                                            <button type="button" class="btn btn-outline-primary btn-sm fw-bold" id="btnNovoEndereco">
+                                                <i class="bi bi-plus-circle me-1"></i> Novo Endereço
+                                            </button>
+                                        </div>
+                                        <div id="containerEnderecosCliente"></div>
+                                    </div>
+
+                                    <!-- Telefones -->
+                                    <div class="tab-pane fade" id="edit-telefones" role="tabpanel">
+                                        <div class="d-flex justify-content-end mb-3">
+                                            <button type="button" class="btn btn-outline-primary btn-sm fw-bold" id="btnNovoTelefone">
+                                                <i class="bi bi-plus-circle me-1"></i> Novo Telefone
+                                            </button>
+                                        </div>
+                                        <div id="containerTelefonesCliente"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Barra de Filtros -->
                     <div class="card shadow-sm border-0 rounded-4 mb-4">
                         <div class="card-body p-4">
-                            <form
-                                class="row g-3 align-items-end"
-                                id="formFiltroClientes"
-                            >
+                            <form class="row g-3 align-items-end" id="formFiltroClientes">
                                 <div class="col-md-10">
-                                    <label
-                                        for="filtro_busca"
-                                        class="form-label text-muted fw-bold"
-                                        >Buscar Cliente</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="filtro_busca"
-                                        placeholder="Nome, CPF ou CNPJ"
-                                    />
+                                    <label for="filtro_busca" class="form-label text-muted fw-bold">Buscar Cliente</label>
+                                    <input type="text" class="form-control" id="filtro_busca" placeholder="Nome, CPF ou CNPJ" />
                                 </div>
                                 <div class="col-md-2">
-                                    <button
-                                        type="submit"
-                                        class="btn btn-outline-secondary w-100 fw-bold"
-                                    >
-                                        <i class="bi bi-search me-1"></i>
-                                        Filtrar
+                                    <button type="submit" class="btn btn-outline-secondary w-100 fw-bold">
+                                        <i class="bi bi-search me-1"></i> Filtrar
                                     </button>
                                 </div>
                             </form>
@@ -87,9 +144,7 @@
                     <div class="card shadow-sm border-0 rounded-4">
                         <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table
-                                    class="table table-hover align-middle mb-0 text-center"
-                                >
+                                <table class="table table-hover table-sm align-middle mb-0 text-center" id="tabela_clientes">
                                     <thead class="table-light">
                                         <tr>
                                             <th>ID</th>
@@ -102,15 +157,8 @@
                                         </tr>
                                     </thead>
                                     <tbody id="tabela_clientes_body">
-                                        <!-- Preenchido via JS -->
                                         <tr>
-                                            <td
-                                                colspan="7"
-                                                class="text-muted py-5 text-center"
-                                                id="loading_resultados"
-                                            >
-                                                Carregando...
-                                            </td>
+                                            <td colspan="7" class="text-muted py-5 text-center" id="loading_resultados">Carregando...</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -121,14 +169,82 @@
             </div>
         </div>
 
-        <!-- Modais -->
-        {{template "errorModal" .}} {{template "modalCliente" .}} {{template
-        "modalEditarCliente" .}}
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-            crossorigin="anonymous"
-        ></script>
+        <!-- Templates para Itens (Endereço e Telefone) -->
+        <template id="template-endereco-item">
+            <div class="card mb-2 border shadow-sm">
+                <div class="card-body py-2">
+                    <p class="mb-1"><strong class="logradouro"></strong>, <span class="numero"></span></p>
+                    <p class="mb-0 text-muted small"><span class="bairro"></span> - <span class="municipio"></span>/<span class="uf"></span> - CEP: <span class="cep"></span></p>
+                </div>
+                <div class="card-footer bg-transparent border-0 text-end pt-0 pb-2">
+                    <button type="button" class="btn btn-outline-primary btn-sm btn-editar-endereco"><i class="bi bi-pencil"></i> Editar</button>
+                </div>
+            </div>
+        </template>
+        <template id="template-telefone-item">
+            <div class="card mb-2 border shadow-sm">
+                <div class="card-body d-flex justify-content-between align-items-center py-2">
+                    <p class="mb-0 fw-semibold">(<span class="ddd"></span>) <span class="numero"></span></p>
+                    <button type="button" class="btn btn-outline-primary btn-sm btn-editar-telefone"><i class="bi bi-pencil"></i> Editar</button>
+                </div>
+            </div>
+        </template>
+
+        <!-- Sub-modais de Endereço e Telefone -->
+        <div class="modal fade" id="modalEnderecoCliente" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content border-0 shadow">
+                    <form id="formEnderecoCliente">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title">Dados do Endereço</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <input type="hidden" id="endereco_id" />
+                            <div class="row g-3">
+                                <div class="col-md-3"><label for="end_cep" class="form-label fw-semibold">CEP *</label><input type="text" class="form-control" id="end_cep" required /></div>
+                                <div class="col-md-9"><label for="end_logradouro" class="form-label fw-semibold">Logradouro *</label><input type="text" class="form-control" id="end_logradouro" required /></div>
+                                <div class="col-md-3"><label for="end_numero" class="form-label fw-semibold">Número *</label><input type="text" class="form-control" id="end_numero" required /></div>
+                                <div class="col-md-4"><label for="end_bairro" class="form-label fw-semibold">Bairro *</label><input type="text" class="form-control" id="end_bairro" required /></div>
+                                <div class="col-md-5"><label for="end_municipio" class="form-label fw-semibold">Município *</label><input type="text" class="form-control" id="end_municipio" required /></div>
+                                <div class="col-md-2"><label for="end_uf" class="form-label fw-semibold">UF *</label><input type="text" class="form-control" id="end_uf" required /></div>
+                                <div class="col-md-4"><label for="end_codigo_municipio" class="form-label fw-semibold">Cód. Município</label><input type="text" class="form-control" id="end_codigo_municipio" /></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">Salvar Endereço</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalTelefoneCliente" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow">
+                    <form id="formTelefoneCliente">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title">Dados do Telefone</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <input type="hidden" id="telefone_id" />
+                            <div class="row g-3">
+                                <div class="col-md-4"><label for="tel_ddd" class="form-label fw-semibold">DDD *</label><input type="text" class="form-control" id="tel_ddd" required /></div>
+                                <div class="col-md-8"><label for="tel_numero" class="form-label fw-semibold">Número *</label><input type="text" class="form-control" id="tel_numero" required /></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">Salvar Telefone</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {{template "errorModal" .}}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script type="module" src="/static/js/clientes/main.js"></script>
     </body>
 </html>

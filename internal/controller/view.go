@@ -171,3 +171,23 @@ func (c *ViewController) RenderizarPdvPage(w http.ResponseWriter, r *http.Reques
 		return
 	}
 }
+
+func (c *ViewController) RenderizarFormasPagamentoPage(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles(
+		"web/template/pages/formas_pagamento.html",
+		"web/template/components/sidebar.html",
+		"web/template/components/modalFormaPagamento.html",
+		"web/template/components/errorModal.html",
+	)
+	if err != nil {
+		fmt.Printf("Erro ao renderizar página de formas de pagamento: %v\n", err)
+		http.Error(w, "Erro interno ao renderizar página", http.StatusInternalServerError)
+		return
+	}
+
+	if err := tmpl.Execute(w, nil); err != nil {
+		fmt.Printf("Erro ao executar template de formas de pagamento: %v\n", err)
+		http.Error(w, "Erro interno", http.StatusInternalServerError)
+		return
+	}
+}

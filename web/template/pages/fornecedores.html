@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
@@ -15,10 +13,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão - Fornecedores</title>
 </head>
-
 <body>
     <div class="d-flex" id="wrapper">
-        
         <!-- Sidebar via Template -->
         {{template "sidebar" .}}
         
@@ -29,8 +25,8 @@
                 <div class="d-flex align-items-center w-100 justify-content-between">
                     <h2 class="fs-4 m-0 text-dark">Cadastro de Fornecedores</h2>
                     
-                    <!-- Botão para disparar o Modal -->
-                    <button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#modalFornecedor">
+                    <!-- Botão para exibir o formulário inline -->
+                    <button class="btn btn-primary fw-bold" id="btnNovoFornecedor">
                         <i class="bi bi-plus-circle me-1"></i> Novo Fornecedor
                     </button>
                 </div>
@@ -38,6 +34,85 @@
 
             <div class="container-fluid px-4 py-4 content">
                 
+                <!-- Painel de Cadastro/Edição Inline -->
+                <div class="collapse mb-4" id="collapseFormFornecedor">
+                    <div class="card shadow-sm border-0 rounded-4 border-start border-primary border-4">
+                        <div class="card-header bg-white border-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 text-primary fw-bold" id="formFornecedorTitulo">
+                                <i class="bi bi-truck me-2"></i> Novo Fornecedor
+                            </h5>
+                            <button type="button" class="btn-close" aria-label="Close" id="btnFecharFormFornecedor"></button>
+                        </div>
+                        <div class="card-body p-4">
+                            <form id="formInlineFornecedor">
+                                <input type="hidden" id="edit_fornecedor_id">
+                                
+                                <!-- Nav Tabs -->
+                                <ul class="nav nav-tabs mb-3" id="editFornecedorTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active fw-bold" id="basico-tab" data-bs-toggle="tab" data-bs-target="#basico" type="button" role="tab" aria-controls="basico" aria-selected="true">Dados Básicos</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link fw-bold" id="enderecos-tab" data-bs-toggle="tab" data-bs-target="#enderecos" type="button" role="tab" aria-controls="enderecos" aria-selected="false">Endereços</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link fw-bold" id="telefones-tab" data-bs-toggle="tab" data-bs-target="#telefones" type="button" role="tab" aria-controls="telefones" aria-selected="false">Telefones</button>
+                                    </li>
+                                </ul>
+
+                                <!-- Tab Content -->
+                                <div class="tab-content" id="editFornecedorTabsContent">
+                                    <!-- Dados Básicos Tab -->
+                                    <div class="tab-pane fade show active" id="basico" role="tabpanel" aria-labelledby="basico-tab">
+                                        <div class="row g-3">
+                                            <div class="col-md-12">
+                                                <label for="edit_fornecedor_razao_social" class="form-label fw-semibold">Razão Social *</label>
+                                                <input type="text" class="form-control" id="edit_fornecedor_razao_social" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="edit_fornecedor_cnpj" class="form-label fw-semibold">CNPJ *</label>
+                                                <input type="text" class="form-control" id="edit_fornecedor_cnpj" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="edit_fornecedor_inscricao_estadual" class="form-label fw-semibold">Inscrição Estadual</label>
+                                                <input type="text" class="form-control" id="edit_fornecedor_inscricao_estadual">
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="edit_fornecedor_email" class="form-label fw-semibold">E-mail de Contato *</label>
+                                                <input type="email" class="form-control" id="edit_fornecedor_email" required>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Endereços Tab -->
+                                    <div class="tab-pane fade" id="enderecos" role="tabpanel" aria-labelledby="enderecos-tab">
+                                        <div id="containerEnderecos">
+                                            <!-- Endereços serão inseridos aqui dinamicamente -->
+                                        </div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm mt-3 fw-bold" id="btnAddEndereco">
+                                            <i class="bi bi-plus-circle"></i> Adicionar Endereço
+                                        </button>
+                                    </div>
+
+                                    <!-- Telefones Tab -->
+                                    <div class="tab-pane fade" id="telefones" role="tabpanel" aria-labelledby="telefones-tab">
+                                        <div id="containerTelefones">
+                                            <!-- Telefones serão inseridos aqui dinamicamente -->
+                                        </div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm mt-3 fw-bold" id="btnAddTelefone">
+                                            <i class="bi bi-plus-circle"></i> Adicionar Telefone
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-end border-top pt-3">
+                                    <button type="button" class="btn btn-light me-2" id="btnCancelarFornecedor">Cancelar</button>
+                                    <button type="submit" class="btn btn-success px-4 fw-bold">Salvar Fornecedor</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Barra de Filtros -->
                 <div class="card shadow-sm border-0 rounded-4 mb-4">
                     <div class="card-body p-4">
@@ -59,7 +134,7 @@
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0 text-center">
+                            <table class="table table-hover table-sm align-middle mb-0 text-center" id="tabela_fornecedores">
                                 <thead class="table-light">
                                     <tr>
                                         <th>ID</th>
@@ -86,14 +161,9 @@
         </div>
     </div>
 
-    <!-- Modais -->
-    {{template "modalFornecedor" .}}
-    {{template "modalEditarFornecedor" .}}
     {{template "errorModal" .}}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script type="module" src="/static/js/fornecedores/main.js"></script>
 </body>
 </html>

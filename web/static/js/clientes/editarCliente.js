@@ -5,7 +5,6 @@ import { validaRespostaRequisicao } from "../utils/resposta.js";
 import { fecharModal } from "../utils/fecharModal.js";
 
 let clienteIdAtual = null;
-let modalEditar = null;
 let modalEndereco = null;
 let modalTelefone = null;
 
@@ -25,6 +24,13 @@ async function requisicaoAPI(url, options = {}) {
 
 async function buscarClienteAPI(id) {
   return requisicaoAPI(`/api/clientes/${id}`, { method: "GET" });
+}
+
+async function criarClienteAPI(payload) {
+  return requisicaoAPI(`/api/clientes`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 
 async function atualizarClienteAPI(id, payload) {
@@ -144,10 +150,6 @@ async function carregarDadosCliente(id) {
   renderizarTelefones(cliente.telefones || []);
 }
 
-function exibirModalEditar() {
-  modalEditar.show();
-}
-
 function abrirModalEndereco(endereco = {}) {
   const form = document.getElementById("formEnderecoCliente");
   form.reset();
@@ -210,7 +212,16 @@ async function salvarDadosCadastrais(e) {
   e.preventDefault();
 
   try {
-    await atualizarClienteAPI(clienteIdAtual, montarPayloadCliente());
+    if (clienteIdAtual) {
+      await atualizarClienteAPI(clienteIdAtual, montarPayloadCliente());
+    } else {
+      await criarClienteAPI(montarPayloadCliente());
+    }
+    
+    // Sucesso, fechar o formulário e recarregar
+    if (window.fecharFormularioInlineCliente) {
+      window.fecharFormularioInlineCliente();
+    }
     carregarClientes();
   } catch (err) {
     showError(err.message);
@@ -280,24 +291,26 @@ function configurarTipoPessoa() {
 }
 
 export function setupEditarCliente() {
-  const modalEl = document.getElementById("modalEditarCliente");
-  if (!modalEl) return;
-
-  modalEditar = bootstrap.Modal.getOrCreateInstance(modalEl);
-  modalEndereco = bootstrap.Modal.getOrCreateInstance(
-    document.getElementById("modalEnderecoCliente")
-  );
-  modalTelefone = bootstrap.Modal.getOrCreateInstance(
-    document.getElementById("modalTelefoneCliente")
-  );
+  // Configurar modais de endereço e telefone
+  const modalEndEl = document.getElementById("modalEnderecoCliente");
+  const modalTelEl = document.getElementById("modalTelefoneCliente");
+  if (modalEndEl) modalEndereco = bootstrap.Modal.getOrCreateInstance(modalEndEl);
+  if (modalTelEl) modalTelefone = bootstrap.Modal.getOrCreateInstance(modalTelEl);
 
   window.abrirModalEditarCliente = async function (id) {
     clienteIdAtual = id;
+    
+    // Change Title
+    const title = document.getElementById("formClienteTitulo");
+    if (title) title.innerHTML = '<i class="bi bi-pencil-square me-2"></i> Editando Cliente #' + id;
+
     resetarAbaInicial();
 
     try {
       await carregarDadosCliente(id);
-      exibirModalEditar();
+      if (window.abrirFormularioInlineCliente) {
+        window.abrirFormularioInlineCliente();
+      }
     } catch (err) {
       showError(err.message);
     }

@@ -33,9 +33,13 @@ export function setupEditarFornecedor() {
                 fornecedor.telefones.forEach(tel => window.adicionarTelefone(tel));
             }
 
-            const modalEditarEl = document.getElementById('modalEditarFornecedor');
-            const modalEditar = bootstrap.Modal.getOrCreateInstance(modalEditarEl);
-            modalEditar.show();
+            // Change Title
+            const title = document.getElementById("formFornecedorTitulo");
+            if (title) title.innerHTML = '<i class="bi bi-pencil-square me-2"></i> Editando Fornecedor #' + id;
+
+            if (window.abrirFormularioInlineFornecedor) {
+                window.abrirFormularioInlineFornecedor();
+            }
         } catch(err) {
             console.error(err);
             showError("Erro de comunicação ao buscar fornecedor.");
@@ -108,7 +112,7 @@ export function setupEditarFornecedor() {
     const btnAddTelefone = document.getElementById('btnAddTelefone');
     if (btnAddTelefone) btnAddTelefone.addEventListener('click', () => window.adicionarTelefone());
 
-    const formEditar = document.getElementById('formEditarFornecedor');
+    const formEditar = document.getElementById('formInlineFornecedor');
     if (formEditar) {
         formEditar.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -144,9 +148,12 @@ export function setupEditarFornecedor() {
                 });
             });
 
+            const method = id ? 'PUT' : 'POST';
+            const endpoint = id ? `/api/fornecedores/${id}` : '/api/fornecedores';
+
             try {
-                const res = await fetch(`/api/fornecedores/${id}`, {
-                    method: 'PUT',
+                const res = await fetch(endpoint, {
+                    method: method,
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
@@ -156,13 +163,13 @@ export function setupEditarFornecedor() {
 
                 if (!res.ok) {
                     const data = await res.json();
-                    showError(data.erro || "Erro ao atualizar fornecedor.");
+                    showError(data.erro || "Erro ao salvar fornecedor.");
                     return;
                 }
 
-                const modalEditarEl = document.getElementById('modalEditarFornecedor');
-                const modalEditar = bootstrap.Modal.getInstance(modalEditarEl);
-                if (modalEditar) modalEditar.hide();
+                if (window.fecharFormularioInlineFornecedor) {
+                    window.fecharFormularioInlineFornecedor();
+                }
 
                 carregarFornecedores();
             } catch(err) {

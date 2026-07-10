@@ -1,0 +1,27 @@
+{{define "modalFormaPagamento"}}
+<div class="modal fade" id="modalFormaPagamento" tabindex="-1" aria-labelledby="modalFormaPagamentoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalFormaPagamentoLabel">
+                    <i class="bi bi-credit-card me-2"></i> Nova Forma de Pagamento
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formNovaFormaPagamento">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label for="forma_pagamento_descricao" class="form-label fw-semibold">Descrição *</label>
+                        <input type="text" class="form-control" id="forma_pagamento_descricao" required>
+                    </div>
+                    <small class="text-muted">* Campos obrigatórios</small>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success px-4 fw-bold">Salvar Forma de Pagamento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}

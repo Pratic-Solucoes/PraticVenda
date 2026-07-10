@@ -44,6 +44,9 @@ type Service struct {
 		CriarCategoria(ctx context.Context, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error)
 		ListarCategorias(ctx context.Context) ([]*model.CategoriaContaPagar, error)
 	}
+	FormasPagamento interface {
+		Criar(ctx context.Context, fp *model.FormaPagamento) (*model.FormaPagamento, error)
+	}
 	Dashboard *DashboardService
 }
 
@@ -70,6 +73,10 @@ func NewService(repository *repository.Repository, db *sql.DB) *Service {
 			db:         db,
 		},
 		ContasPagar: &ContaPagarService{
+			repository: repository,
+			db:         db,
+		},
+		FormasPagamento: &FormaPagamentoService{
 			repository: repository,
 			db:         db,
 		},
