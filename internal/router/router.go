@@ -56,6 +56,7 @@ func CarregarRotas(c *controller.Controller) *chi.Mux {
 		r.Post("/formas-pagamento", auth.Autenticar(c.FormasPagamento.Criar))
 		r.Get("/formas-pagamento", auth.Autenticar(c.FormasPagamento.Listar))
 		r.Get("/formas-pagamento/{id}", auth.Autenticar(c.FormasPagamento.BuscarPorID))
+		r.Put("/formas-pagamento/{id}", auth.Autenticar(c.FormasPagamento.Atualizar))
 
 		// Rotas Contas a Pagar
 		r.Get("/contas-pagar/categorias", auth.Autenticar(c.CategoriasContasPagar.ListarCategorias))
