@@ -140,21 +140,21 @@ export async function carregarProdutoParaEdicao(id) {
 
         const data = await res.json();
         
-        document.getElementById('edit_produto_id').value = data.produto.id;
-        document.getElementById('formProdutoTitulo').innerHTML = `<i class="bi bi-box-seam me-2"></i> Editar Produto: ${data.produto.nome}`;
+        document.getElementById('edit_produto_id').value = data.id;
+        document.getElementById('formProdutoTitulo').innerHTML = `<i class="bi bi-box-seam me-2"></i> Editar Produto: ${data.nome}`;
         
         // Preecher comercial
-        document.getElementById('prod_nome').value = data.produto.nome;
-        document.getElementById('prod_codigo_interno').value = data.produto.codigo_interno_loja || '';
-        document.getElementById('prod_codigo_barras').value = data.produto.codigo_barras || '';
-        document.getElementById('prod_preco_custo').value = data.produto.preco_custo;
-        document.getElementById('prod_preco_venda').value = data.produto.preco_venda;
-        document.getElementById('prod_unidade_estoque').value = data.produto.unidade_estoque;
-        document.getElementById('prod_unidade_venda').value = data.produto.unidade_venda;
-        document.getElementById('prod_peso_bruto').value = data.produto.peso_bruto;
-        document.getElementById('prod_peso_liquido').value = data.produto.peso_liquido;
-        document.getElementById('prod_ativo').checked = data.produto.ativo;
-        document.getElementById('prod_descricao').value = data.produto.descricao || '';
+        document.getElementById('prod_nome').value = data.nome;
+        document.getElementById('prod_codigo_interno').value = data.codigo_interno_loja || '';
+        document.getElementById('prod_codigo_barras').value = data.codigo_barras || '';
+        document.getElementById('prod_preco_custo').value = data.preco_custo;
+        document.getElementById('prod_preco_venda').value = data.preco_venda;
+        document.getElementById('prod_unidade_estoque').value = data.unidade_estoque;
+        document.getElementById('prod_unidade_venda').value = data.unidade_venda;
+        document.getElementById('prod_peso_bruto').value = data.peso_bruto;
+        document.getElementById('prod_peso_liquido').value = data.peso_liquido;
+        document.getElementById('prod_ativo').checked = data.ativo;
+        document.getElementById('prod_descricao').value = data.descricao || '';
 
         // Preencher fiscal
         if (data.fiscal) {

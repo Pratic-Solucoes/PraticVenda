@@ -30,11 +30,13 @@ export async function carregarProdutos(busca = "") {
 
         tbody.innerHTML = '';
 
-        if (produtos.length === 0) {
+        if (!produtos || produtos.length === 0) {
             tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">Nenhum produto cadastrado.</td></tr>';
             return;
         }
 
+        // A struct ProdutoCompleto usa embed de Produto, então a API retorna os campos
+        // diretamente no nível raiz do objeto (p.id, p.nome, etc.) — não em p.produto.xxx
         produtos.forEach(p => {
             const tr = document.createElement('tr');
             
@@ -48,23 +50,23 @@ export async function carregarProdutos(busca = "") {
                 ).join('');
             }
 
-            const badgeStatus = p.produto.ativo 
+            const badgeStatus = p.ativo 
                 ? '<span class="badge bg-success">Ativo</span>' 
                 : '<span class="badge bg-danger">Inativo</span>';
 
             tr.innerHTML = `
-                <td>${p.produto.codigo_interno_loja || '-'}</td>
-                <td class="fw-semibold text-dark">${p.produto.nome}</td>
-                <td>${p.produto.codigo_barras || '-'}</td>
-                <td>R$ ${(p.produto.preco_custo || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
-                <td>R$ ${(p.produto.preco_venda || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td>${p.codigo_interno_loja || '-'}</td>
+                <td class="fw-semibold text-dark">${p.nome}</td>
+                <td>${p.codigo_barras || '-'}</td>
+                <td>R$ ${(p.preco_custo || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
+                <td>R$ ${(p.preco_venda || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                 <td>${estoquesBadges}</td>
                 <td>${badgeStatus}</td>
                 <td class="text-end">
-                    <button class="btn btn-sm btn-outline-primary btn-editar-prod me-1" data-id="${p.produto.id}" title="Editar Produto">
+                    <button class="btn btn-sm btn-outline-primary btn-editar-prod me-1" data-id="${p.id}" title="Editar Produto">
                         <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-danger btn-excluir-prod" data-id="${p.produto.id}" title="Excluir/Inativar">
+                    <button class="btn btn-sm btn-outline-danger btn-excluir-prod" data-id="${p.id}" title="Excluir/Inativar">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
@@ -72,11 +74,11 @@ export async function carregarProdutos(busca = "") {
 
             // Bind events
             tr.querySelector('.btn-editar-prod').addEventListener('click', () => {
-                carregarProdutoParaEdicao(p.produto.id);
+                carregarProdutoParaEdicao(p.id);
             });
 
             tr.querySelector('.btn-excluir-prod').addEventListener('click', () => {
-                excluirOuInativarProduto(p.produto.id, p.produto.nome);
+                excluirOuInativarProduto(p.id, p.nome);
             });
 
             tbody.appendChild(tr);

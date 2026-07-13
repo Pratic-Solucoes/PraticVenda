@@ -91,12 +91,14 @@ func (r *ProdutoRepository) ListarProdutos(ctx context.Context, tx *sql.Tx, busc
 		var pc model.ProdutoCompleto
 		var pf model.ProdutoFiscal
 		var hasFiscal sql.NullInt64
+		var ncmNull sql.NullString
+		var fiscalAtualizadoEm sql.NullTime
 
 		err := rows.Scan(
 			&pc.Produto.ID, &pc.Produto.CodigoBarras, &pc.Produto.CodigoInternoLoja, &pc.Produto.Nome, &pc.Produto.Descricao,
 			&pc.Produto.PrecoCusto, &pc.Produto.PrecoVenda, &pc.Produto.UnidadeEstoque, &pc.Produto.UnidadeVenda,
 			&pc.Produto.PesoBruto, &pc.Produto.PesoLiquido, &pc.Produto.Ativo, &pc.Produto.CriadoEm, &pc.Produto.AtualizadoEm,
-			&pf.Ncm, &pf.Cest, &hasFiscal, &pf.AtualizadoEm,
+			&ncmNull, &pf.Cest, &hasFiscal, &fiscalAtualizadoEm,
 		)
 		if err != nil {
 			return nil, err
@@ -105,6 +107,8 @@ func (r *ProdutoRepository) ListarProdutos(ctx context.Context, tx *sql.Tx, busc
 		if hasFiscal.Valid {
 			pf.IDGrupoTributario = hasFiscal.Int64
 			pf.IDProduto = pc.Produto.ID
+			pf.Ncm = ncmNull.String
+			pf.AtualizadoEm = fiscalAtualizadoEm.Time
 			pc.Fiscal = &pf
 		}
 
@@ -127,12 +131,14 @@ func (r *ProdutoRepository) ObterProdutoPorID(ctx context.Context, tx *sql.Tx, i
 	var pc model.ProdutoCompleto
 	var pf model.ProdutoFiscal
 	var hasFiscal sql.NullInt64
+	var ncmNull sql.NullString
+	var fiscalAtualizadoEm sql.NullTime
 
 	err := tx.QueryRowContext(ctx, query, id).Scan(
 		&pc.Produto.ID, &pc.Produto.CodigoBarras, &pc.Produto.CodigoInternoLoja, &pc.Produto.Nome, &pc.Produto.Descricao,
 		&pc.Produto.PrecoCusto, &pc.Produto.PrecoVenda, &pc.Produto.UnidadeEstoque, &pc.Produto.UnidadeVenda,
 		&pc.Produto.PesoBruto, &pc.Produto.PesoLiquido, &pc.Produto.Ativo, &pc.Produto.CriadoEm, &pc.Produto.AtualizadoEm,
-		&pf.Ncm, &pf.Cest, &hasFiscal, &pf.AtualizadoEm,
+		&ncmNull, &pf.Cest, &hasFiscal, &fiscalAtualizadoEm,
 	)
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -143,6 +149,8 @@ func (r *ProdutoRepository) ObterProdutoPorID(ctx context.Context, tx *sql.Tx, i
 	if hasFiscal.Valid {
 		pf.IDGrupoTributario = hasFiscal.Int64
 		pf.IDProduto = pc.Produto.ID
+		pf.Ncm = ncmNull.String
+		pf.AtualizadoEm = fiscalAtualizadoEm.Time
 		pc.Fiscal = &pf
 	}
 
