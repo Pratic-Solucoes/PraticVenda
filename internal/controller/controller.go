@@ -16,6 +16,7 @@ type Controller struct {
 		RenderizarConfiguracaoUsuarioPage(w http.ResponseWriter, r *http.Request)
 		RenderizarPdvPage(w http.ResponseWriter, r *http.Request)
 		RenderizarFormasPagamentoPage(w http.ResponseWriter, r *http.Request)
+		RenderizarEstoquesPage(w http.ResponseWriter, r *http.Request)
 	}
 	Login interface {
 		Login(w http.ResponseWriter, r *http.Request)
@@ -63,6 +64,11 @@ type Controller struct {
 		BuscarPorID(w http.ResponseWriter, r *http.Request)
 		Atualizar(w http.ResponseWriter, r *http.Request)
 	}
+	Estoques interface {
+		CriarEstoque(w http.ResponseWriter, r *http.Request)
+		ListarEstoques(w http.ResponseWriter, r *http.Request)
+		ListarProdutosDoEstoque(w http.ResponseWriter, r *http.Request)
+	}
 	Dashboard interface {
 		ResumoDashboard(w http.ResponseWriter, r *http.Request)
 	}
@@ -78,6 +84,7 @@ func NewController(service *service.Service) *Controller {
 		CategoriasContasPagar: &CategoriaContaPagarController{service: service},
 		ContasPagar:           &ContaPagarController{service: service},
 		FormasPagamento:       &FormaPagamentoController{service: service},
+		Estoques:              &EstoqueController{service: service},
 		Dashboard:             &DashboardController{service: service.Dashboard},
 	}
 }

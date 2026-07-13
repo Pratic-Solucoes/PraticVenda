@@ -51,6 +51,11 @@ type Repository struct {
 		CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error)
 		ListarCategorias(ctx context.Context, tx *sql.Tx) ([]*model.CategoriaContaPagar, error)
 	}
+	Estoques interface {
+		CriarEstoque(ctx context.Context, tx *sql.Tx, e *model.Estoque) (*model.Estoque, error)
+		ListarEstoques(ctx context.Context, tx *sql.Tx) ([]*model.Estoque, error)
+		ListarProdutosDoEstoque(ctx context.Context, tx *sql.Tx, idEstoque int64) ([]*model.ProdutoEstoque, error)
+	}
 	Dashboard *DashboardRepository
 }
 
@@ -73,6 +78,9 @@ func NewRepository(db *sql.DB) *Repository {
 			db: db,
 		},
 		FormasPagamento: &FormaPagamentoRepository{
+			db: db,
+		},
+		Estoques: &EstoqueRepository{
 			db: db,
 		},
 		Dashboard: NewDashboardRepository(db),

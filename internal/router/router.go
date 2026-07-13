@@ -36,6 +36,7 @@ func CarregarRotas(c *controller.Controller) *chi.Mux {
 	r.Get("/categorias-contas-pagar", c.View.RenderizarCategoriasPage)
 	r.Get("/pdv", c.View.RenderizarPdvPage)
 	r.Get("/formas-pagamento", c.View.RenderizarFormasPagamentoPage)
+	r.Get("/estoques", c.View.RenderizarEstoquesPage)
 
 	// rotas funcionalidades
 	r.Route("/api", func(r chi.Router) {
@@ -66,7 +67,11 @@ func CarregarRotas(c *controller.Controller) *chi.Mux {
 		r.Post("/contas-pagar", auth.Autenticar(c.ContasPagar.CriarContaPagar))
 		r.Put("/contas-pagar/{id}", auth.Autenticar(c.ContasPagar.EditarContaPagar))
 		r.Put("/contas-pagar/{id}/pagar", auth.Autenticar(c.ContasPagar.PagarContaPagar))
-		r.Post("/contas-pagar/{id}/pagar-parcial", nil)
+
+		// Rotas Estoques
+		r.Get("/estoques", auth.Autenticar(c.Estoques.ListarEstoques))
+		r.Post("/estoques", auth.Autenticar(c.Estoques.CriarEstoque))
+		r.Get("/estoques/{id}/produtos", auth.Autenticar(c.Estoques.ListarProdutosDoEstoque))
 
 		// Rotas Clientes
 		r.Get("/clientes", auth.Autenticar(c.Clientes.ListarClientes))

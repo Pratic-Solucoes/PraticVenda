@@ -50,6 +50,11 @@ type Service struct {
 		BuscarPorID(ctx context.Context, idFp int64) (*model.FormaPagamento, error)
 		Atualizar(ctx context.Context, fp *model.FormaPagamento) (*model.FormaPagamento, error)
 	}
+	Estoques interface {
+		CriarEstoque(ctx context.Context, input *model.EstoqueCriar) (*model.Estoque, error)
+		ListarEstoques(ctx context.Context) ([]*model.Estoque, error)
+		ListarProdutosDoEstoque(ctx context.Context, idEstoque int64) ([]*model.ProdutoEstoque, error)
+	}
 	Dashboard *DashboardService
 }
 
@@ -80,6 +85,10 @@ func NewService(repository *repository.Repository, db *sql.DB) *Service {
 			db:         db,
 		},
 		FormasPagamento: &FormaPagamentoService{
+			repository: repository,
+			db:         db,
+		},
+		Estoques: &EstoqueService{
 			repository: repository,
 			db:         db,
 		},

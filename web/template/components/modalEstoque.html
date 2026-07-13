@@ -1,0 +1,31 @@
+{{define "modalEstoque"}}
+<div class="modal fade" id="modalEstoque" tabindex="-1" aria-labelledby="modalEstoqueLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalEstoqueLabel">
+                    <i class="bi bi-boxes me-2"></i> Novo Local de Estoque
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formNovoEstoque">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label for="estoque_nome" class="form-label fw-semibold">Nome do Local *</label>
+                        <input type="text" class="form-control" id="estoque_nome" placeholder="Ex: Estoque Central" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="estoque_descricao" class="form-label fw-semibold">Descrição</label>
+                        <textarea class="form-control" id="estoque_descricao" rows="3" placeholder="Opcional"></textarea>
+                    </div>
+                    <small class="text-muted">* Campos obrigatórios</small>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success px-4 fw-bold">Salvar Estoque</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
