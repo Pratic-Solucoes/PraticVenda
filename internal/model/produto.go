@@ -5,6 +5,24 @@ import (
 	"time"
 )
 
+// Produto representa os campos básicos de tb_produtos necessários para o estoque
+type Produto struct {
+	ID                int64     `json:"id" db:"id"`
+	CodigoBarras      *string   `json:"codigo_barras,omitempty" db:"codigo_barras"`
+	CodigoInternoLoja *string   `json:"codigo_interno_loja,omitempty" db:"codigo_interno_loja"`
+	Nome              string    `json:"nome" db:"nome"`
+	Descricao         *string   `json:"descricao,omitempty" db:"descricao"`
+	PrecoCusto        float64   `json:"preco_custo" db:"preco_custo"`
+	PrecoVenda        float64   `json:"preco_venda" db:"preco_venda"`
+	UnidadeEstoque    string    `json:"unidade_estoque" db:"unidade_estoque"`
+	UnidadeVenda      string    `json:"unidade_venda" db:"unidade_venda"`
+	PesoBruto         float64   `json:"peso_bruto" db:"peso_bruto"`
+	PesoLiquido       float64   `json:"peso_liquido" db:"peso_liquido"`
+	Ativo             bool      `json:"ativo" db:"ativo"`
+	CriadoEm          time.Time `json:"criado_em" db:"criado_em"`
+	AtualizadoEm      time.Time `json:"atualizado_em" db:"atualizado_em"`
+}
+
 // GrupoTributario representa a tabela tb_grupos_tributarios
 type GrupoTributario struct {
 	ID               int64     `json:"id" db:"id"`

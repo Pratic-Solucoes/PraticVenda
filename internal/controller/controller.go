@@ -17,6 +17,7 @@ type Controller struct {
 		RenderizarPdvPage(w http.ResponseWriter, r *http.Request)
 		RenderizarFormasPagamentoPage(w http.ResponseWriter, r *http.Request)
 		RenderizarEstoquesPage(w http.ResponseWriter, r *http.Request)
+		RenderizarEntradaEstoquePage(w http.ResponseWriter, r *http.Request)
 		RenderizarProdutosPage(w http.ResponseWriter, r *http.Request)
 	}
 	Login interface {
@@ -69,6 +70,7 @@ type Controller struct {
 		CriarEstoque(w http.ResponseWriter, r *http.Request)
 		ListarEstoques(w http.ResponseWriter, r *http.Request)
 		ListarProdutosDoEstoque(w http.ResponseWriter, r *http.Request)
+		EntradaEstoque(w http.ResponseWriter, r *http.Request)
 	}
 	Produtos interface {
 		CriarProduto(w http.ResponseWriter, r *http.Request)
