@@ -39,10 +39,39 @@
             <div id="page-content">
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <h2 class="fs-4 m-0 text-dark">Formas de Pagamento</h2>
-                    <button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#modalFormaPagamento">
+                    <button class="btn btn-primary fw-bold" id="btnNovaFormaPagamento">
                         <i class="bi bi-plus-circle me-1"></i> Nova Forma de Pagamento
                     </button>
                 </div>
+
+                <!-- Painel de Cadastro/Edição Inline -->
+                <div class="collapse mb-4" id="collapseFormFormaPagamento">
+                    <div class="card shadow-sm border-0 rounded-4 border-start border-primary border-4">
+                        <div class="card-header bg-white border-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 text-primary fw-bold" id="formFormaPagamentoTitulo">
+                                <i class="bi bi-credit-card me-2"></i> Nova Forma de Pagamento
+                            </h5>
+                            <button type="button" class="btn-close" aria-label="Fechar" id="btnFecharFormFormaPagamento"></button>
+                        </div>
+                        <div class="card-body p-4">
+                            <form id="formInlineFormaPagamento">
+                                <input type="hidden" id="edit_fp_id">
+                                <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <label for="edit_fp_descricao" class="form-label form-label-sm fw-semibold mb-1">Descrição *</label>
+                                        <input type="text" class="form-control form-control-sm" id="edit_fp_descricao" required>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-end border-top pt-3">
+                                    <button type="button" class="btn btn-light me-2" id="btnCancelarFormaPagamento">Cancelar</button>
+                                    <button type="submit" class="btn btn-success px-4 fw-bold">Salvar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Formas de Pagamento -->
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body p-0">
                         <div class="table-responsive">

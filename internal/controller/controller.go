@@ -60,6 +60,8 @@ type Controller struct {
 	FormasPagamento interface {
 		Criar(w http.ResponseWriter, r *http.Request)
 		Listar(w http.ResponseWriter, r *http.Request)
+		BuscarPorID(w http.ResponseWriter, r *http.Request)
+		Atualizar(w http.ResponseWriter, r *http.Request)
 	}
 	Dashboard interface {
 		ResumoDashboard(w http.ResponseWriter, r *http.Request)

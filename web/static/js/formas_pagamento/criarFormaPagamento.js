@@ -1,5 +1,6 @@
 import { getToken } from '../utils/auth.js';
-import { carregarFormasPagamento, showError } from './listarFormasPagamento.js';
+import { carregarFormasPagamento } from './listarFormasPagamento.js';
+import { showError } from '../utils/showError.js';
 
 export function setupCriarFormaPagamento() {
     const formNovo = document.getElementById('formNovaFormaPagamento');

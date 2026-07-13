@@ -1,16 +1,5 @@
 import { getToken } from '../utils/auth.js';
-
-function showError(message) {
-    const modalBody = document.getElementById('errorModalBody');
-    if (modalBody) {
-        modalBody.textContent = message;
-        const errorModalElement = document.getElementById('errorModal');
-        const errorModal = bootstrap.Modal.getOrCreateInstance(errorModalElement);
-        errorModal.show();
-    } else {
-        alert(message);
-    }
-}
+import { showError } from '../utils/showError.js';
 
 export async function carregarFormasPagamento() {
     const tbody = document.getElementById('tabela_formas_pagamento_body');
@@ -62,11 +51,11 @@ function renderTabela(formas) {
             <td>#${f.id}</td>
             <td class="text-start fw-bold">${f.descricao}</td>
             <td>
-                <button class="btn btn-sm btn-outline-primary" title="Editar"><i class="bi bi-pencil"></i></button>
+                <button class="btn btn-sm btn-outline-primary" title="Editar" onclick="abrirEditarFormaPagamento(${f.id})">
+                    <i class="bi bi-pencil"></i>
+                </button>
             </td>
         `;
         tbody.appendChild(tr);
     });
 }
-
-export { showError };

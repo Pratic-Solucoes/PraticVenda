@@ -58,3 +58,49 @@ func (s *FormaPagamentoService) Listar(ctx context.Context) ([]model.FormaPagame
 
 	return fps, nil
 }
+
+func (s *FormaPagamentoService) BuscarPorID(ctx context.Context, idFp int64) (*model.FormaPagamento, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := helpers.SetSchema(ctx, tx); err != nil {
+		return nil, err
+	}
+
+	fp, err := s.repository.FormasPagamento.BuscarPorID(ctx, tx, idFp)
+	if err != nil {
+		return nil, err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+
+	return fp, nil
+}
+
+func (s *FormaPagamentoService) Atualizar(ctx context.Context, fp *model.FormaPagamento) (*model.FormaPagamento, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := helpers.SetSchema(ctx, tx); err != nil {
+		return nil, err
+	}
+
+	fpAtualizado, err := s.repository.FormasPagamento.Atualizar(ctx, tx, fp)
+	if err != nil {
+		return nil, err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+
+	return fpAtualizado, nil
+}
