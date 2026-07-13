@@ -217,6 +217,26 @@ export function setupGerenciarProduto() {
         const token = getToken();
         const id = document.getElementById('edit_produto_id').value;
 
+        // Validação manual de campos fiscais na aba oculta para evitar erro de foco
+        const ncm = document.getElementById('prod_ncm').value.trim();
+        const grupoTributario = document.getElementById('prod_grupo_tributario').value;
+
+        if (!ncm) {
+            showError("O campo NCM é obrigatório.");
+            const fiscalTab = document.getElementById("fiscal-tab");
+            if (fiscalTab) bootstrap.Tab.getOrCreateInstance(fiscalTab).show();
+            document.getElementById('prod_ncm').focus();
+            return;
+        }
+
+        if (!grupoTributario) {
+            showError("Selecione um Grupo Tributário.");
+            const fiscalTab = document.getElementById("fiscal-tab");
+            if (fiscalTab) bootstrap.Tab.getOrCreateInstance(fiscalTab).show();
+            document.getElementById('prod_grupo_tributario').focus();
+            return;
+        }
+
         // Montar a lista de estoques vinculados selecionados
         const estoquesVinculados = [];
         const rows = document.querySelectorAll('#listaEstoquesVinculoBody tr');
