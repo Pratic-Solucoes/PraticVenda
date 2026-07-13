@@ -55,6 +55,16 @@ type Service struct {
 		ListarEstoques(ctx context.Context) ([]*model.Estoque, error)
 		ListarProdutosDoEstoque(ctx context.Context, idEstoque int64) ([]*model.ProdutoEstoque, error)
 	}
+	Produtos interface {
+		CriarProduto(ctx context.Context, input *model.ProdutoInput) (*model.ProdutoCompleto, error)
+		ListarProdutos(ctx context.Context, busca string) ([]*model.ProdutoCompleto, error)
+		ObterProdutoPorID(ctx context.Context, id int64) (*model.ProdutoCompleto, error)
+		AtualizarProduto(ctx context.Context, id int64, input *model.ProdutoInput) error
+		ExcluirOuInativarProduto(ctx context.Context, id int64) (string, error)
+		VincularProdutoEstoque(ctx context.Context, idProduto, idEstoque int64, qtdMinima float64) error
+		DesvincularProdutoEstoque(ctx context.Context, idProduto, idEstoque int64) error
+		ListarGruposTributarios(ctx context.Context) ([]*model.GrupoTributario, error)
+	}
 	Dashboard *DashboardService
 }
 
@@ -89,6 +99,10 @@ func NewService(repository *repository.Repository, db *sql.DB) *Service {
 			db:         db,
 		},
 		Estoques: &EstoqueService{
+			repository: repository,
+			db:         db,
+		},
+		Produtos: &ProdutoService{
 			repository: repository,
 			db:         db,
 		},

@@ -56,6 +56,20 @@ type Repository struct {
 		ListarEstoques(ctx context.Context, tx *sql.Tx) ([]*model.Estoque, error)
 		ListarProdutosDoEstoque(ctx context.Context, tx *sql.Tx, idEstoque int64) ([]*model.ProdutoEstoque, error)
 	}
+	Produtos interface {
+		CriarProduto(ctx context.Context, tx *sql.Tx, p *model.Produto, f *model.ProdutoFiscal) (*model.Produto, error)
+		AtualizarProduto(ctx context.Context, tx *sql.Tx, id int64, p *model.Produto, f *model.ProdutoFiscal) error
+		ListarProdutos(ctx context.Context, tx *sql.Tx, busca string) ([]*model.ProdutoCompleto, error)
+		ObterProdutoPorID(ctx context.Context, tx *sql.Tx, id int64) (*model.ProdutoCompleto, error)
+		ExcluirProduto(ctx context.Context, tx *sql.Tx, id int64) error
+		InativarProduto(ctx context.Context, tx *sql.Tx, id int64) error
+		TemMovimentacaoEstoque(ctx context.Context, tx *sql.Tx, idProduto int64) (bool, error)
+		TemMovimentacaoNoEstoqueEspecifico(ctx context.Context, tx *sql.Tx, idProduto, idEstoque int64) (bool, error)
+		VincularAoEstoque(ctx context.Context, tx *sql.Tx, idProduto, idEstoque int64, quantidadeMinima, quantidade float64) error
+		DesvincularDoEstoque(ctx context.Context, tx *sql.Tx, idProduto, idEstoque int64) error
+		BuscarEstoqueVinculos(ctx context.Context, tx *sql.Tx, idProduto int64) ([]model.ProdutoEstoqueInfo, error)
+		ListarGruposTributarios(ctx context.Context, tx *sql.Tx) ([]*model.GrupoTributario, error)
+	}
 	Dashboard *DashboardRepository
 }
 
@@ -81,6 +95,9 @@ func NewRepository(db *sql.DB) *Repository {
 			db: db,
 		},
 		Estoques: &EstoqueRepository{
+			db: db,
+		},
+		Produtos: &ProdutoRepository{
 			db: db,
 		},
 		Dashboard: NewDashboardRepository(db),

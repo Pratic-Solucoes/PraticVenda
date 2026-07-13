@@ -208,3 +208,22 @@ func (c *ViewController) RenderizarEstoquesPage(w http.ResponseWriter, r *http.R
 	}
 }
 
+func (c *ViewController) RenderizarProdutosPage(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles(
+		"web/template/pages/produtos.html",
+		"web/template/components/sidebar.html",
+		"web/template/components/errorModal.html",
+	)
+	if err != nil {
+		fmt.Printf("Erro ao renderizar página de produtos: %v\n", err)
+		http.Error(w, "Erro interno ao renderizar página: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if err := tmpl.Execute(w, nil); err != nil {
+		fmt.Printf("Erro ao executar template de produtos: %v\n", err)
+		http.Error(w, "Erro interno", http.StatusInternalServerError)
+		return
+	}
+}
+

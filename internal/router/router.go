@@ -37,6 +37,7 @@ func CarregarRotas(c *controller.Controller) *chi.Mux {
 	r.Get("/pdv", c.View.RenderizarPdvPage)
 	r.Get("/formas-pagamento", c.View.RenderizarFormasPagamentoPage)
 	r.Get("/estoques", c.View.RenderizarEstoquesPage)
+	r.Get("/produtos", c.View.RenderizarProdutosPage)
 
 	// rotas funcionalidades
 	r.Route("/api", func(r chi.Router) {
@@ -72,6 +73,16 @@ func CarregarRotas(c *controller.Controller) *chi.Mux {
 		r.Get("/estoques", auth.Autenticar(c.Estoques.ListarEstoques))
 		r.Post("/estoques", auth.Autenticar(c.Estoques.CriarEstoque))
 		r.Get("/estoques/{id}/produtos", auth.Autenticar(c.Estoques.ListarProdutosDoEstoque))
+
+		// Rotas Produtos
+		r.Get("/produtos", auth.Autenticar(c.Produtos.ListarProdutos))
+		r.Post("/produtos", auth.Autenticar(c.Produtos.CriarProduto))
+		r.Get("/produtos/{id}", auth.Autenticar(c.Produtos.ObterProduto))
+		r.Put("/produtos/{id}", auth.Autenticar(c.Produtos.AtualizarProduto))
+		r.Delete("/produtos/{id}", auth.Autenticar(c.Produtos.ExcluirProduto))
+		r.Post("/produtos/{id}/estoques", auth.Autenticar(c.Produtos.VincularEstoque))
+		r.Delete("/produtos/{id}/estoques/{id_estoque}", auth.Autenticar(c.Produtos.DesvincularEstoque))
+		r.Get("/grupos-tributarios", auth.Autenticar(c.Produtos.ListarGruposTributarios))
 
 		// Rotas Clientes
 		r.Get("/clientes", auth.Autenticar(c.Clientes.ListarClientes))
