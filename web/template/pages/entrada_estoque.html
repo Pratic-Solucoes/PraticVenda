@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+    <link rel="icon" type="image/png" href="/static/images/logo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <!-- Bootstrap Icons -->
@@ -14,6 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão - Entrada de Estoque</title>
 </head>
+
 <body>
     <div id="app-wrapper">
         {{template "sidebar" .}}
@@ -51,11 +54,13 @@
                 <!-- ============================================================ -->
                 <div class="collapse mb-4" id="collapseFormEntrada">
                     <div class="card shadow-sm border-0 rounded-4 border-start border-primary border-4">
-                        <div class="card-header bg-white border-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center">
+                        <div
+                            class="card-header bg-white border-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center">
                             <h5 class="mb-0 text-primary fw-bold">
                                 <i class="bi bi-box-arrow-in-down me-2"></i> Nova Entrada de Estoque
                             </h5>
-                            <button type="button" class="btn-close" aria-label="Fechar" id="btnFecharFormEntrada"></button>
+                            <button type="button" class="btn-close" aria-label="Fechar"
+                                id="btnFecharFormEntrada"></button>
                         </div>
 
                         <div class="card-body p-4">
@@ -63,13 +68,15 @@
                             <!-- SEÇÃO 1: Cabeçalho da Entrada (Fornecedor + Despesa Adicional) -->
                             <div class="row g-3 align-items-end mb-4 pb-4 border-bottom">
                                 <div class="col-md-8">
-                                    <label for="entrada_id_fornecedor" class="form-label form-label-sm fw-semibold mb-1">Fornecedor *</label>
+                                    <label for="entrada_id_fornecedor"
+                                        class="form-label form-label-sm fw-semibold mb-1">Fornecedor *</label>
                                     <select class="form-select form-select-sm" id="entrada_id_fornecedor" required>
                                         <option value="" disabled selected>Carregando fornecedores...</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="entrada_despesa_adicional" class="form-label form-label-sm fw-semibold mb-1">
+                                    <label for="entrada_despesa_adicional"
+                                        class="form-label form-label-sm fw-semibold mb-1">
                                         Despesa Adicional (R$)
                                         <span class="text-muted fw-normal">(opcional — frete, seguro etc.)</span>
                                     </label>
@@ -80,18 +87,21 @@
 
                             <!-- SEÇÃO 2: Busca e Adição de Produto -->
                             <div class="mb-3">
-                                <label class="form-label form-label-sm fw-semibold mb-2">Adicionar Produto à Entrada</label>
+                                <label class="form-label form-label-sm fw-semibold mb-2">Adicionar Produto à
+                                    Entrada</label>
                                 <div class="row g-2 align-items-end">
                                     <div class="col-md-9">
                                         <div class="input-group input-group-sm">
-                                            <span class="input-group-text bg-light border-0 text-muted"><i class="bi bi-search"></i></span>
+                                            <span class="input-group-text bg-light border-0 text-muted"><i
+                                                    class="bi bi-search"></i></span>
                                             <input type="text" class="form-control bg-light border-0"
                                                 id="entrada_busca_produto"
                                                 placeholder="Buscar produto por nome ou código de barras...">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <button type="button" class="btn btn-outline-primary btn-sm w-100 fw-bold" id="btnBuscarProdutoEntrada">
+                                        <button type="button" class="btn btn-outline-primary btn-sm w-100 fw-bold"
+                                            id="btnBuscarProdutoEntrada">
                                             <i class="bi bi-search me-1"></i> Buscar
                                         </button>
                                     </div>
@@ -114,7 +124,8 @@
                                                 <span id="ps_codigo_interno" class="fw-semibold">—</span>
                                             </div>
                                             <div class="col-md-6">
-                                                <span class="text-muted small fw-semibold d-block">Nome do Produto</span>
+                                                <span class="text-muted small fw-semibold d-block">Nome do
+                                                    Produto</span>
                                                 <span id="ps_nome" class="fw-bold">—</span>
                                             </div>
                                         </div>
@@ -122,55 +133,77 @@
                                         <!-- Campos de Valores -->
                                         <div class="row g-2 align-items-end">
                                             <div class="col-md-2">
-                                                <label for="ps_quantidade" class="form-label form-label-sm fw-semibold mb-1">Quantidade *</label>
-                                                <input type="number" step="0.001" min="0.001" class="form-control form-control-sm"
-                                                    id="ps_quantidade" placeholder="0.000">
+                                                <label for="ps_quantidade"
+                                                    class="form-label form-label-sm fw-semibold mb-1">Quantidade
+                                                    *</label>
+                                                <input type="number" step="0.001" min="0.001"
+                                                    class="form-control form-control-sm" id="ps_quantidade"
+                                                    placeholder="0.000">
                                             </div>
                                             <div class="col-md-2">
-                                                <label for="ps_valor_unitario" class="form-label form-label-sm fw-semibold mb-1">Vlr. Unitário (R$) *</label>
-                                                <input type="number" step="0.0001" min="0" class="form-control form-control-sm"
-                                                    id="ps_valor_unitario" placeholder="0.0000">
+                                                <label for="ps_valor_unitario"
+                                                    class="form-label form-label-sm fw-semibold mb-1">Vlr. Unitário (R$)
+                                                    *</label>
+                                                <input type="number" step="0.0001" min="0"
+                                                    class="form-control form-control-sm" id="ps_valor_unitario"
+                                                    placeholder="0.0000">
                                             </div>
                                             <div class="col-md-2">
-                                                <label for="ps_icms_st" class="form-label form-label-sm fw-semibold mb-1">ICMS-ST (R$)</label>
-                                                <input type="number" step="0.01" min="0" class="form-control form-control-sm"
-                                                    id="ps_icms_st" placeholder="0.00" value="0">
+                                                <label for="ps_icms_st"
+                                                    class="form-label form-label-sm fw-semibold mb-1">ICMS-ST
+                                                    (R$)</label>
+                                                <input type="number" step="0.01" min="0"
+                                                    class="form-control form-control-sm" id="ps_icms_st"
+                                                    placeholder="0.00" value="0">
                                             </div>
                                             <div class="col-md-2">
-                                                <label for="ps_ipi" class="form-label form-label-sm fw-semibold mb-1">IPI (R$)</label>
-                                                <input type="number" step="0.01" min="0" class="form-control form-control-sm"
-                                                    id="ps_ipi" placeholder="0.00" value="0">
+                                                <label for="ps_ipi"
+                                                    class="form-label form-label-sm fw-semibold mb-1">IPI (R$)</label>
+                                                <input type="number" step="0.01" min="0"
+                                                    class="form-control form-control-sm" id="ps_ipi" placeholder="0.00"
+                                                    value="0">
                                             </div>
                                             <div class="col-md-2">
-                                                <label for="ps_desconto" class="form-label form-label-sm fw-semibold mb-1">Desconto (R$)</label>
-                                                <input type="number" step="0.01" min="0" class="form-control form-control-sm"
-                                                    id="ps_desconto" placeholder="0.00" value="0">
+                                                <label for="ps_desconto"
+                                                    class="form-label form-label-sm fw-semibold mb-1">Desconto
+                                                    (R$)</label>
+                                                <input type="number" step="0.01" min="0"
+                                                    class="form-control form-control-sm" id="ps_desconto"
+                                                    placeholder="0.00" value="0">
                                             </div>
                                             <div class="col-md-2">
-                                                <label for="ps_rateio" class="form-label form-label-sm fw-semibold mb-1">
+                                                <label for="ps_rateio"
+                                                    class="form-label form-label-sm fw-semibold mb-1">
                                                     Rateio Desp. (R$)
-                                                    <i class="bi bi-info-circle text-muted" title="Calculado automaticamente conforme a despesa adicional"></i>
+                                                    <i class="bi bi-info-circle text-muted"
+                                                        title="Calculado automaticamente conforme a despesa adicional"></i>
                                                 </label>
-                                                <input type="number" step="0.01" class="form-control form-control-sm bg-light"
-                                                    id="ps_rateio" placeholder="0.00" value="0" readonly>
+                                                <input type="number" step="0.01"
+                                                    class="form-control form-control-sm bg-light" id="ps_rateio"
+                                                    placeholder="0.00" value="0" readonly>
                                             </div>
                                             <div class="col-md-2">
-                                                <label for="ps_valor_custo" class="form-label form-label-sm fw-semibold mb-1 text-success">
+                                                <label for="ps_valor_custo"
+                                                    class="form-label form-label-sm fw-semibold mb-1 text-success">
                                                     Vlr. Custo Unit. (R$)
                                                     <i class="bi bi-calculator text-muted"></i>
                                                 </label>
-                                                <input type="number" step="0.0001" class="form-control form-control-sm bg-success bg-opacity-10 fw-bold text-success border-success"
+                                                <input type="number" step="0.0001"
+                                                    class="form-control form-control-sm bg-success bg-opacity-10 fw-bold text-success border-success"
                                                     id="ps_valor_custo" placeholder="0.0000" readonly>
                                             </div>
                                             <div class="col-md-2">
-                                                <label for="ps_valor_total" class="form-label form-label-sm fw-semibold mb-1 text-primary">
+                                                <label for="ps_valor_total"
+                                                    class="form-label form-label-sm fw-semibold mb-1 text-primary">
                                                     Vlr. Total (R$)
                                                 </label>
-                                                <input type="number" step="0.01" class="form-control form-control-sm bg-primary bg-opacity-10 fw-bold text-primary border-primary"
+                                                <input type="number" step="0.01"
+                                                    class="form-control form-control-sm bg-primary bg-opacity-10 fw-bold text-primary border-primary"
                                                     id="ps_valor_total" placeholder="0.00" readonly>
                                             </div>
                                             <div class="col-md-2 d-flex align-items-end">
-                                                <button type="button" class="btn btn-success btn-sm w-100 fw-bold" id="btnAdicionarProdutoEntrada">
+                                                <button type="button" class="btn btn-success btn-sm w-100 fw-bold"
+                                                    id="btnAdicionarProdutoEntrada">
                                                     <i class="bi bi-plus-circle me-1"></i> Adicionar
                                                 </button>
                                             </div>
@@ -182,11 +215,13 @@
                             <!-- SEÇÃO 3: Tabela de Produtos Adicionados -->
                             <div id="secaoTabelaProdutosEntrada" class="mt-4">
                                 <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-list-ul me-1"></i> Produtos da Entrada</h6>
+                                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-list-ul me-1"></i> Produtos da
+                                        Entrada</h6>
                                     <span class="badge bg-secondary" id="badge_qtd_itens">0 itens</span>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-sm table-hover align-middle mb-0" id="tabelaProdutosEntrada">
+                                    <table class="table table-sm table-hover align-middle mb-0"
+                                        id="tabelaProdutosEntrada">
                                         <thead class="table-light">
                                             <tr>
                                                 <th>ID</th>
@@ -213,7 +248,8 @@
                                         <tfoot class="table-light fw-bold">
                                             <tr>
                                                 <td colspan="9" class="text-end pe-3">Valor Total da Entrada:</td>
-                                                <td class="text-end text-primary fs-6" id="totalGeralEntrada">R$ 0,00</td>
+                                                <td class="text-end text-primary fs-6" id="totalGeralEntrada">R$ 0,00
+                                                </td>
                                                 <td></td>
                                             </tr>
                                         </tfoot>
@@ -227,10 +263,12 @@
                                     <i class="bi bi-x-circle me-1"></i> Cancelar
                                 </button>
                                 <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-outline-secondary fw-bold" id="btnSalvarEntrada">
+                                    <button type="button" class="btn btn-outline-secondary fw-bold"
+                                        id="btnSalvarEntrada">
                                         <i class="bi bi-floppy me-1"></i> Salvar (Em Aberto)
                                     </button>
-                                    <button type="button" class="btn btn-warning fw-bold text-dark" id="btnGerarFinanceiro">
+                                    <button type="button" class="btn btn-warning fw-bold text-dark"
+                                        id="btnGerarFinanceiro">
                                         <i class="bi bi-cash-coin me-1"></i> Gerar Financeiro
                                     </button>
                                     <button type="button" class="btn btn-success fw-bold" id="btnConcluirEntrada">
@@ -250,12 +288,15 @@
                     <div class="card-body p-4">
                         <form class="row g-3 align-items-end" id="formFiltroEntradas">
                             <div class="col-md-3">
-                                <label for="filtro_entrada_id" class="form-label text-muted fw-bold">ID da Entrada</label>
+                                <label for="filtro_entrada_id" class="form-label text-muted fw-bold">ID da
+                                    Entrada</label>
                                 <input type="number" class="form-control" id="filtro_entrada_id" placeholder="Ex: 42">
                             </div>
                             <div class="col-md-3">
-                                <label for="filtro_entrada_fornecedor" class="form-label text-muted fw-bold">Fornecedor</label>
-                                <input type="text" class="form-control" id="filtro_entrada_fornecedor" placeholder="Nome do fornecedor">
+                                <label for="filtro_entrada_fornecedor"
+                                    class="form-label text-muted fw-bold">Fornecedor</label>
+                                <input type="text" class="form-control" id="filtro_entrada_fornecedor"
+                                    placeholder="Nome do fornecedor">
                             </div>
                             <div class="col-md-2">
                                 <label for="filtro_entrada_data" class="form-label text-muted fw-bold">Data</label>
@@ -320,9 +361,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
-    </script>
+        </script>
 
     <!-- Módulo JS principal da Entrada de Estoque -->
     <script type="module" src="/static/js/entrada_estoque/main.js"></script>
 </body>
+
 </html>

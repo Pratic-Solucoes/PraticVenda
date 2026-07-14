@@ -62,6 +62,14 @@ body {
     -webkit-background-clip: text;
     color: transparent;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-header .s-logo img {
+    height: 35px;
+    width: auto;
+    object-fit: contain;
 }
 .sidebar-header .s-title {
     font-size: .85rem;
