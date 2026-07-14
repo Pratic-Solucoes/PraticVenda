@@ -21,16 +21,15 @@ function getDespesaAdicional() {
 }
 
 /**
- * Recalcula o rateio de despesa adicional para cada item e atualiza a tabela.
- * Rateio proporcional ao valor (unitario * quantidade) de cada item.
+ * Rateio por linha de produto: despesa_adicional / número de itens distintos.
+ * Ex: 10 produtos na nota → cada um recebe despesa / 10, independente da quantidade.
  */
 function recalcularRateios() {
     const despesa = getDespesaAdicional();
-    const totalBruto = itensDaEntrada.reduce((acc, it) => acc + (it.valorUnitario * it.quantidade), 0);
+    const totalItens = itensDaEntrada.length;
 
     itensDaEntrada.forEach(item => {
-        const proporcao = totalBruto > 0 ? (item.valorUnitario * item.quantidade) / totalBruto : 0;
-        item.rateio = parseFloat((despesa * proporcao).toFixed(4));
+        item.rateio = totalItens > 0 ? parseFloat((despesa / totalItens).toFixed(4)) : 0;
         item.valorCusto = calcularValorCusto(item);
         item.valorTotal = parseFloat((item.valorCusto * item.quantidade).toFixed(2));
     });
