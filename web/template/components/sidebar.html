@@ -1,7 +1,9 @@
 {{define "sidebar"}}
 <nav id="sidebar">
     <div class="sidebar-header">
-        <div class="s-logo fw-bold">P</div>
+        <div class="s-logo fw-bold">
+            <img src="..\..\static\image\logo_pv.jpg" alt="">
+        </div>
         <div style="flex: 1; overflow: hidden;">
             <div class="s-title">Pratic Venda</div>
             <span class="s-sub">Painel Administrativo</span>
@@ -112,20 +114,20 @@
 </nav>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const sidebar = document.getElementById('sidebar');
         const btnToggle = document.getElementById('btn-toggle-sidebar');
         const btnExpand = document.getElementById('btn-expand-sidebar');
         const toggles = document.querySelectorAll('.submenu-toggle');
-        
+
         // Verifica se a página atual corresponde ao link e marca como ativo
         const currentPath = window.location.pathname;
         const links = document.querySelectorAll('.sidebar-nav a.nav-link-item');
-        
+
         links.forEach(link => {
             if (link.getAttribute('href') === currentPath) {
                 link.classList.add('active');
-                
+
                 // Se estiver dentro de um submenu, abre ele
                 const submenu = link.closest('.sidebar-submenu');
                 if (submenu) {
@@ -157,9 +159,9 @@
 
         // Submenus Toggle
         toggles.forEach(toggle => {
-            toggle.addEventListener('click', function(e) {
+            toggle.addEventListener('click', function (e) {
                 e.preventDefault();
-                
+
                 // Se estiver colapsado e clicar no item, devemos abrir o flyout (aqui podemos apenas expandir a sidebar para simplificar ou implementar o flyout via JS)
                 if (sidebar.classList.contains('collapsed')) {
                     toggleSidebar(); // Expande ao clicar no submenu se estiver colapsado
@@ -168,7 +170,7 @@
                 const targetId = this.getAttribute('data-target');
                 const targetMenu = document.getElementById(targetId);
                 const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                
+
                 // Fecha outros
                 document.querySelectorAll('.sidebar-submenu.open').forEach(menu => {
                     if (menu.id !== targetId) {

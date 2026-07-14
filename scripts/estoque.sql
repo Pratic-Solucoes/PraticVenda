@@ -57,3 +57,42 @@ CREATE TABLE tb_movimento_estoque (
 -- Índices essenciais para relatórios de estoque e auditoria rápidos
 CREATE INDEX idx_mov_produto_estoque ON tb_movimento_estoque(id_produto, id_estoque);
 CREATE INDEX idx_mov_criado_em ON tb_movimento_estoque(criado_em);
+
+create table if not exists tb_entradas_estoque(
+    id bigserial primary key,
+    id_estoque bigint not null,
+    id_fornecedor bigint not null,
+    valor_despesa_adicional decimal(10,2) default 0,
+    id_usuario bigint not null,
+    valor_total decimal(10,2) default 0,
+    status varchar(20) default 'ABERTO',
+    criado_em timestamp with time zone default current_timestamp not null,
+    foreign key (id_estoque) references tb_estoques(id),
+    foreign key (id_fornecedor) references tb_fornecedores(id),
+    foreign key (id_usuario) references tb_usuarios_gestao(id),
+    constraint chk_status check (status in ('ABERTO', 'CONCLUIDA', 'CANCELADA'))
+);
+
+create table if not exists tb_produtos_entradas_estoque(
+    id bigserial primary key,
+    id_entrada_estoque bigint not null,
+    id_produto bigint not null,
+    valor_unitario decimal(10,2) not null,
+    valor_icms_st decimal(10,2) default 0,
+    valor_ipi decimal(10,2) default 0,
+    valor_desconto decimal(10,2) default 0,
+    rateio_despesa_adicional decimal(10,2) default 0,
+    valor_custo decimal(10,2) not null,
+    valor_total decimal(10,2) not null,
+    quantidade decimal(10,3) not null,
+    foreign key (id_entrada_estoque) references tb_entradas_estoque(id),
+    foreign key (id_produto) references tb_produtos(id),
+    constraint chk_valor_unitario check (valor_unitario > 0),
+    constraint chk_valor_icms_st check (valor_icms_st >= 0),
+    constraint chk_valor_ipi check (valor_ipi >= 0),
+    constraint chk_valor_desconto check (valor_desconto >= 0),
+    constraint chk_rateio_despesa_adicional check (rateio_despesa_adicional >= 0),
+    constraint chk_valor_custo check (valor_custo > 0),
+    constraint chk_valor_total check (valor_total > 0),
+    constraint chk_quantidade check (quantidade > 0)
+);
