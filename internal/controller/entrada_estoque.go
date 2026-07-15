@@ -20,11 +20,12 @@ func (c *EstoqueController) EntradaEstoque(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	idUsuario, ok := r.Context().Value("usuario_id").(int64)
+	idUsuarioFloat, ok := r.Context().Value("usuario_id").(float64)
 	if !ok {
-		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id de usuario inválido"})
+		resposta.Padrao(w, http.StatusUnauthorized, map[string]string{"erro": "id de usuario inválido no token"})
 		return
 	}
+	idUsuario := int64(idUsuarioFloat)
 
 	var entrada model.EntradaEstoque
 
