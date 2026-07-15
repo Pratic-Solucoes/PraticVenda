@@ -424,7 +424,12 @@ async function enviarEntrada(status) {
             body: JSON.stringify(payload),
         });
 
-        const data = await res.json();
+        let data = {};
+        try {
+            data = await res.json();
+        } catch (_) {
+            // Resposta sem body JSON (ex: erro interno do servidor)
+        }
 
         if (!res.ok) {
             showError(data.erro || 'Erro ao registrar entrada de estoque.');

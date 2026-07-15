@@ -105,6 +105,10 @@ func NewService(repository *repository.Repository, db *sql.DB) *Service {
 			repository: repository,
 			db:         db,
 		},
+		EntradaEstoque: &EntradaEstoqueService{
+			repositorio: repository,
+			db:          db,
+		},
 		Produtos: &ProdutoService{
 			repository: repository,
 			db:         db,
