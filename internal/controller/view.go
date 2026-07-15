@@ -14,7 +14,7 @@ func (c *ViewController) RenderizarLoginPage(w http.ResponseWriter, r *http.Requ
 	tmpl, err := template.ParseFiles(
 		"web/template/pages/login.html",
 		"web/template/components/loginForm.html",
-		"web/template/components/errorModal.html",
+		"web/template/components/toastContainer.html",
 	)
 
 	if err != nil {
@@ -36,7 +36,7 @@ func (c *ViewController) RenderizarDashboardPage(w http.ResponseWriter, r *http.
 		"web/template/components/sidebar.html",
 		"web/template/components/modalContaPagarAvulso.html",
 		"web/template/components/modalFornecedor.html",
-		"web/template/components/errorModal.html",
+		"web/template/components/toastContainer.html",
 	)
 	if err != nil {
 		fmt.Printf("Erro ao renderizar dashboard: %v\n", err)
@@ -77,7 +77,7 @@ func (c *ViewController) RenderizarClientesPage(w http.ResponseWriter, r *http.R
 	tmpl, err := template.ParseFiles(
 		"web/template/pages/clientes.html",
 		"web/template/components/sidebar.html",
-		"web/template/components/errorModal.html",
+		"web/template/components/toastContainer.html",
 	)
 	if err != nil {
 		fmt.Printf("Erro ao renderizar página de clientes: %v\n", err)
@@ -96,7 +96,7 @@ func (c *ViewController) RenderizarFornecedoresPage(w http.ResponseWriter, r *ht
 	tmpl, err := template.ParseFiles(
 		"web/template/pages/fornecedores.html",
 		"web/template/components/sidebar.html",
-		"web/template/components/errorModal.html",
+		"web/template/components/toastContainer.html",
 	)
 	if err != nil {
 		fmt.Printf("Erro ao renderizar página de fornecedores: %v\n", err)
@@ -116,7 +116,7 @@ func (c *ViewController) RenderizarCategoriasPage(w http.ResponseWriter, r *http
 		"web/template/pages/categorias_contas_pagar.html",
 		"web/template/components/sidebar.html",
 		"web/template/components/modalCategoria.html",
-		"web/template/components/errorModal.html",
+		"web/template/components/toastContainer.html",
 	)
 	if err != nil {
 		fmt.Printf("Erro ao renderizar página de categorias: %v\n", err)
@@ -153,7 +153,7 @@ func (c *ViewController) RenderizarPdvPage(w http.ResponseWriter, r *http.Reques
 	tmpl, err := template.ParseFiles(
 		"web/template/pages/pdv.html",
 		"web/template/components/sidebar.html",
-		"web/template/components/errorModal.html",
+		"web/template/components/toastContainer.html",
 	)
 	if err != nil {
 		fmt.Printf("Erro ao renderizar página de PDV: %v\n", err)
@@ -173,7 +173,7 @@ func (c *ViewController) RenderizarFormasPagamentoPage(w http.ResponseWriter, r 
 		"web/template/pages/formas_pagamento.html",
 		"web/template/components/sidebar.html",
 		"web/template/components/modalFormaPagamento.html",
-		"web/template/components/errorModal.html",
+		"web/template/components/toastContainer.html",
 	)
 	if err != nil {
 		fmt.Printf("Erro ao renderizar página de formas de pagamento: %v\n", err)
@@ -193,7 +193,7 @@ func (c *ViewController) RenderizarEstoquesPage(w http.ResponseWriter, r *http.R
 		"web/template/pages/estoques.html",
 		"web/template/components/sidebar.html",
 		"web/template/components/modalEstoque.html",
-		"web/template/components/errorModal.html",
+		"web/template/components/toastContainer.html",
 	)
 	if err != nil {
 		fmt.Printf("Erro ao renderizar página de estoques: %v\n", err)
@@ -212,7 +212,7 @@ func (c *ViewController) RenderizarProdutosPage(w http.ResponseWriter, r *http.R
 	tmpl, err := template.ParseFiles(
 		"web/template/pages/produtos.html",
 		"web/template/components/sidebar.html",
-		"web/template/components/errorModal.html",
+		"web/template/components/toastContainer.html",
 	)
 	if err != nil {
 		fmt.Printf("Erro ao renderizar página de produtos: %v\n", err)
@@ -232,7 +232,7 @@ func (c *ViewController) RenderizarEntradaEstoquePage(w http.ResponseWriter, r *
 		"web/template/pages/entrada_estoque.html",
 		"web/template/components/sidebar.html",
 		"web/template/components/modalFinanceiroEntrada.html",
-		"web/template/components/errorModal.html",
+		"web/template/components/toastContainer.html",
 	)
 	if err != nil {
 		fmt.Printf("Erro ao renderizar página de entrada de estoque: %v\n", err)

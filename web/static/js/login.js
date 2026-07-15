@@ -1,3 +1,5 @@
+import { showError } from './utils/notification.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('form');
     const emailInput = document.getElementById('entrada_email');
@@ -26,8 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (!response.ok) {
-                // Em caso de erro, a API retorna mensagem na propriedade correspondente 
-                // Exemplo: { "erro": "dados login inválidos" } ou similar
                 showError(data.erro || data.mensagem || "Erro ao realizar login");
                 return;
             }
@@ -45,12 +45,4 @@ document.addEventListener('DOMContentLoaded', () => {
             showError("Erro interno ao comunicar com o servidor.");
         }
     });
-
-    function showError(message) {
-        const modalBody = document.getElementById('errorModalBody');
-        modalBody.textContent = message;
-        const errorModalElement = document.getElementById('errorModal');
-        const errorModal = bootstrap.Modal.getOrCreateInstance(errorModalElement);
-        errorModal.show();
-    }
 });

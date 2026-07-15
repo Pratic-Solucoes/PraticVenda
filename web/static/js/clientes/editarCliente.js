@@ -1,6 +1,6 @@
 import { getToken } from "../utils/auth.js";
 import { carregarClientes } from "./listarClientes.js";
-import { showError } from "../utils/showError.js";
+import { showError, showSuccess } from "../utils/showError.js";
 import { validaRespostaRequisicao } from "../utils/resposta.js";
 import { fecharModal } from "../utils/fecharModal.js";
 
@@ -214,8 +214,10 @@ async function salvarDadosCadastrais(e) {
   try {
     if (clienteIdAtual) {
       await atualizarClienteAPI(clienteIdAtual, montarPayloadCliente());
+      showSuccess("Cliente atualizado com sucesso!");
     } else {
       await criarClienteAPI(montarPayloadCliente());
+      showSuccess("Cliente cadastrado com sucesso!");
     }
     
     // Sucesso, fechar o formulário e recarregar
@@ -237,8 +239,10 @@ async function salvarEndereco(e) {
   try {
     if (idEndereco) {
       await atualizarEnderecoAPI(clienteIdAtual, idEndereco, payload);
+      showSuccess("Endereço atualizado com sucesso!");
     } else {
       await criarEnderecoAPI(clienteIdAtual, payload);
+      showSuccess("Endereço adicionado com sucesso!");
     }
 
     fecharModal("modalEnderecoCliente");
@@ -257,8 +261,10 @@ async function salvarTelefone(e) {
   try {
     if (idTelefone) {
       await atualizarTelefoneAPI(clienteIdAtual, idTelefone, payload);
+      showSuccess("Telefone atualizado com sucesso!");
     } else {
       await criarTelefoneAPI(clienteIdAtual, payload);
+      showSuccess("Telefone adicionado com sucesso!");
     }
 
     fecharModal("modalTelefoneCliente");
