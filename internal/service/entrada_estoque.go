@@ -32,6 +32,13 @@ func (s *EntradaEstoqueService) RegistrarEntrada(ctx context.Context, entrada *m
 		return err
 	}
 
+	// Calcula o valor total da entrada somando os produtos
+	var total float64
+	for _, p := range entrada.Produtos {
+		total += p.ValorTotal
+	}
+	entrada.ValorTotal = total
+
 	// Lógica para criar a entrada de estoque no BD
 	if err := s.repositorio.EntradaEstoque.RegistrarEntrada(ctx, tx, entrada); err != nil {
 		return err

@@ -101,6 +101,9 @@ func NewRepository(db *sql.DB) *Repository {
 		Estoques: &EstoqueRepository{
 			db: db,
 		},
+		EntradaEstoque: &EntradaEstoqueRepository{
+			db: db,
+		},
 		Produtos: &ProdutoRepository{
 			db: db,
 		},
