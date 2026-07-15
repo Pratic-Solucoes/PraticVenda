@@ -56,6 +56,10 @@ type Repository struct {
 		ListarEstoques(ctx context.Context, tx *sql.Tx) ([]*model.Estoque, error)
 		ListarProdutosDoEstoque(ctx context.Context, tx *sql.Tx, idEstoque int64) ([]*model.ProdutoEstoque, error)
 	}
+	EntradaEstoque interface {
+		RegistrarEntrada(ctx context.Context, tx *sql.Tx, entrada *model.EntradaEstoque) error
+		RegistrarProdutosEntrada(ctx context.Context, tx *sql.Tx, entrada *model.EntradaEstoque) error
+	}
 	Produtos interface {
 		CriarProduto(ctx context.Context, tx *sql.Tx, p *model.Produto, f *model.ProdutoFiscal) (*model.Produto, error)
 		AtualizarProduto(ctx context.Context, tx *sql.Tx, id int64, p *model.Produto, f *model.ProdutoFiscal) error

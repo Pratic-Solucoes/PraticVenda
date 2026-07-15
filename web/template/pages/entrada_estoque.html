@@ -65,9 +65,16 @@
 
                         <div class="card-body p-4">
 
-                            <!-- SEÇÃO 1: Cabeçalho da Entrada (Fornecedor + Despesa Adicional) -->
+                            <!-- SEÇÃO 1: Cabeçalho da Entrada -->
                             <div class="row g-3 align-items-end mb-4 pb-4 border-bottom">
-                                <div class="col-md-8">
+                                <div class="col-md-4">
+                                    <label for="entrada_id_estoque"
+                                        class="form-label form-label-sm fw-semibold mb-1">Estoque de Destino *</label>
+                                    <select class="form-select form-select-sm" id="entrada_id_estoque" required>
+                                        <option value="" disabled selected>Carregando estoques...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
                                     <label for="entrada_id_fornecedor"
                                         class="form-label form-label-sm fw-semibold mb-1">Fornecedor *</label>
                                     <select class="form-select form-select-sm" id="entrada_id_fornecedor" required>
@@ -91,12 +98,20 @@
                                     Entrada</label>
                                 <div class="row g-2 align-items-end">
                                     <div class="col-md-9">
-                                        <div class="input-group input-group-sm">
-                                            <span class="input-group-text bg-light border-0 text-muted"><i
-                                                    class="bi bi-search"></i></span>
-                                            <input type="text" class="form-control bg-light border-0"
-                                                id="entrada_busca_produto"
-                                                placeholder="Buscar produto por nome ou código de barras...">
+                                        <div class="position-relative">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text bg-light border-0 text-muted"><i
+                                                        class="bi bi-search"></i></span>
+                                                <input type="text" class="form-control bg-light border-0"
+                                                    id="entrada_busca_produto"
+                                                    placeholder="Buscar produto por nome ou código de barras..."
+                                                    autocomplete="off">
+                                            </div>
+                                            <!-- Dropdown de sugestões -->
+                                            <div id="dropdownSugestoesProduto"
+                                                class="d-none position-absolute w-100 bg-white border rounded-3 shadow-sm"
+                                                style="z-index:1050; top:calc(100% + 4px); max-height:220px; overflow-y:auto;">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3">

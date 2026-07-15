@@ -72,6 +72,9 @@ type Controller struct {
 		ListarProdutosDoEstoque(w http.ResponseWriter, r *http.Request)
 		EntradaEstoque(w http.ResponseWriter, r *http.Request)
 	}
+	EntradaEstoque interface {
+		RegistrarEntrada(w http.ResponseWriter, r *http.Request)
+	}
 	Produtos interface {
 		CriarProduto(w http.ResponseWriter, r *http.Request)
 		ListarProdutos(w http.ResponseWriter, r *http.Request)

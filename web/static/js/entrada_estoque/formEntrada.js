@@ -9,6 +9,9 @@ let itensDaEntrada = [];
 /** Produto atualmente carregado no card de busca */
 let produtoSelecionado = null;
 
+/** Timer para debounce da busca por digitação */
+let debounceTimer = null;
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function formatBRL(valor) {
@@ -129,8 +132,80 @@ function renderizarTabelaItens() {
     });
 }
 
-// ─── Busca de Produto ────────────────────────────────────────────────────────
+// ─── Autocomplete / Dropdown de sugestões ────────────────────────────────────
 
+/**
+ * Exibe o dropdown de sugestões com os produtos encontrados.
+ * @param {Array} produtos
+ */
+function exibirDropdownSugestoes(produtos) {
+    const dropdown = document.getElementById('dropdownSugestoesProduto');
+    dropdown.innerHTML = '';
+
+    if (!produtos || produtos.length === 0) {
+        dropdown.innerHTML = `
+            <div class="px-3 py-2 text-muted small">
+                <i class="bi bi-search me-1"></i> Nenhum produto encontrado.
+            </div>`;
+        dropdown.classList.remove('d-none');
+        return;
+    }
+
+    produtos.forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'px-3 py-2 cursor-pointer d-flex justify-content-between align-items-center';
+        item.style.cssText = 'cursor:pointer; transition: background .15s;';
+        item.innerHTML = `
+            <div>
+                <span class="fw-semibold">${p.nome}</span>
+                <span class="text-muted small ms-2">${p.codigo_barras || p.codigo_interno_loja || ''}</span>
+            </div>
+            <span class="badge bg-light text-secondary border">ID ${p.id}</span>
+        `;
+        item.addEventListener('mouseenter', () => item.style.background = '#f0f4ff');
+        item.addEventListener('mouseleave', () => item.style.background = '');
+        item.addEventListener('click', () => {
+            produtoSelecionado = p;
+            preencherCardProduto(p);
+            fecharDropdown();
+            document.getElementById('entrada_busca_produto').value = p.nome;
+        });
+        dropdown.appendChild(item);
+    });
+
+    dropdown.classList.remove('d-none');
+}
+
+function fecharDropdown() {
+    document.getElementById('dropdownSugestoesProduto').classList.add('d-none');
+}
+
+/**
+ * Busca produtos para o autocomplete com debounce de 300ms.
+ */
+async function buscarSugestoesProduto(termo) {
+    if (!termo || termo.length < 2) {
+        fecharDropdown();
+        return;
+    }
+
+    const token = getToken();
+    try {
+        const res = await fetch(`/api/produtos?busca=${encodeURIComponent(termo)}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) { fecharDropdown(); return; }
+        const produtos = await res.json();
+        exibirDropdownSugestoes(produtos || []);
+    } catch (err) {
+        console.error('Erro ao buscar sugestões:', err);
+        fecharDropdown();
+    }
+}
+
+/**
+ * Busca e seleciona o primeiro resultado (chamada via botão ou Enter).
+ */
 async function buscarProduto() {
     const busca = document.getElementById('entrada_busca_produto').value.trim();
     if (!busca) {
@@ -158,10 +233,12 @@ async function buscarProduto() {
             return;
         }
 
-        // Usa o primeiro resultado (pode ser expandido com autocomplete futuramente)
+        // Seleciona o primeiro resultado
         const p = produtos[0];
         produtoSelecionado = p;
         preencherCardProduto(p);
+        fecharDropdown();
+        document.getElementById('entrada_busca_produto').value = p.nome;
 
     } catch (err) {
         console.error(err);
@@ -242,6 +319,37 @@ function adicionarItemEntrada() {
     document.getElementById('entrada_busca_produto').value = '';
 }
 
+// ─── Carregar Estoques no Select ─────────────────────────────────────────────
+
+async function carregarEstoquesSelect(selectId) {
+    const token = getToken();
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    try {
+        const res = await fetch('/api/estoques', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) return;
+
+        const estoques = await res.json();
+        select.innerHTML = '<option value="" disabled selected>Selecione o estoque...</option>';
+        (estoques || []).forEach(e => {
+            const opt = document.createElement('option');
+            opt.value = e.id;
+            opt.textContent = e.nome;
+            select.appendChild(opt);
+        });
+
+        // Se só houver um estoque, seleciona automaticamente
+        if (estoques && estoques.length === 1) {
+            select.value = estoques[0].id;
+        }
+    } catch (err) {
+        console.error('Erro ao carregar estoques:', err);
+    }
+}
+
 // ─── Carrega Fornecedores no Select ─────────────────────────────────────────
 
 async function carregarFornecedoresSelect(selectId) {
@@ -257,7 +365,7 @@ async function carregarFornecedoresSelect(selectId) {
 
         const fornecedores = await res.json();
         select.innerHTML = '<option value="" disabled selected>Selecione o fornecedor...</option>';
-        fornecedores.forEach(f => {
+        (fornecedores || []).forEach(f => {
             const opt = document.createElement('option');
             opt.value = f.id;
             opt.textContent = f.razao_social;
@@ -273,11 +381,73 @@ async function carregarFornecedoresSelect(selectId) {
 function resetarFormEntrada() {
     itensDaEntrada = [];
     produtoSelecionado = null;
+    document.getElementById('entrada_id_estoque').value = '';
     document.getElementById('entrada_id_fornecedor').value = '';
     document.getElementById('entrada_despesa_adicional').value = '0';
     document.getElementById('entrada_busca_produto').value = '';
+    fecharDropdown();
     esconderCardProduto();
     renderizarTabelaItens();
+}
+
+// ─── Envio para a API ────────────────────────────────────────────────────────
+
+async function enviarEntrada(status) {
+    const idEstoque = document.getElementById('entrada_id_estoque').value;
+    const idFornecedor = document.getElementById('entrada_id_fornecedor').value;
+
+    if (!idEstoque) {
+        showError('Selecione o estoque de destino.');
+        return;
+    }
+
+    if (!idFornecedor) {
+        showError('Selecione o fornecedor da entrada.');
+        return;
+    }
+
+    if (itensDaEntrada.length === 0) {
+        showError('Adicione ao menos um produto antes de salvar.');
+        return;
+    }
+
+    const payload = montarPayload(status);
+    const token = getToken();
+
+    try {
+        const res = await fetch(`/api/estoques/${idEstoque}/entrada`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            showError(data.erro || 'Erro ao registrar entrada de estoque.');
+            return;
+        }
+
+        // Feedback visual de sucesso
+        const msg = status === 'CONCLUIDA'
+            ? 'Entrada de estoque concluída com sucesso!'
+            : 'Entrada salva em aberto com sucesso!';
+
+        alert(msg); // Pode ser substituído por um toast/modal de sucesso futuramente
+
+        // Fechar painel e resetar
+        bootstrap.Collapse.getOrCreateInstance(
+            document.getElementById('collapseFormEntrada')
+        ).hide();
+        resetarFormEntrada();
+
+    } catch (err) {
+        console.error('Erro ao enviar entrada:', err);
+        showError('Erro interno ao registrar entrada. Tente novamente.');
+    }
 }
 
 // ─── Setup Principal ─────────────────────────────────────────────────────────
@@ -291,6 +461,7 @@ export function setupBotaoNovaEntrada() {
             document.getElementById('collapseFormEntrada')
         );
         collapse.show();
+        carregarEstoquesSelect('entrada_id_estoque');
         carregarFornecedoresSelect('entrada_id_fornecedor');
         btn.scrollIntoView({ behavior: 'smooth' });
     });
@@ -312,11 +483,28 @@ export function setupFormEntrada() {
         resetarFormEntrada();
     });
 
-    // Busca de produto
-    document.getElementById('btnBuscarProdutoEntrada')?.addEventListener('click', buscarProduto);
-    document.getElementById('entrada_busca_produto')?.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') { e.preventDefault(); buscarProduto(); }
+    // ── Autocomplete: debounce ao digitar ──
+    const inputBusca = document.getElementById('entrada_busca_produto');
+    inputBusca?.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            buscarSugestoesProduto(inputBusca.value.trim());
+        }, 300);
     });
+
+    // Fechar dropdown ao clicar fora
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#entrada_busca_produto') && !e.target.closest('#dropdownSugestoesProduto')) {
+            fecharDropdown();
+        }
+    });
+
+    // Busca via Enter ou botão
+    inputBusca?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); buscarProduto(); }
+        if (e.key === 'Escape') { fecharDropdown(); }
+    });
+    document.getElementById('btnBuscarProdutoEntrada')?.addEventListener('click', buscarProduto);
 
     // Recalcular ao mudar campos do card
     ['ps_quantidade', 'ps_valor_unitario', 'ps_icms_st', 'ps_ipi', 'ps_desconto'].forEach(id => {
@@ -332,28 +520,14 @@ export function setupFormEntrada() {
     // Adicionar produto
     document.getElementById('btnAdicionarProdutoEntrada')?.addEventListener('click', adicionarItemEntrada);
 
-    // Salvar (em aberto) — apenas UI por enquanto, backend será implementado
+    // Salvar (em aberto)
     document.getElementById('btnSalvarEntrada')?.addEventListener('click', () => {
-        if (itensDaEntrada.length === 0) {
-            showError('Adicione ao menos um produto antes de salvar.');
-            return;
-        }
-        const payload = montarPayload('ABERTA');
-        console.log('Salvar entrada (ABERTA):', payload);
-        // TODO: Chamar API quando backend estiver pronto
-        showError('Funcionalidade de salvar será implementada com o backend.');
+        enviarEntrada('ABERTO');
     });
 
     // Concluir
     document.getElementById('btnConcluirEntrada')?.addEventListener('click', () => {
-        if (itensDaEntrada.length === 0) {
-            showError('Adicione ao menos um produto antes de concluir.');
-            return;
-        }
-        const payload = montarPayload('CONCLUIDA');
-        console.log('Concluir entrada:', payload);
-        // TODO: Chamar API quando backend estiver pronto
-        showError('Funcionalidade de concluir será implementada com o backend.');
+        enviarEntrada('CONCLUIDA');
     });
 }
 

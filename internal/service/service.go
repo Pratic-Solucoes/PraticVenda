@@ -55,6 +55,9 @@ type Service struct {
 		ListarEstoques(ctx context.Context) ([]*model.Estoque, error)
 		ListarProdutosDoEstoque(ctx context.Context, idEstoque int64) ([]*model.ProdutoEstoque, error)
 	}
+	EntradaEstoque interface {
+		RegistrarEntrada(ctx context.Context, entrada *model.EntradaEstoque) error
+	}
 	Produtos interface {
 		CriarProduto(ctx context.Context, input *model.ProdutoInput) (*model.ProdutoCompleto, error)
 		ListarProdutos(ctx context.Context, busca string) ([]*model.ProdutoCompleto, error)
