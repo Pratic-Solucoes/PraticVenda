@@ -1,9 +1,9 @@
 package controller
 
 import (
+	"encoding/json"
 	"gestao/internal/model"
 	"gestao/internal/service"
-	"gestao/pkg/requisicao"
 	"gestao/pkg/resposta"
 	"net/http"
 	"strconv"
@@ -32,8 +32,8 @@ func (c *EstoqueController) EntradaEstoque(w http.ResponseWriter, r *http.Reques
 	entrada.IDEstoque = uint64(idEstoque)
 	entrada.IDUsuario = idUsuario
 
-	if err := requisicao.ProcessarRequisicao(w, r, &entrada); err != nil {
-		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": err.Error()})
+	if err := json.NewDecoder(r.Body).Decode(&entrada); err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "Erro ao decodificar dados: " + err.Error()})
 		return
 	}
 
