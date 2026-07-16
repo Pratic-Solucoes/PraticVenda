@@ -39,6 +39,7 @@ func CarregarRotas(c *controller.Controller) *chi.Mux {
 	r.Get("/estoques", c.View.RenderizarEstoquesPage)
 	r.Get("/entrada-estoque", c.View.RenderizarEntradaEstoquePage)
 	r.Get("/produtos", c.View.RenderizarProdutosPage)
+	r.Get("/condicoes-pagamento", c.View.RenderizarCondicoesPagamentoPage)
 
 	// rotas funcionalidades
 	r.Route("/api", func(r chi.Router) {

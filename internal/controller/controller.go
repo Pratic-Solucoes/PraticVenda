@@ -19,6 +19,7 @@ type Controller struct {
 		RenderizarEstoquesPage(w http.ResponseWriter, r *http.Request)
 		RenderizarEntradaEstoquePage(w http.ResponseWriter, r *http.Request)
 		RenderizarProdutosPage(w http.ResponseWriter, r *http.Request)
+		RenderizarCondicoesPagamentoPage(w http.ResponseWriter, r *http.Request)
 	}
 	Login interface {
 		Login(w http.ResponseWriter, r *http.Request)

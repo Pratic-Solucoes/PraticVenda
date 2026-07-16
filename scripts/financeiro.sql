@@ -10,13 +10,19 @@ create table if not exists tb_formas_pagamento(
 
 create table if not exists tb_condicoes_pagamento(
     id bigserial primary key,
-    id_forma_pagamento bigint not null,
     descricao varchar(100) not null,
     qtd_parcelas bigint not null,
     dias_primeiro_venc bigint not null,
-    intervalo_parcelas bigint not null,
-    FOREIGN KEY (id_forma_pagamento) REFERENCES tb_formas_pagamento(id)
-)
+    intervalo_parcelas bigint not null
+);
+
+create table if not exists tb_condicao_forma_pagamento(
+    id_condicao bigint not null,
+    id_forma_pagamento bigint not null,
+    primary key (id_condicao, id_forma_pagamento),
+    foreign key (id_condicao) references tb_condicoes_pagamento(id) on delete cascade,
+    foreign key (id_forma_pagamento) references tb_formas_pagamento(id) on delete cascade
+);
 
 create table if not exists tb_contas_receber(
     id bigserial primary key,
