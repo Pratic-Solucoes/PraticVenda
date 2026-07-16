@@ -4,6 +4,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('form');
     const emailInput = document.getElementById('entrada_email');
     const senhaInput = document.getElementById('entrada_senha');
+    const btnToggleSenha = document.getElementById('toggleSenhaBtn');
+    const iconToggleSenha = document.getElementById('toggleSenhaIcon');
+
+    if (btnToggleSenha) {
+        btnToggleSenha.addEventListener('click', () => {
+            if (senhaInput.type === 'password') {
+                senhaInput.type = 'text';
+                iconToggleSenha.classList.remove('bi-eye');
+                iconToggleSenha.classList.add('bi-eye-slash');
+            } else {
+                senhaInput.type = 'password';
+                iconToggleSenha.classList.remove('bi-eye-slash');
+                iconToggleSenha.classList.add('bi-eye');
+            }
+        });
+    }
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();

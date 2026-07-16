@@ -1,13 +1,21 @@
 {{define "loginForm"}}
 <form>
     <div class="mb-3">
-        <label for="entrada_email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="entrada_email">
+        <label for="entrada_email" class="form-label login-label fw-semibold"><i class="bi bi-person me-1"></i> Usuário</label>
+        <input type="text" class="form-control login-input" id="entrada_email" placeholder="Seu usuário" required>
     </div>
-    <div class="mb-3">
-        <label for="entrada_senha" class="form-label">Senha</label>
-        <input type="password" class="form-control" id="entrada_senha">
+    <div class="mb-4">
+        <label for="entrada_senha" class="form-label login-label fw-semibold"><i class="bi bi-lock me-1"></i> Senha</label>
+        <div class="input-group">
+            <input type="password" class="form-control login-input" id="entrada_senha" placeholder="Sua senha" required>
+            <button class="btn btn-outline-secondary" type="button" id="toggleSenhaBtn">
+                <i class="bi bi-eye" id="toggleSenhaIcon"></i>
+            </button>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Entrar</button>
+    <div class="d-flex gap-3 mt-4">
+        <button type="button" class="btn login-btn-voltar"><i class="bi bi-arrow-left me-1"></i> Voltar</button>
+        <button type="submit" class="btn login-btn-entrar text-white flex-grow-1"><i class="bi bi-box-arrow-in-right me-1"></i> Entrar</button>
+    </div>
 </form>
 {{end}}
