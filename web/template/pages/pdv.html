@@ -15,36 +15,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestão - Ponto de Venda</title>
-    <style>
-        .pdv-container {
-            height: calc(100vh - 120px);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .table-container {
-            flex-grow: 1;
-            overflow-y: auto;
-            min-height: 200px;
-        }
-
-        .total-display {
-            font-size: 3rem;
-            font-weight: 800;
-            background-color: #f8f9fa;
-            border: 3px solid #198754;
-            border-radius: 0.75rem;
-            padding: 10px 30px;
-            color: #198754;
-            text-align: right;
-            min-width: 250px;
-        }
-
-        .pdv-actions .btn {
-            padding: 12px 20px;
-            font-size: 1.1rem;
-        }
-    </style>
 </head>
 
 <body>
@@ -113,7 +83,7 @@
                         </div>
 
                         <!-- Tabela de Produtos -->
-                        <div class="table-responsive table-container border rounded-3 mb-4 shadow-sm">
+                        <div class="table-responsive pdv-table-container border rounded-3 mb-4 shadow-sm">
                             <table class="table table-hover align-middle mb-0 text-center">
                                 <thead class="table-light sticky-top shadow-sm">
                                     <tr>
@@ -172,8 +142,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
-    <!-- Para a próxima etapa: adicionar script para lógica do PDV -->
-    <!-- <script type="module" src="/static/js/pdv/main.js"></script> -->
+    <!-- Inicialização da lógica do PDV -->
+    <script type="module" src="/static/js/pdv/main.js"></script>
 </body>
 
 </html>

@@ -18,3 +18,33 @@
     padding: 0.4rem 0.4rem;
     font-size: 0.9rem;
 }
+
+/* Estilos do PDV */
+.pdv-container {
+    height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+}
+
+.pdv-table-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 200px;
+}
+
+.total-display {
+    font-size: 3rem;
+    font-weight: 800;
+    background-color: #f8f9fa;
+    border: 3px solid #198754;
+    border-radius: 0.75rem;
+    padding: 10px 30px;
+    color: #198754;
+    text-align: right;
+    min-width: 250px;
+}
+
+.pdv-actions .btn {
+    padding: 12px 20px;
+    font-size: 1.1rem;
+}
