@@ -29,14 +29,32 @@ document.addEventListener('DOMContentLoaded', () => {
         btnAddProduto.addEventListener('click', handleAddProduto);
     }
 
+    let debounceTimeout;
     if (inputProduto) {
+        inputProduto.addEventListener('input', (e) => {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => {
+                const query = inputProduto.value.trim();
+                buscarEAdicionarProduto(query);
+            }, 400); // 400ms debounce
+        });
+
         inputProduto.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
+                clearTimeout(debounceTimeout);
                 handleAddProduto();
             }
         });
     }
+
+    // Fechar dropdown ao clicar fora
+    document.addEventListener('click', (e) => {
+        const dropdown = document.getElementById('dropdown_produto');
+        if (dropdown && !dropdown.contains(e.target) && e.target !== inputProduto) {
+            dropdown.classList.add('d-none');
+        }
+    });
 
     // 4. Delegação de Eventos para os botões dentro da Tabela
     if (tbody) {

@@ -51,34 +51,29 @@
                     <div class="card-body p-4 d-flex flex-column">
 
                         <!-- Primeira Linha: Cliente -->
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label for="pdv_cliente" class="form-label text-muted fw-bold">Cliente</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i
-                                            class="bi bi-person fs-5"></i></span>
-                                    <input type="text" class="form-control form-control-lg border-start-0 ps-0"
-                                        id="pdv_cliente"
-                                        placeholder="Buscar cliente por nome, CPF ou CNPJ (Opcional)" />
+                        <div class="row mb-2">
+                            <div class="col-md-12 position-relative">
+                                <label for="pdv_cliente" class="form-label form-label-sm text-muted fw-bold mb-1">Cliente</label>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="pdv_cliente" placeholder="Buscar cliente por nome, CPF ou CNPJ (Opcional)" autocomplete="off" />
                                 </div>
+                                <div id="dropdown_cliente" class="list-group position-absolute w-100 shadow-sm d-none" style="z-index: 1000; max-height: 200px; overflow-y: auto; top: 100%;"></div>
                             </div>
                         </div>
 
                         <!-- Segunda Linha: Produto -->
-                        <div class="row mb-4">
-                            <div class="col-md-12">
-                                <label for="pdv_produto" class="form-label text-muted fw-bold">Produto</label>
-                                <div class="input-group shadow-sm">
-                                    <span class="input-group-text bg-primary text-white border-primary"><i
-                                            class="bi bi-upc-scan fs-5"></i></span>
-                                    <input type="text" class="form-control form-control-lg border-primary"
-                                        id="pdv_produto"
-                                        placeholder="Digite o código de barras ou nome do produto..." />
-                                    <button class="btn btn-primary px-4 fw-bold fs-5" type="button"
-                                        id="btn_adicionar_produto">
+                        <div class="row mb-3">
+                            <div class="col-md-12 position-relative">
+                                <label for="pdv_produto" class="form-label form-label-sm text-muted fw-bold mb-1">Produto</label>
+                                <div class="input-group input-group-sm shadow-sm">
+                                    <span class="input-group-text bg-primary text-white border-primary"><i class="bi bi-upc-scan"></i></span>
+                                    <input type="text" class="form-control border-primary" id="pdv_produto" placeholder="Digite o código de barras ou nome do produto..." autocomplete="off" />
+                                    <button class="btn btn-primary px-3 fw-bold" type="button" id="btn_adicionar_produto">
                                         <i class="bi bi-plus-lg"></i>
                                     </button>
                                 </div>
+                                <div id="dropdown_produto" class="list-group position-absolute w-100 shadow-sm d-none" style="z-index: 1000; max-height: 250px; overflow-y: auto; top: 100%;"></div>
                             </div>
                         </div>
 

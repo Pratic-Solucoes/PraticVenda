@@ -33,18 +33,18 @@
 }
 
 .total-display {
-    font-size: 3rem;
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 700;
     background-color: #f8f9fa;
-    border: 3px solid #198754;
-    border-radius: 0.75rem;
-    padding: 10px 30px;
+    border: 2px solid #198754;
+    border-radius: 0.5rem;
+    padding: 5px 20px;
     color: #198754;
     text-align: right;
-    min-width: 250px;
+    min-width: 200px;
 }
 
 .pdv-actions .btn {
-    padding: 12px 20px;
-    font-size: 1.1rem;
+    padding: 8px 15px;
+    font-size: 0.95rem;
 }
