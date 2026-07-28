@@ -1,26 +1,37 @@
-package controller
+package usuario
 
 import (
-	"gestao/internal/model"
-	"gestao/internal/service"
 	"gestao/pkg/requisicao"
 	"gestao/pkg/resposta"
 	"net/http"
 )
 
-type UsuarioController struct {
-	service *service.Service
+type ControllerInterface interface {
+	CriarUsuario(w http.ResponseWriter, r *http.Request)
+	BuscarUsuarioPorID(w http.ResponseWriter, r *http.Request)
+	EditarUsuario(w http.ResponseWriter, r *http.Request)
+	AlterarSenha(w http.ResponseWriter, r *http.Request)
 }
 
-func (c *UsuarioController) CriarUsuario(w http.ResponseWriter, r *http.Request) {
+type Controller struct {
+	service ServiceInterface
+}
 
-	var usuarioCriar model.UsuarioCriar
+func NewController(service ServiceInterface) ControllerInterface {
+	return &Controller{
+		service: service,
+	}
+}
+
+func (c *Controller) CriarUsuario(w http.ResponseWriter, r *http.Request) {
+
+	var usuarioCriar Usuario
 	if err := requisicao.ProcessarRequisicao(w, r, &usuarioCriar); err != nil {
 		// ProcessarRequisicao já enviou um HTTP 400 caso tenha falhado
 		return
 	}
 
-	usuarioCriado, err := c.service.Usuarios.CriarUsuario(r.Context(), &usuarioCriar)
+	usuarioCriado, err := c.service.CriarUsuario(r.Context(), &usuarioCriar)
 	if err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": err.Error()})
 		return
@@ -29,7 +40,7 @@ func (c *UsuarioController) CriarUsuario(w http.ResponseWriter, r *http.Request)
 	resposta.Padrao(w, http.StatusCreated, usuarioCriado)
 }
 
-func (c *UsuarioController) BuscarUsuarioPorID(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) BuscarUsuarioPorID(w http.ResponseWriter, r *http.Request) {
 
 	// O ID do usuário vem do token JWT, que é validado pelo middleware de autenticação.
 	// O pacote JWT decodifica números JSON como float64, então tratamos esse tipo.
@@ -46,7 +57,7 @@ func (c *UsuarioController) BuscarUsuarioPorID(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	usuario, err := c.service.Usuarios.BuscarUsuarioPorID(r.Context(), int(usuarioID))
+	usuario, err := c.service.BuscarUsuarioPorID(r.Context(), uint64(usuarioID))
 	if err != nil {
 		resposta.Padrao(w, http.StatusNotFound, map[string]string{"erro": "erro ao buscar usuário: " + err.Error()})
 		return
@@ -54,9 +65,9 @@ func (c *UsuarioController) BuscarUsuarioPorID(w http.ResponseWriter, r *http.Re
 	resposta.Padrao(w, http.StatusOK, usuario)
 }
 
-func (c *UsuarioController) EditarUsuario(w http.ResponseWriter, r *http.Request) {}
+func (c *Controller) EditarUsuario(w http.ResponseWriter, r *http.Request) {}
 
-func (c *UsuarioController) AlterarSenha(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) AlterarSenha(w http.ResponseWriter, r *http.Request) {
 
 	type payload struct {
 		SenhaAtual       string `json:"senha_atual"`
@@ -76,7 +87,13 @@ func (c *UsuarioController) AlterarSenha(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if err := c.service.Usuarios.AlterarSenha(r.Context(), int64(usuarioIDClaim.(float64)), p.SenhaAtual, p.NovaSenha, p.SenhaConfirmacao); err != nil {
+	usuarioID, ok := usuarioIDClaim.(float64)
+	if !ok {
+		resposta.Padrao(w, http.StatusInternalServerError, map[string]string{"erro": "Formato de ID do usuário inválido no token"})
+		return
+	}
+
+	if err := c.service.AlterarSenha(r.Context(), uint64(usuarioID), p.SenhaAtual, p.NovaSenha, p.SenhaConfirmacao); err != nil {
 		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": err.Error()})
 		return
 	}

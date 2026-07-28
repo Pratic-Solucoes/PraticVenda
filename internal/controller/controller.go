@@ -27,12 +27,6 @@ type Controller struct {
 	Empresa interface {
 		CriarEmpresa(w http.ResponseWriter, r *http.Request)
 	}
-	Usuarios interface {
-		CriarUsuario(w http.ResponseWriter, r *http.Request)
-		BuscarUsuarioPorID(w http.ResponseWriter, r *http.Request)
-		EditarUsuario(w http.ResponseWriter, r *http.Request)
-		AlterarSenha(w http.ResponseWriter, r *http.Request)
-	}
 	Clientes interface {
 		CriarCliente(w http.ResponseWriter, r *http.Request)
 		ListarClientes(w http.ResponseWriter, r *http.Request)

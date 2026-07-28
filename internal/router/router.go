@@ -45,11 +45,6 @@ func CarregarRotas(c *controller.Controller) *chi.Mux {
 	r.Route("/api", func(r chi.Router) {
 		r.Post("/login", c.Login.Login)
 
-		// Rotas Usuarios
-		r.Post("/usuarios", c.Usuarios.CriarUsuario)
-		r.Get("/usuario", auth.Autenticar(c.Usuarios.BuscarUsuarioPorID))
-		r.Put("/usuario/alterar-senha", auth.Autenticar(c.Usuarios.AlterarSenha))
-
 		// Rotas Fornecedores
 		r.Get("/fornecedores", auth.Autenticar(c.Fornecedores.ListarFornecedores))
 		r.Post("/fornecedores", auth.Autenticar(c.Fornecedores.CriarFornecedor))

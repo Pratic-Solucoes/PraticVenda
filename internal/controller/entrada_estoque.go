@@ -43,3 +43,23 @@ func (c *EstoqueController) EntradaEstoque(w http.ResponseWriter, r *http.Reques
 
 	resposta.Padrao(w, http.StatusCreated, map[string]string{"mensagem": "Entrada de estoque registrada com sucesso"})
 }
+
+/*
+func (c *EstoqueController) Listar(w http.ResponseWriter, r *http.Request) {
+
+
+
+	idEstoque, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
+	if err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id de estoque inválido"})
+		return
+	}
+
+	var entradas []model.EntradaEstoque
+
+	if err := c.service.EntradaEstoque.ListarEntradas(r.Context(), uint64(idEstoque)); err != nil {
+
+	}
+
+}
+*/

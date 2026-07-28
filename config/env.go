@@ -5,7 +5,16 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/joho/godotenv"
 )
+
+func init() {
+	// Carrega as variáveis do arquivo .env se ele existir.
+	// Não retornamos erro fatal se o arquivo não existir, pois em ambientes
+	// de produção/Docker as variáveis podem ser passadas diretamente no container.
+	_ = godotenv.Load()
+}
 
 func GetToken(key string) string {
 	value, exists := os.LookupEnv(key)
