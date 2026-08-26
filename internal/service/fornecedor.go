@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"gestao/internal/model"
 	"gestao/internal/repository"
-	"gestao/pkg/helpers"
+	"gestao/utils/helpers"
 )
 
 type FornecedorService struct {

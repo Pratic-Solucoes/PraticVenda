@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"gestao/pkg/token"
 	"net/http"
 	"strings"
 )
@@ -17,7 +16,7 @@ func Autenticar(next http.HandlerFunc) http.HandlerFunc {
 
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
-		dadosUsuarioRequesicao, err := token.ValidarTokenJWT(tokenString)
+		dadosUsuarioRequesicao, err := ValidarTokenJWT(tokenString)
 		if err != nil {
 			http.Error(w, "Token inválido", http.StatusUnauthorized)
 			return

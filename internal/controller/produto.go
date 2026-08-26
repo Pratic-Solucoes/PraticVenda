@@ -3,8 +3,8 @@ package controller
 import (
 	"gestao/internal/model"
 	"gestao/internal/service"
-	"gestao/pkg/requisicao"
-	"gestao/pkg/resposta"
+	"gestao/utils/requisicao"
+	"gestao/utils/resposta"
 	"net/http"
 	"strconv"
 

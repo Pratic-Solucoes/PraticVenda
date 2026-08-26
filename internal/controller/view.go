@@ -9,6 +9,7 @@ import (
 type ViewController struct {
 }
 
+
 func (c *ViewController) RenderizarLoginPage(w http.ResponseWriter, r *http.Request) {
 
 	tmpl, err := template.ParseFiles(
@@ -265,4 +266,3 @@ func (c *ViewController) RenderizarCondicoesPagamentoPage(w http.ResponseWriter,
 		return
 	}
 }
-

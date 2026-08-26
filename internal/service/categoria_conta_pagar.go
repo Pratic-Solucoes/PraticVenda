@@ -6,7 +6,7 @@ import (
 	"errors"
 	"gestao/internal/model"
 	"gestao/internal/repository"
-	"gestao/pkg/helpers"
+	"gestao/utils/helpers"
 )
 
 type CategoriaContaPagarService struct {
@@ -33,7 +33,6 @@ func (s *CategoriaContaPagarService) CriarCategoria(ctx context.Context, c *mode
 	if err != nil {
 		return nil, err
 	}
-
 	if err := tx.Commit(); err != nil {
 		return nil, err
 	}
@@ -56,7 +55,7 @@ func (s *CategoriaContaPagarService) ListarCategorias(ctx context.Context) ([]*m
 	if err != nil {
 		return nil, err
 	}
-	
+
 	if err := tx.Commit(); err != nil {
 		return nil, err
 	}

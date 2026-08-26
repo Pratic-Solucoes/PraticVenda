@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"gestao/internal/repository"
-	"gestao/pkg/helpers"
+	"gestao/utils/helpers"
 	"time"
 )
 
@@ -43,7 +43,6 @@ func (s *DashboardService) ObterResumo(ctx context.Context) (*ResumoDashboard, e
 	fimMes := inicioMes.AddDate(0, 1, -1)
 
 	resumo := &ResumoDashboard{}
-	
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err

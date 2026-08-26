@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"gestao/internal/model"
 	"gestao/internal/repository"
-	"gestao/pkg/helpers"
+	"gestao/utils/helpers"
 )
 
 type ProdutoService struct {

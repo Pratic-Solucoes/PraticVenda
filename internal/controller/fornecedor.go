@@ -3,8 +3,8 @@ package controller
 import (
 	"gestao/internal/model"
 	"gestao/internal/service"
-	"gestao/pkg/requisicao"
-	"gestao/pkg/resposta"
+	"gestao/utils/requisicao"
+	"gestao/utils/resposta"
 	"net/http"
 	"strconv"
 	"github.com/go-chi/chi/v5"
@@ -16,7 +16,6 @@ type FornecedorController struct {
 
 func (c *FornecedorController) ListarFornecedores(w http.ResponseWriter, r *http.Request) {
 	busca := r.URL.Query().Get("busca")
-	
 	fornecedores, err := c.service.Fornecedores.ListarFornecedores(r.Context(), busca)
 	if err != nil {
 		resposta.Padrao(w, http.StatusInternalServerError, map[string]string{"erro": "erro ao buscar fornecedores: " + err.Error()})

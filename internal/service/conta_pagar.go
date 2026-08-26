@@ -6,7 +6,7 @@ import (
 	"errors"
 	"gestao/internal/model"
 	"gestao/internal/repository"
-	"gestao/pkg/helpers"
+	"gestao/utils/helpers"
 )
 
 type ContaPagarService struct {

@@ -14,5 +14,4 @@ func Padrao(w http.ResponseWriter, statusCode int, data any) {
 			log.Printf("erro ao codificar resposta: %v", err)
 		}
 	}
-
 }

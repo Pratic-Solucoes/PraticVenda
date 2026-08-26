@@ -2,7 +2,7 @@ package controller
 
 import (
 	"gestao/internal/service"
-	"gestao/pkg/resposta"
+	"gestao/utils/resposta"
 	"net/http"
 )
 

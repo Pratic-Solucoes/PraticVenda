@@ -24,7 +24,7 @@ func (r *CategoriaContaPagarRepository) CriarCategoria(ctx context.Context, tx *
 	return c, nil
 }
 
-func (r *CategoriaContaPagarRepository) ListarCategorias(ctx context.Context, tx *sql.Tx) ([]*model.CategoriaContaPagar, error) {
+func (r *CategoriaContaPagarRepository) ListarCategorias(ctx context.Context, tx *sql.Tx) ([]model.CategoriaContaPagar, error) {
 	query := `SELECT id, descricao FROM tb_categorias_contas_pagar ORDER BY descricao ASC`
 	rows, err := tx.QueryContext(ctx, query)
 	if err != nil {
@@ -32,9 +32,9 @@ func (r *CategoriaContaPagarRepository) ListarCategorias(ctx context.Context, tx
 	}
 	defer rows.Close()
 
-	var categorias []*model.CategoriaContaPagar
+	var categorias []model.CategoriaContaPagar
 	for rows.Next() {
-		c := &model.CategoriaContaPagar{}
+		var c model.CategoriaContaPagar
 		if err := rows.Scan(&c.ID, &c.Nome); err != nil {
 			return nil, err
 		}

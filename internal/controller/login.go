@@ -2,11 +2,11 @@ package controller
 
 import (
 	"fmt"
+	"gestao/internal/auth"
 	"gestao/internal/model"
 	"gestao/internal/service"
-	"gestao/pkg/requisicao"
-	"gestao/pkg/resposta"
-	"gestao/pkg/token"
+	"gestao/utils/requisicao"
+	"gestao/utils/resposta"
 	"net/http"
 )
 
@@ -30,7 +30,7 @@ func (c *LoginController) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tokenString, err := token.GerarTokenJWT(int(id), nome, schema)
+	tokenString, err := auth.GerarTokenJWT(int(id), nome, schema)
 	if err != nil {
 		resposta.Padrao(w, http.StatusInternalServerError, "erro ao gerar token")
 		return
