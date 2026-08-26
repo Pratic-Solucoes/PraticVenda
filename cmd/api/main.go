@@ -13,6 +13,11 @@ import (
 )
 
 func main() {
+	if err := config.CarregarArquivoEnv(".envrc"); err != nil && !os.IsNotExist(err) {
+		fmt.Printf("Erro ao carregar arquivo .envrc: %v\n", err)
+		return
+	}
+
 	app := &application{
 		API_port:           fmt.Sprintf(":%s", os.Getenv("PORT")),
 		API_maxHeaderBytes: config.GetInt("API_MAX_HEADER_BYTES", 1<<20), // 1 MB

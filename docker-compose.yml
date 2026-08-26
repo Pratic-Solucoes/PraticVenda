@@ -6,7 +6,7 @@ services:
     image: postgres:16-alpine
     container_name: erp_postgres
     environment:
-      # ATENÇÃO: Substitua pelos seus valores ou use um arquivo .env
+      # ATENÇÃO: Substitua pelos seus valores ou use um arquivo .envrc
       POSTGRES_DB: erp
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: stfXJxYNAFleLsvWqRUyzsMhGosduXkk
@@ -22,7 +22,10 @@ services:
       dockerfile: Dockerfile
     container_name: erp_gestao_api
     env_file:
-      - .env # Carrega as variáveis de ambiente do seu arquivo .env
+      - .envrc # Carrega as variáveis de ambiente locais
+    environment:
+      # Dentro da rede Docker, o banco é acessado pelo nome do serviço.
+      DATABASE_URL: postgres://postgres:stfXJxYNAFleLsvWqRUyzsMhGosduXkk@postgres:5432/erp?sslmode=disable
     ports:
       - "9000:9000" # Mapeia a porta 9000 do host para a porta 9000 do contêiner
     depends_on:

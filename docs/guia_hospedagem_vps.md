@@ -52,7 +52,7 @@ Quando o servidor for adquirido (com o Endereço de IP e Senha de Root em mãos)
 ### B. Deploy da Aplicação (O Gerente Go)
 1. No seu computador Windows, executaremos a compilação cruzada:
    `GOOS=linux GOARCH=amd64 go build -o gestao-api ./cmd/api`
-2. Fazer o upload seguro (via `scp` ou sFTP) do arquivo `gestao-api` e do seu arquivo `.env` para o servidor Linux.
+2. Fazer o upload seguro (via `scp` ou sFTP) do arquivo `gestao-api` e do seu arquivo `.envrc` para o servidor Linux.
 3. Criar um **Serviço Systemd** (`gestao.service`). Isso garante que a aplicação ligue sozinha se a máquina for reiniciada e permaneça rodando em background na porta 9000.
 
 ### C. Publicação e Segurança
