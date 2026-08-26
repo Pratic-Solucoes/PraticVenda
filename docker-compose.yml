@@ -13,6 +13,8 @@ services:
     volumes:
       # Garante que os dados do banco de dados persistam ao reiniciar o contêiner
       - postgres_data:/var/lib/postgresql/data
+      # Executado automaticamente apenas na criação de um volume novo.
+      - ./database/001_inicializar_banco.sql:/docker-entrypoint-initdb.d/001_inicializar_banco.sql:ro
     restart: unless-stopped
 
   # Serviço da Aplicação Go (API)

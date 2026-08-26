@@ -48,3 +48,70 @@
     padding: 8px 15px;
     font-size: 0.95rem;
 }
+
+/* Tema Pangea Sales: sobrescreve os componentes Bootstrap com a marca verde. */
+.btn-primary {
+    --bs-btn-bg: var(--primary);
+    --bs-btn-border-color: var(--primary);
+    --bs-btn-hover-bg: var(--primary-hover);
+    --bs-btn-hover-border-color: var(--primary-hover);
+    --bs-btn-active-bg: var(--primary-dark);
+    --bs-btn-active-border-color: var(--primary-dark);
+    --bs-btn-focus-shadow-rgb: 0, 100, 55;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--primary);
+    --bs-btn-border-color: var(--primary);
+    --bs-btn-hover-bg: var(--primary);
+    --bs-btn-hover-border-color: var(--primary);
+    --bs-btn-active-bg: var(--primary-dark);
+    --bs-btn-active-border-color: var(--primary-dark);
+    --bs-btn-focus-shadow-rgb: 0, 100, 55;
+}
+
+.text-primary { color: var(--primary) !important; }
+.bg-primary { background-color: var(--primary) !important; }
+.border-primary { border-color: var(--primary) !important; }
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    border-color: var(--verde-300);
+    box-shadow: 0 0 0 .2rem var(--primary-focus);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.nav-pills {
+    --bs-nav-pills-link-active-bg: var(--primary);
+}
+
+.page-link {
+    color: var(--primary);
+}
+
+.page-link:focus {
+    color: var(--primary-dark);
+    box-shadow: 0 0 0 .2rem var(--primary-focus);
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.card,
+.modal-content,
+.dropdown-menu {
+    border-color: var(--border-color);
+}
+
+.card,
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 43, 24, .06);
+}

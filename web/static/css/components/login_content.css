@@ -1,5 +1,5 @@
 body {
-    background-color: #0A3152; /* Dark blue background */
+    background-color: #003b21;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -22,7 +22,7 @@ body {
 
 .login-left {
     flex: 1;
-    background: linear-gradient(145deg, #104C82 0%, #0088EA 100%);
+    background: linear-gradient(145deg, #003b21 0%, #006437 62%, #15945c 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -87,8 +87,8 @@ body {
     border: 1px solid #e2e8f0;
 }
 .login-input:focus {
-    box-shadow: 0 0 0 0.25rem rgba(10, 49, 82, 0.15);
-    border-color: #0A3152;
+    box-shadow: 0 0 0 0.25rem rgba(0, 100, 55, 0.16);
+    border-color: #006437;
 }
 
 .login-btn-voltar {
@@ -106,13 +106,13 @@ body {
 
 .login-btn-entrar {
     border-radius: 6px;
-    background-color: #0A3152;
-    border-color: #0A3152;
+    background-color: #006437;
+    border-color: #006437;
     font-size: 0.95rem;
 }
 .login-btn-entrar:hover {
-    background-color: #0f4572;
-    border-color: #0f4572;
+    background-color: #00512d;
+    border-color: #00512d;
 }
 
 .login-footer {

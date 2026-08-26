@@ -16,6 +16,18 @@ Segurança: Bcrypt para senhas e JWT (golang-jwt/v5) para sessões.
 
 ---
 
+## Banco de dados
+
+Toda a estrutura foi consolidada em `database/001_inicializar_banco.sql`. Para criar o banco local já existente, execute:
+
+```bash
+psql "$DATABASE_URL" -f database/001_inicializar_banco.sql
+```
+
+No Docker Compose, o arquivo é executado automaticamente somente quando o volume do PostgreSQL é criado pela primeira vez.
+
+---
+
 ## 🏛️ Arquitetura
 
 O projeto segue um padrão em camadas, separando as responsabilidades:

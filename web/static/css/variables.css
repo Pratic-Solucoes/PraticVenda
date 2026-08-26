@@ -1,50 +1,84 @@
 :root {
-    /* Paleta principal — azul jurídico escuro */
-    --azul-900: #05080f;
-    --azul-800: #080f1e;
-    --azul-700: #0d1a30;
-    --azul-600: #122340;
-    --azul-500: #1a3358;
-    --azul-400: #254d7f;
-    --azul-300: #3d6fa3;
-    --azul-200: #7ea8cc;
-    --azul-100: #b8d0e8;
-    --azul-050: #ddeaf5;
-    --azul-025: #eef5fb;
-    --azul-010: #f6fafd;
+    /* Marca Pangea Sales */
+    --verde-900: #002b18;
+    --verde-800: #003b21;
+    --verde-700: #004d2b;
+    --verde-600: #005a32;
+    --verde-500: #006437;
+    --verde-400: #007a43;
+    --verde-300: #15945c;
+    --verde-200: #65bf91;
+    --verde-100: #b6e2c9;
+    --verde-050: #e0f3e8;
+    --verde-025: #eff9f3;
+    --verde-010: #f7fcf8;
 
-    --azul: #009FE3; /*Cor principal do logo */
-    --azul-escuro: #003156; /*Cor Secundaria do logo */
-    --azul-escuro-sombra: #00223b;
+    --primary: #006437;
+    --primary-hover: #00512d;
+    --primary-dark: #003b21;
+    --primary-soft: #e0f3e8;
+    --primary-focus: rgba(0, 100, 55, .18);
+    --gold: linear-gradient(135deg, #006437 0%, #15945c 100%);
+    --gold-solid: var(--primary);
+    --gold-light: var(--verde-200);
 
-    
-    /* Dourado — destaque jurídico */
-    --gold: radial-gradient(
-        ellipse farthest-corner at right bottom,
-        #8a7020 0%, #c9a227 20%, #e8c547 45%, #c9a227 70%, #8a7020 100%
-    );
-    --gold-solid: #c9a227;
-    --gold-light: #f0d87a;
+    /* Aliases preservam os componentes existentes enquanto aplicam a nova marca. */
+    --azul-900: var(--verde-900);
+    --azul-800: var(--verde-800);
+    --azul-700: var(--verde-700);
+    --azul-600: var(--verde-600);
+    --azul-500: var(--verde-500);
+    --azul-400: var(--verde-400);
+    --azul-300: var(--verde-300);
+    --azul-200: var(--verde-200);
+    --azul-100: var(--verde-100);
+    --azul-050: var(--verde-050);
+    --azul-025: var(--verde-025);
+    --azul-010: var(--verde-010);
+    --azul: var(--primary);
+    --azul-escuro: var(--verde-800);
+    --azul-escuro-sombra: var(--verde-900);
 
     /* Semânticas */
-    --cor-danger:  #a83a3a;
-    --cor-success: #1e6b3c;
-    --cor-warning: #8a6d00;
-    --cor-info:    #1a5a7f;
+    --cor-danger: #b33a3a;
+    --cor-success: #006437;
+    --cor-warning: #9a6b18;
+    --cor-info: #126782;
+
+    /* Superfícies */
+    --body-bg: var(--verde-010);
+    --body-color: #183126;
+    --surface-bg: #ffffff;
+    --surface-muted: var(--verde-025);
+    --border-color: #dce9e1;
+    --text-muted: #6a7d72;
 
     /* Sidebar */
-    --sidebar-width:       240px;
-    --sidebar-collapsed:   60px;
-    --sidebar-bg:          var(--azul-800);
-    --sidebar-border:      var(--azul-600);
-    --sidebar-item-hover:  var(--azul-700);
-    --sidebar-item-active: var(--azul-500);
-    --sidebar-text:        var(--azul-100);
+    --sidebar-width: 240px;
+    --sidebar-collapsed: 60px;
+    --sidebar-bg: var(--verde-800);
+    --sidebar-border: #00512d;
+    --sidebar-item-hover: var(--verde-700);
+    --sidebar-item-active: var(--verde-600);
+    --sidebar-text: var(--verde-100);
 
-    /* Tipografia */
-    --font-base: 'Nunito', 'Segoe UI', sans-serif;
+    /* Tipografia e movimento */
+    --font-base: 'Inter', 'Nunito', 'Segoe UI', Arial, sans-serif;
     --font-size-base: 14px;
+    --transition: .22s ease;
+}
 
-    /* Transições */
-    --transition: 0.22s ease;
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    background: var(--body-bg);
+    color: var(--body-color);
+    font-family: var(--font-base);
+    font-size: var(--font-size-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }

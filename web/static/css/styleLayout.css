@@ -8,8 +8,8 @@
 body {
     font-family: var(--font-base);
     font-size: var(--font-size-base);
-    background: var(--azul-025);
-    color: var(--azul-700);
+    background: var(--body-bg);
+    color: var(--body-color);
     margin: 0;
 }
 
@@ -381,7 +381,7 @@ body {
 .formulario .form-control:focus,
 .formulario .form-select:focus {
     border-color: var(--azul-400);
-    box-shadow: 0 0 0 .18rem rgba(37,77,127,.15);
+    box-shadow: 0 0 0 .18rem var(--primary-focus);
 }
 
 .formulario .btn-primary {
