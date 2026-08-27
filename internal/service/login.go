@@ -14,9 +14,6 @@ type LoginService struct {
 }
 
 func (s *LoginService) Login(ctx context.Context, usuario *model.UsuarioLogin) (uint64, string, string, error) {
-	if err := usuario.Validar(); err != nil {
-		return 0, "", "", err
-	}
 
 	id, nome, senhaDB, schema, err := s.repository.Login.Login(ctx, usuario.Email)
 
@@ -25,8 +22,26 @@ func (s *LoginService) Login(ctx context.Context, usuario *model.UsuarioLogin) (
 	}
 
 	if err := usuario.ValidarSenha(senhaDB); err != nil {
-		return 0, "", "", errors.New("dados login inválidos")
+		return 0, "", "", err
 	}
 
 	return id, nome, schema, nil
+}
+
+func (s *LoginService) LoginAdministrativo(ctx context.Context, usuario *model.UsuarioLogin) (uint64, string, error) {
+	id, nome, senhaDB, ativo, err := s.repository.Login.LoginAdministrativo(ctx, usuario.Email)
+	if err != nil {
+		return 0, "", err
+	}
+
+	if err := usuario.ValidarSenha(senhaDB); err != nil {
+		return 0, "", err
+	}
+
+	if !ativo {
+		return 0, "", errors.New("usuario inativo")
+	}
+
+	return id, nome, nil
+
 }

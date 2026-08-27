@@ -40,10 +40,14 @@ func CarregarRotas(c *controller.Controller) *chi.Mux {
 	r.Get("/entrada-estoque", c.View.RenderizarEntradaEstoquePage)
 	r.Get("/produtos", c.View.RenderizarProdutosPage)
 	r.Get("/condicoes-pagamento", c.View.RenderizarCondicoesPagamentoPage)
+	r.Get("/administrativo", c.View.RenderizarAdministrativoPage)
 
 	// rotas funcionalidades
 	r.Route("/api", func(r chi.Router) {
 		r.Post("/login", c.Login.Login)
+		r.Post("/login/administrativo", c.Login.LoginAdministrativo)
+		r.Get("/administrativo/organizacoes", auth.AutenticarAdministrador(c.Admin.CarregarOrganizacoes))
+		r.Get("/administrativo/usuarios", auth.AutenticarAdministrador(c.Admin.CarregarUsuarios))
 
 		// Rotas Usuarios
 		r.Post("/usuarios", c.Usuarios.CriarUsuario)

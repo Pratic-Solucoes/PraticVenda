@@ -9,7 +9,6 @@ import (
 type ViewController struct {
 }
 
-
 func (c *ViewController) RenderizarLoginPage(w http.ResponseWriter, r *http.Request) {
 
 	tmpl, err := template.ParseFiles(
@@ -264,5 +263,19 @@ func (c *ViewController) RenderizarCondicoesPagamentoPage(w http.ResponseWriter,
 		fmt.Printf("Erro ao executar template de condições de pagamento: %v\n", err)
 		http.Error(w, "Erro interno", http.StatusInternalServerError)
 		return
+	}
+}
+
+func (c *ViewController) RenderizarAdministrativoPage(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("web/template/pages/administrativo.html")
+	if err != nil {
+		fmt.Printf("Erro ao renderizar página administrativa: %v\n", err)
+		http.Error(w, "Erro interno ao renderizar página", http.StatusInternalServerError)
+		return
+	}
+
+	if err := tmpl.Execute(w, nil); err != nil {
+		fmt.Printf("Erro ao executar template administrativo: %v\n", err)
+		http.Error(w, "Erro interno", http.StatusInternalServerError)
 	}
 }

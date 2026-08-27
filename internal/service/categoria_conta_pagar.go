@@ -40,7 +40,7 @@ func (s *CategoriaContaPagarService) CriarCategoria(ctx context.Context, c *mode
 	return categoriaCriada, nil
 }
 
-func (s *CategoriaContaPagarService) ListarCategorias(ctx context.Context) ([]*model.CategoriaContaPagar, error) {
+func (s *CategoriaContaPagarService) ListarCategorias(ctx context.Context) ([]model.CategoriaContaPagar, error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err

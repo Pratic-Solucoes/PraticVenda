@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"gestao/internal/auth"
 	"gestao/internal/model"
 	"gestao/internal/service"
@@ -19,14 +18,17 @@ func (c *LoginController) Login(w http.ResponseWriter, r *http.Request) {
 	var usuarioRequest model.UsuarioLogin
 
 	if err := requisicao.ProcessarRequisicao(w, r, &usuarioRequest); err != nil {
-		resposta.Padrao(w, http.StatusBadRequest, "erro ao ler json")
+		return
+	}
+
+	if err := usuarioRequest.Validar(); err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": err.Error()})
 		return
 	}
 
 	id, nome, schema, err := c.service.Login.Login(r.Context(), &usuarioRequest)
 	if err != nil {
-		fmt.Printf("ERRO REAL DURANTE O LOGIN: %v\n", err) // Print para debug
-		resposta.Padrao(w, http.StatusUnauthorized, "dados login inválidos")
+		resposta.Padrao(w, http.StatusUnauthorized, map[string]string{"erro": "E-mail ou senha inválidos"})
 		return
 	}
 
@@ -42,4 +44,35 @@ func (c *LoginController) Login(w http.ResponseWriter, r *http.Request) {
 
 	resposta.Padrao(w, http.StatusOK, token)
 
+}
+
+func (c *LoginController) LoginAdministrativo(w http.ResponseWriter, r *http.Request) {
+
+	var usuario model.UsuarioLogin
+	if err := requisicao.ProcessarRequisicao(w, r, &usuario); err != nil {
+		return
+	}
+
+	if err := usuario.Validar(); err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": err.Error()})
+		return
+	}
+
+	id, nome, err := c.service.Login.LoginAdministrativo(r.Context(), &usuario)
+	if err != nil {
+		resposta.Padrao(w, http.StatusUnauthorized, map[string]string{"erro": "Dados de login inválidos"})
+		return
+	}
+
+	tokenString, err := auth.GerarTokenJWTAdministrativo(int(id), nome)
+	if err != nil {
+		resposta.Padrao(w, http.StatusInternalServerError, "erro ao gerar token")
+		return
+	}
+
+	token := map[string]string{
+		"token": tokenString,
+	}
+
+	resposta.Padrao(w, http.StatusOK, token)
 }

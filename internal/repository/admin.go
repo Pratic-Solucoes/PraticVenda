@@ -12,8 +12,9 @@ type AdminRepository struct {
 
 func (r *AdminRepository) CarregarOrganizacoes(ctx context.Context) ([]model.Organizacao, error) {
 	query := `
-	select id, nome_fantasia, email, telefone, celular, schema, ativo, criado_em, atualizado_em
+	select id, nome_fantasia, email, telefone, ''::text as celular, schema, ativo, criado_em, atualizado_em
 	from public.tb_empresas_gestao
+	order by nome_fantasia
 	`
 
 	rows, err := r.db.QueryContext(ctx, query)
@@ -46,4 +47,42 @@ func (r *AdminRepository) CarregarOrganizacoes(ctx context.Context) ([]model.Org
 	}
 
 	return organizacoes, err
+}
+
+func (r *AdminRepository) CarregarUsuarios(ctx context.Context) ([]model.Usuario, error) {
+	query := `
+		select id, id_empresa, nome, cpf, telefone, email, ativo, criado_em, atualizado_em
+		from public.tb_usuarios_gestao
+		order by nome
+	`
+	rows, err := r.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var usuarios []model.Usuario
+	for rows.Next() {
+		var u model.Usuario
+		if err := rows.Scan(
+			&u.ID,
+			&u.IDEmpresa,
+			&u.Nome,
+			&u.CPF,
+			&u.Telefone,
+			&u.Email,
+			&u.Ativo,
+			&u.CriadoEm,
+			&u.AtualizadoEm,
+		); err != nil {
+			return nil, err
+		}
+		usuarios = append(usuarios, u)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return usuarios, nil
 }

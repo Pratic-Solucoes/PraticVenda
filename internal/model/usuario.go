@@ -15,7 +15,7 @@ type Usuario struct {
 	CPF          *string   `json:"cpf,omitempty" db:"cpf"`
 	Telefone     *string   `json:"telefone,omitempty" db:"telefone"`
 	Email        string    `json:"email" db:"email"`
-	Senha        string    `json:"-" db:"senha"` // Oculto no JSON por segurança
+	Senha        string    `json:"senha,omitempty" db:"senha"`
 	Ativo        bool      `json:"ativo" db:"ativo"`
 	CriadoEm     time.Time `json:"criado_em" db:"criado_em"`
 	AtualizadoEm time.Time `json:"atualizado_em" db:"atualizado_em"`
@@ -24,21 +24,21 @@ type Usuario struct {
 // DTOs (Data Transfer Objects) - Usados no tráfego da API
 
 type UsuarioCriar struct {
-	Nome      string `json:"nome"`
-	Email     string `json:"email"`
-	Senha     string `json:"senha"`
+	Nome  string `json:"nome"`
+	Email string `json:"email"`
+	Senha string `json:"senha"`
 }
 
 type UsuarioLogin struct {
-	Email     string `json:"email"`
-	Senha     string `json:"senha"`
+	Email string `json:"email"`
+	Senha string `json:"senha"`
 }
 
 type UsuarioBasico struct {
-	ID        int64  `json:"id"`
-	Nome      string `json:"nome"`
-	Telefone  string `json:"telefone"`
-	Email     string `json:"email"`
+	ID       int64  `json:"id"`
+	Nome     string `json:"nome"`
+	Telefone string `json:"telefone"`
+	Email    string `json:"email"`
 }
 
 // Validar verifica se os dados de criação são válidos

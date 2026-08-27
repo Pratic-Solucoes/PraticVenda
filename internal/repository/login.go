@@ -28,3 +28,25 @@ func (r *LoginRepository) Login(ctx context.Context, email string) (uint64, stri
 
 	return id, nome, senhaDB, schema, nil
 }
+
+func (r *LoginRepository) LoginAdministrativo(ctx context.Context, email string) (uint64, string, string, bool, error) {
+	var senhaDB string
+	var nome string
+	var id uint64
+	var ativo bool
+
+	query := `
+		select id, nome, senha, ativo from public.tb_usuarios_admin where email = $1
+	`
+
+	if err := r.db.QueryRowContext(
+		ctx,
+		query,
+		email,
+	).Scan(&id, &nome, &senhaDB, &ativo); err != nil {
+		return 0, "", "", false, err
+	}
+
+	return id, nome, senhaDB, ativo, nil
+
+}

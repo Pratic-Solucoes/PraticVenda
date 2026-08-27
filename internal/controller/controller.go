@@ -20,9 +20,15 @@ type Controller struct {
 		RenderizarEntradaEstoquePage(w http.ResponseWriter, r *http.Request)
 		RenderizarProdutosPage(w http.ResponseWriter, r *http.Request)
 		RenderizarCondicoesPagamentoPage(w http.ResponseWriter, r *http.Request)
+		RenderizarAdministrativoPage(w http.ResponseWriter, r *http.Request)
 	}
 	Login interface {
 		Login(w http.ResponseWriter, r *http.Request)
+		LoginAdministrativo(w http.ResponseWriter, r *http.Request)
+	}
+	Admin interface {
+		CarregarOrganizacoes(w http.ResponseWriter, r *http.Request)
+		CarregarUsuarios(w http.ResponseWriter, r *http.Request)
 	}
 	Empresa interface {
 		CriarEmpresa(w http.ResponseWriter, r *http.Request)
@@ -95,6 +101,7 @@ func NewController(service *service.Service) *Controller {
 	return &Controller{
 		View:                  &ViewController{},
 		Login:                 &LoginController{service: service},
+		Admin:                 &AdminController{service: service},
 		Usuarios:              &UsuarioController{service: service},
 		Clientes:              &ClienteController{service: service},
 		Fornecedores:          &FornecedorController{service: service},

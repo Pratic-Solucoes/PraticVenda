@@ -15,6 +15,11 @@ type Service struct {
 	}
 	Login interface {
 		Login(ctx context.Context, usuario *model.UsuarioLogin) (uint64, string, string, error)
+		LoginAdministrativo(ctx context.Context, usuario *model.UsuarioLogin) (uint64, string, error)
+	}
+	Admin interface {
+		CarregarOrganizacoes(ctx context.Context) ([]model.Organizacao, error)
+		CarregarUsuarios(ctx context.Context) ([]model.Usuario, error)
 	}
 	Clientes interface {
 		CriarCliente(ctx context.Context, c *model.Cliente) (*model.Cliente, error)
@@ -42,7 +47,7 @@ type Service struct {
 	}
 	CategoriasContasPagar interface {
 		CriarCategoria(ctx context.Context, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error)
-		ListarCategorias(ctx context.Context) ([]*model.CategoriaContaPagar, error)
+		ListarCategorias(ctx context.Context) ([]model.CategoriaContaPagar, error)
 	}
 	FormasPagamento interface {
 		Criar(ctx context.Context, fp *model.FormaPagamento) (*model.FormaPagamento, error)
@@ -81,6 +86,7 @@ func NewService(repository *repository.Repository, db *sql.DB) *Service {
 			repository: repository,
 			db:         db,
 		},
+		Admin: &AdminService{repository: repository},
 		Clientes: &ClienteService{
 			repository: repository,
 			db:         db,

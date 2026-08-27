@@ -24,6 +24,22 @@ func GerarTokenJWT(usuarioID int, nome, schema string) (string, error) {
 	return tokenString, nil
 }
 
+// GerarTokenJWTAdministrativo cria um token exclusivo para o painel
+// administrativo. A claim impede que um usuário de uma organização acesse
+// endpoints globais apenas por possuir um token válido.
+func GerarTokenJWTAdministrativo(usuarioID int, nome string) (string, error) {
+	var secretKey = config.GetToken("JWT_KEY")
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"usuario_id":    usuarioID,
+		"schema":        "public",
+		"nome":          nome,
+		"administrador": true,
+		"exp":           time.Now().Add(time.Hour * 4).Unix(),
+	})
+
+	return token.SignedString([]byte(secretKey))
+}
+
 // ValidarTokenJWT é uma função que valida um token JWT recebido,
 // verificando sua assinatura e extraindo as claims (informações) contidas no token
 func ValidarTokenJWT(tokenString string) (jwt.MapClaims, error) {

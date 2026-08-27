@@ -9,6 +9,11 @@ import (
 type Repository struct {
 	Login interface {
 		Login(ctx context.Context, email string) (uint64, string, string, string, error)
+		LoginAdministrativo(ctx context.Context, email string) (uint64, string, string, bool, error)
+	}
+	Admin interface {
+		CarregarOrganizacoes(ctx context.Context) ([]model.Organizacao, error)
+		CarregarUsuarios(ctx context.Context) ([]model.Usuario, error)
 	}
 	Usuarios interface {
 		CriarUsuario(ctx context.Context, tx *sql.Tx, usuario *model.UsuarioCriar) (*model.UsuarioBasico, error)
@@ -49,7 +54,7 @@ type Repository struct {
 	}
 	CategoriasContasPagar interface {
 		CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error)
-		ListarCategorias(ctx context.Context, tx *sql.Tx) ([]*model.CategoriaContaPagar, error)
+		ListarCategorias(ctx context.Context, tx *sql.Tx) ([]model.CategoriaContaPagar, error)
 	}
 	Estoques interface {
 		CriarEstoque(ctx context.Context, tx *sql.Tx, e *model.Estoque) (*model.Estoque, error)
@@ -82,6 +87,9 @@ func NewRepository(db *sql.DB) *Repository {
 		Login: &LoginRepository{
 			db: db,
 		},
+		Admin: &AdminRepository{
+			db: db,
+		},
 		Usuarios: &UsuarioRepository{
 			db: db,
 		},
@@ -91,7 +99,9 @@ func NewRepository(db *sql.DB) *Repository {
 		Clientes: &ClienteRepository{
 			db: db,
 		},
-		CategoriasContasPagar: NovoCategoriaContaPagarRepository(db),
+		CategoriasContasPagar: &CategoriaContaPagarRepository{
+			db: db,
+		},
 		ContasPagar: &ContaPagarRepository{
 			db: db,
 		},

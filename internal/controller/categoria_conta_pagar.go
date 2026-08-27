@@ -35,7 +35,7 @@ func (c *CategoriaContaPagarController) ListarCategorias(w http.ResponseWriter, 
 	}
 
 	if categorias == nil {
-		categorias = []*model.CategoriaContaPagar{}
+		categorias = []model.CategoriaContaPagar{}
 	}
 
 	resposta.Padrao(w, http.StatusOK, categorias)

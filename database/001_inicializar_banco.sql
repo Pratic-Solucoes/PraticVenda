@@ -22,6 +22,17 @@ CREATE TABLE IF NOT EXISTS public.tb_empresas_gestao (
         CHECK (schema ~ '^[a-z][a-z0-9_]{0,48}$')
 );
 
+CREATE TABLE IF NOT EXISTS public.tb_usuarios_admin(
+    id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    celular VARCHAR(20) NOT NULL UNIQUE,
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
+    criado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS public.tb_usuarios_gestao (
     id BIGSERIAL PRIMARY KEY,
     id_empresa BIGINT NOT NULL DEFAULT 1 REFERENCES public.tb_empresas_gestao(id) ON DELETE CASCADE,
