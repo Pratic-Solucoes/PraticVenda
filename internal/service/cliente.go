@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"gestao/internal/model"
 	"gestao/internal/repository"
-	"gestao/utils/helpers"
 )
 
 type ClienteService struct {
@@ -24,10 +23,6 @@ func (s *ClienteService) CriarCliente(ctx context.Context, c *model.Cliente) (*m
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
 
 	clienteCriado, err := s.repository.Clientes.CriarCliente(ctx, tx, c)
 	if err != nil {
@@ -48,10 +43,6 @@ func (s *ClienteService) ListarClientes(ctx context.Context, busca string) ([]mo
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
-
 	clientes, err := s.repository.Clientes.ListarClientes(ctx, tx, busca)
 	if err != nil {
 		return nil, err
@@ -68,10 +59,6 @@ func (s *ClienteService) ObterClientePorID(ctx context.Context, id int64) (*mode
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
 
 	cliente, err := s.repository.Clientes.ObterClientePorID(ctx, tx, id)
 	if err != nil {
@@ -94,10 +81,6 @@ func (s *ClienteService) AtualizarCliente(ctx context.Context, id int64, c *mode
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return err
-	}
-
 	err = s.repository.Clientes.AtualizarCliente(ctx, tx, id, c)
 	if err != nil {
 		return err
@@ -116,10 +99,6 @@ func (s *ClienteService) CriarEndereco(ctx context.Context, idCliente int64, e *
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
 
 	enderecoCriado, err := s.repository.Clientes.CriarEndereco(ctx, tx, idCliente, e)
 	if err != nil {
@@ -144,10 +123,6 @@ func (s *ClienteService) EditarEndereco(ctx context.Context, idCliente int64, id
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return err
-	}
-
 	err = s.repository.Clientes.EditarEndereco(ctx, tx, idCliente, idEndereco, e)
 	if err != nil {
 		return err
@@ -162,10 +137,6 @@ func (s *ClienteService) BuscarEnderecoByID(ctx context.Context, idCliente int64
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
 
 	endereco, err := s.repository.Clientes.BuscarEnderecoByID(ctx, tx, idCliente, idEndereco)
 	if err != nil {
@@ -189,10 +160,6 @@ func (s *ClienteService) CriarTelefone(ctx context.Context, idCliente int64, t *
 
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
-
 	telefoneCriado, err := s.repository.Clientes.CriarTelefone(ctx, tx, idCliente, t)
 	if err != nil {
 		return nil, err
@@ -215,10 +182,6 @@ func (s *ClienteService) EditarTelefone(ctx context.Context, idCliente int64, id
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return err
-	}
-
 	err = s.repository.Clientes.EditarTelefone(ctx, tx, idCliente, idTelefone, t)
 	if err != nil {
 		return err
@@ -233,10 +196,6 @@ func (s *ClienteService) BuscarTelefoneByID(ctx context.Context, idCliente int64
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
 
 	telefone, err := s.repository.Clientes.BuscarTelefoneByID(ctx, tx, idCliente, idTelefone)
 	if err != nil {

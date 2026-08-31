@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"strings"
 	"time"
 )
 
@@ -49,14 +50,13 @@ type TelefoneFornecedor struct {
 // Validar verifica se os dados obrigatórios do fornecedor estão presentes
 func (f *Fornecedor) Validar() error {
 	var erros []error
+	f.RazaoSocial = strings.TrimSpace(f.RazaoSocial)
+	f.CNPJ = strings.TrimSpace(f.CNPJ)
 	if f.RazaoSocial == "" {
 		erros = append(erros, errors.New("a razão social não foi informada"))
 	}
 	if f.CNPJ == "" {
 		erros = append(erros, errors.New("o CNPJ não foi informado"))
-	}
-	if f.Email == nil || *f.Email == "" {
-		erros = append(erros, errors.New("o email não foi informado"))
 	}
 	if len(erros) > 0 {
 		return errors.Join(erros...)

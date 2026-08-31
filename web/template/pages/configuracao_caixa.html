@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="icon" type="image/png" href="/static/images/logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/static/css/styleLayout.css">
+    <link rel="stylesheet" href="/static/css/app.css?v=3">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão - Configuração de Caixa</title>
+</head>
+<body>
+    <div id="app-wrapper">
+        {{template "sidebar" .}}
+        <div id="main-content">
+            <div id="topbar"><div class="topbar-title">Gestão Vendas</div><div class="topbar-notif-wrap ms-auto"><div class="topbar-notif"><i class="bi bi-bell"></i><span class="badge-notif">2</span></div></div><div class="topbar-user-wrap"><i class="bi bi-person-circle topbar-user-icon"></i><span class="topbar-user-name">TESTE</span><i class="bi bi-chevron-down topbar-user-chevron"></i></div></div>
+            <div id="page-content">
+                <div class="d-flex align-items-center justify-content-between mb-4"><h2 class="fs-4 m-0 text-dark"><i class="bi bi-cash-stack text-primary me-2"></i>Configuração de Caixa</h2></div>
+                <div class="row justify-content-center"><div class="col-lg-8"><div class="card shadow-sm border-0 rounded-4"><div class="card-header bg-white py-3 border-0"><h5 class="mb-0 fw-bold text-dark">Gestão de caixas</h5></div><div class="card-body p-4"><form id="formCriarCaixa"><div class="row g-3"><div class="col-md-6"><label class="form-label">Nome do caixa *</label><input id="caixa_nome" class="form-control" placeholder="Ex.: Caixa 01" required></div><div class="col-md-6"><label class="form-label">Usuário responsável *</label><select id="caixa_usuario" class="form-select" required><option>Carregando...</option></select></div></div><div class="text-end mt-4"><button class="btn btn-primary fw-bold px-4">Criar caixa</button></div></form><hr><h6 class="fw-bold">Meus caixas</h6><div id="listaCaixas" class="text-muted">Carregando caixas vinculados ao seu usuário...</div></div></div></div></div>
+            </div>
+        </div>
+    </div>
+    {{template "toastContainer" .}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script type="module" src="/static/js/configuracao_caixa/main.js"></script>
+</body>
+</html>

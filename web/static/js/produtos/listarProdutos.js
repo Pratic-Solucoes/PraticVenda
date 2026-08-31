@@ -1,6 +1,6 @@
 import { getToken } from '../utils/auth.js';
 import { showError } from '../utils/showError.js';
-import { carregarProdutoParaEdicao, excluirOuInativarProduto } from './gerenciarProduto.js';
+import { carregarProdutoParaEdicao, excluirOuInativarProduto } from './gerenciarProduto.js?v=2';
 
 export async function carregarProdutos(busca = "") {
     const tbody = document.getElementById('tabelaProdutosBody');
@@ -53,6 +53,7 @@ export async function carregarProdutos(busca = "") {
             const badgeStatus = p.ativo 
                 ? '<span class="badge bg-success">Ativo</span>' 
                 : '<span class="badge bg-danger">Inativo</span>';
+			const badgeTipo = p.materia_prima ? '<span class="badge bg-info text-dark ms-1">Matéria-prima</span>' : (p.composto ? '<span class="badge bg-primary ms-1">Composto</span>' : '');
 
             tr.innerHTML = `
                 <td>${p.codigo_interno_loja || '-'}</td>
@@ -61,7 +62,7 @@ export async function carregarProdutos(busca = "") {
                 <td>R$ ${(p.preco_custo || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
                 <td>R$ ${(p.preco_venda || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                 <td>${estoquesBadges}</td>
-                <td>${badgeStatus}</td>
+				<td>${badgeStatus}${badgeTipo}</td>
                 <td class="text-end">
                     <button class="btn btn-sm btn-outline-primary btn-editar-prod me-1" data-id="${p.id}" title="Editar Produto">
                         <i class="bi bi-pencil-square"></i>

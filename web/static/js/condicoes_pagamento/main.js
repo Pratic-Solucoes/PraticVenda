@@ -30,17 +30,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             if (res.ok) {
                 const formas = await res.json();
-                containerFormasPagamento.innerHTML = '';
+                containerFormasPagamento.replaceChildren();
                 if (formas && formas.length > 0) {
                     formas.forEach(f => {
                         const div = document.createElement('div');
                         div.className = 'form-check';
-                        div.innerHTML = `
-                            <input class="form-check-input fp-checkbox" type="checkbox" value="${f.id}" id="fp_check_${f.id}">
-                            <label class="form-check-label small" for="fp_check_${f.id}">
-                                ${f.descricao}
-                            </label>
-                        `;
+                        const input = document.createElement('input');
+                        input.className = 'form-check-input fp-checkbox';
+                        input.type = 'checkbox';
+                        input.value = f.id;
+                        input.id = `fp_check_${f.id}`;
+
+                        const label = document.createElement('label');
+                        label.className = 'form-check-label small';
+                        label.htmlFor = input.id;
+                        label.textContent = f.descricao;
+
+                        div.append(input, label);
                         containerFormasPagamento.appendChild(div);
                     });
                 } else {
@@ -61,6 +67,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         carregarCondicoesPagamento();
         carregarFormasPagamentoParaCheckboxes();
     }
+
+    window.carregarFormasPagamentoParaCondicao = carregarFormasPagamentoParaCheckboxes;
 
     // Abre formulário limpo para nova condição de pagamento
     function abrirFormularioNovo() {

@@ -9,44 +9,20 @@ type LoginRepository struct {
 	db *sql.DB
 }
 
-func (r *LoginRepository) Login(ctx context.Context, email string) (uint64, string, string, string, error) {
+func (r *LoginRepository) Login(ctx context.Context, username string) (uint64, string, string, error) {
 	var senhaDB string
 	var nome string
 	var id uint64
-	var schema string
 
 	err := r.db.QueryRowContext(ctx, `
-		select u.id, u.nome, u.senha, e.schema
-		from tb_usuarios_gestao u
-		join tb_empresas_gestao e on e.id = u.id_empresa
-		where u.email = $1 and e.ativo = true;
-	`, email).Scan(&id, &nome, &senhaDB, &schema)
+		select id, nome, senha
+		from tb_usuarios_gestao
+		where username = $1 and ativo = true;
+	`, username).Scan(&id, &nome, &senhaDB)
 
 	if err != nil {
-		return 0, "", "", "", err
+		return 0, "", "", err
 	}
 
-	return id, nome, senhaDB, schema, nil
-}
-
-func (r *LoginRepository) LoginAdministrativo(ctx context.Context, email string) (uint64, string, string, bool, error) {
-	var senhaDB string
-	var nome string
-	var id uint64
-	var ativo bool
-
-	query := `
-		select id, nome, senha, ativo from public.tb_usuarios_admin where email = $1
-	`
-
-	if err := r.db.QueryRowContext(
-		ctx,
-		query,
-		email,
-	).Scan(&id, &nome, &senhaDB, &ativo); err != nil {
-		return 0, "", "", false, err
-	}
-
-	return id, nome, senhaDB, ativo, nil
-
+	return id, nome, senhaDB, nil
 }

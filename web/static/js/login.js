@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('form');
-    const emailInput = document.getElementById('entrada_email');
+    const usernameInput = document.getElementById('entrada_username');
     const senhaInput = document.getElementById('entrada_senha');
     const btnToggleSenha = document.getElementById('toggleSenhaBtn');
     const iconToggleSenha = document.getElementById('toggleSenhaIcon');
@@ -33,25 +33,23 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const loginAdministrativo = e.submitter?.dataset.login === 'administrativo';
-
-        const email = emailInput.value;
+        const username = usernameInput.value.trim();
         const senha = senhaInput.value;
 
-        if (!email || !senha) {
-            mostrarErro('Informe seu e-mail e sua senha para continuar.');
+        if (!username || !senha) {
+            mostrarErro('Informe seu usuário e sua senha para continuar.');
             return;
         }
 
         ocultarErro();
 
         try {
-            const response = await fetch(loginAdministrativo ? '/api/login/administrativo' : '/api/login', {
+            const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email, senha })
+                body: JSON.stringify({ username, senha })
             });
 
             const tipoConteudo = response.headers.get('content-type') || '';
@@ -63,9 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const mensagemApi = typeof data === 'string'
                     ? data
                     : data.erro || data.mensagem;
-                mostrarErro(mensagemApi || (loginAdministrativo
-                    ? 'Não foi possível entrar como administrador. Verifique e-mail e senha.'
-                    : 'E-mail ou senha inválidos. Se esta for uma conta administrativa, use “Entrar como admin”.'));
+                mostrarErro(mensagemApi || 'Usuário ou senha inválidos.');
                 return;
             }
 
@@ -74,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('token', data.token);
             }
 
-            window.location.href = loginAdministrativo ? '/administrativo' : '/dashboard';
+            window.location.href = '/dashboard';
 
         } catch (error) {
             console.error("Erro no login:", error);

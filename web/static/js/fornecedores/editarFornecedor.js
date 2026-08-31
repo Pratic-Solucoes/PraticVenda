@@ -123,7 +123,7 @@ export function setupEditarFornecedor() {
                 razao_social: document.getElementById('edit_fornecedor_razao_social').value,
                 cnpj: document.getElementById('edit_fornecedor_cnpj').value,
                 inscricao_estadual: document.getElementById('edit_fornecedor_inscricao_estadual').value,
-                email: document.getElementById('edit_fornecedor_email').value,
+                email: document.getElementById('edit_fornecedor_email').value.trim() || null,
                 enderecos: [],
                 telefones: []
             };

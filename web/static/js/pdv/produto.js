@@ -33,7 +33,7 @@ export async function buscarEAdicionarProduto(query) {
         if (produtos && produtos.length > 0) {
             if (produtos.length === 1 && (produtos[0].produto.codigo_barras === query || produtos[0].produto.id.toString() === query)) {
                 // Se for bipe exato (1 resultado) adiciona direto
-                adicionarProduto(produtos[0]);
+                adicionarProduto(produtos[0].produto || produtos[0]);
                 inputProduto.value = '';
                 if (dropdown) dropdown.classList.add('d-none');
             } else {
@@ -47,7 +47,7 @@ export async function buscarEAdicionarProduto(query) {
                         btn.className = 'list-group-item list-group-item-action py-2';
                         btn.innerHTML = `<strong>${prod.codigo_barras || prod.id}</strong> - ${prod.nome} <span class="float-end text-success fw-bold">R$ ${(prod.preco_venda || 0).toFixed(2).replace('.', ',')}</span>`;
                         btn.addEventListener('click', () => {
-                            adicionarProduto(p);
+                            adicionarProduto(prod);
                             inputProduto.value = '';
                             dropdown.classList.add('d-none');
                         });
@@ -71,7 +71,7 @@ export async function buscarEAdicionarProduto(query) {
 
 function adicionarProduto(p) {
     const produtoData = p.produto || p;
-    adicionarItem(p, 1);
+    adicionarItem(produtoData, 1);
     renderizarTabela();
     atualizarTotalDisplay();
     notify(`${produtoData.nome} adicionado!`, "success");

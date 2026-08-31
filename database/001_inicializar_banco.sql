@@ -2,41 +2,15 @@
 -- Execute em um banco novo com:
 --   psql "$DATABASE_URL" -f database/001_inicializar_banco.sql
 --
--- Estrutura:
---   * public: empresas e usuários usados na autenticação.
---   * schemas schema_pao_quente e schema_mercadinho: dados operacionais isolados.
+-- Estrutura: todas as tabelas são criadas no schema public.
 -- Não há funções, procedures ou SQL dinâmico neste arquivo.
 
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS public.tb_empresas_gestao (
-    id BIGSERIAL PRIMARY KEY,
-    nome_fantasia VARCHAR(255) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    telefone VARCHAR(20) NOT NULL UNIQUE,
-    schema VARCHAR(50) NOT NULL UNIQUE,
-    ativo BOOLEAN NOT NULL DEFAULT TRUE,
-    criado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT chk_empresas_gestao_schema
-        CHECK (schema ~ '^[a-z][a-z0-9_]{0,48}$')
-);
-
-CREATE TABLE IF NOT EXISTS public.tb_usuarios_admin(
-    id BIGSERIAL PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    senha VARCHAR(255) NOT NULL,
-    celular VARCHAR(20) NOT NULL UNIQUE,
-    ativo BOOLEAN NOT NULL DEFAULT TRUE,
-    criado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE IF NOT EXISTS public.tb_usuarios_gestao (
     id BIGSERIAL PRIMARY KEY,
-    id_empresa BIGINT NOT NULL DEFAULT 1 REFERENCES public.tb_empresas_gestao(id) ON DELETE CASCADE,
     nome VARCHAR(255) NOT NULL,
+	username VARCHAR(100) NOT NULL UNIQUE,
     cpf VARCHAR(14) UNIQUE,
     telefone VARCHAR(20) UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -46,14 +20,7 @@ CREATE TABLE IF NOT EXISTS public.tb_usuarios_gestao (
     ativo BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-CREATE INDEX IF NOT EXISTS idx_usuarios_gestao_empresa ON public.tb_usuarios_gestao(id_empresa);
-
--- Schemas operacionais dos tenants de desenvolvimento.
-CREATE SCHEMA IF NOT EXISTS schema_pao_quente;
-CREATE SCHEMA IF NOT EXISTS schema_mercadinho;
-
--- Estrutura operacional: Padaria Pão Quente.
-SET search_path TO schema_pao_quente, public;
+SET search_path TO public;
 CREATE TABLE IF NOT EXISTS tb_empresas (
     id BIGSERIAL PRIMARY KEY,
     razao_social VARCHAR(100) NOT NULL,
@@ -227,6 +194,8 @@ CREATE TABLE IF NOT EXISTS tb_contas_receber (
     id BIGSERIAL PRIMARY KEY,
     id_cliente BIGINT NOT NULL REFERENCES tb_clientes(id),
     id_categoria BIGINT NOT NULL REFERENCES tb_categorias_contas_receber(id),
+    id_condicao_pagamento BIGINT NOT NULL REFERENCES tb_condicoes_pagamento(id),
+    id_forma_pagamento BIGINT NOT NULL REFERENCES tb_formas_pagamento(id),
     tipo_origem VARCHAR(50) NOT NULL,
     id_origem BIGINT,
     id_grupo_parcelas UUID,
@@ -284,6 +253,7 @@ CREATE TABLE IF NOT EXISTS tb_grupos_tributarios (
 
 CREATE TABLE IF NOT EXISTS tb_produtos (
     id BIGSERIAL PRIMARY KEY,
+    id_fornecedor BIGINT REFERENCES tb_fornecedores(id),
     codigo_barras VARCHAR(14) UNIQUE,
     codigo_interno_loja VARCHAR(50),
     nome VARCHAR(150) NOT NULL,
@@ -300,15 +270,20 @@ CREATE TABLE IF NOT EXISTS tb_produtos (
 );
 
 CREATE INDEX IF NOT EXISTS idx_produtos_codigo_interno ON tb_produtos(codigo_interno_loja);
+CREATE INDEX IF NOT EXISTS idx_produtos_fornecedor ON tb_produtos(id_fornecedor);
 CREATE INDEX IF NOT EXISTS idx_produtos_nome_ativos ON tb_produtos(nome) WHERE ativo = TRUE;
 
 CREATE TABLE IF NOT EXISTS tb_produtos_fiscal (
     id_produto BIGINT PRIMARY KEY REFERENCES tb_produtos(id) ON DELETE CASCADE,
-    ncm VARCHAR(8) NOT NULL,
+    ncm VARCHAR(8),
     cest VARCHAR(7),
-    id_grupo_tributario BIGINT NOT NULL REFERENCES tb_grupos_tributarios(id) ON DELETE RESTRICT,
+    id_grupo_tributario BIGINT REFERENCES tb_grupos_tributarios(id) ON DELETE RESTRICT,
     atualizado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE tb_produtos_fiscal
+    ALTER COLUMN ncm DROP NOT NULL,
+    ALTER COLUMN id_grupo_tributario DROP NOT NULL;
 
 CREATE TABLE IF NOT EXISTS tb_estoques (
     id BIGSERIAL PRIMARY KEY,
@@ -387,7 +362,7 @@ VALUES ('Estoque Geral', 'Local padrão de armazenamento e vendas')
 ON CONFLICT (nome) DO NOTHING;
 
 -- Estrutura operacional: Mercadinho da Esquina.
-SET search_path TO schema_mercadinho, public;
+SET search_path TO public;
 CREATE TABLE IF NOT EXISTS tb_empresas (
     id BIGSERIAL PRIMARY KEY,
     razao_social VARCHAR(100) NOT NULL,
@@ -561,6 +536,8 @@ CREATE TABLE IF NOT EXISTS tb_contas_receber (
     id BIGSERIAL PRIMARY KEY,
     id_cliente BIGINT NOT NULL REFERENCES tb_clientes(id),
     id_categoria BIGINT NOT NULL REFERENCES tb_categorias_contas_receber(id),
+    id_condicao_pagamento BIGINT NOT NULL REFERENCES tb_condicoes_pagamento(id),
+    id_forma_pagamento BIGINT NOT NULL REFERENCES tb_formas_pagamento(id),
     tipo_origem VARCHAR(50) NOT NULL,
     id_origem BIGINT,
     id_grupo_parcelas UUID,
@@ -618,6 +595,7 @@ CREATE TABLE IF NOT EXISTS tb_grupos_tributarios (
 
 CREATE TABLE IF NOT EXISTS tb_produtos (
     id BIGSERIAL PRIMARY KEY,
+    id_fornecedor BIGINT REFERENCES tb_fornecedores(id),
     codigo_barras VARCHAR(14) UNIQUE,
     codigo_interno_loja VARCHAR(50),
     nome VARCHAR(150) NOT NULL,
@@ -634,15 +612,20 @@ CREATE TABLE IF NOT EXISTS tb_produtos (
 );
 
 CREATE INDEX IF NOT EXISTS idx_produtos_codigo_interno ON tb_produtos(codigo_interno_loja);
+CREATE INDEX IF NOT EXISTS idx_produtos_fornecedor ON tb_produtos(id_fornecedor);
 CREATE INDEX IF NOT EXISTS idx_produtos_nome_ativos ON tb_produtos(nome) WHERE ativo = TRUE;
 
 CREATE TABLE IF NOT EXISTS tb_produtos_fiscal (
     id_produto BIGINT PRIMARY KEY REFERENCES tb_produtos(id) ON DELETE CASCADE,
-    ncm VARCHAR(8) NOT NULL,
+    ncm VARCHAR(8),
     cest VARCHAR(7),
-    id_grupo_tributario BIGINT NOT NULL REFERENCES tb_grupos_tributarios(id) ON DELETE RESTRICT,
+    id_grupo_tributario BIGINT REFERENCES tb_grupos_tributarios(id) ON DELETE RESTRICT,
     atualizado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE tb_produtos_fiscal
+    ALTER COLUMN ncm DROP NOT NULL,
+    ALTER COLUMN id_grupo_tributario DROP NOT NULL;
 
 CREATE TABLE IF NOT EXISTS tb_estoques (
     id BIGSERIAL PRIMARY KEY,
@@ -722,32 +705,11 @@ ON CONFLICT (nome) DO NOTHING;
 
 SET search_path TO public;
 
--- Tenants de desenvolvimento herdados da estrutura original.
-INSERT INTO public.tb_empresas_gestao (nome_fantasia, email, telefone, schema, ativo)
-VALUES
-    ('Padaria Pão Quente', 'contato@paoquente.com.br', '11999999991', 'schema_pao_quente', TRUE),
-    ('Mercadinho da Esquina', 'contato@mercadinho.com.br', '11999999992', 'schema_mercadinho', TRUE)
-ON CONFLICT (email) DO UPDATE
-SET nome_fantasia = EXCLUDED.nome_fantasia,
-    telefone = EXCLUDED.telefone,
-    schema = EXCLUDED.schema,
-    ativo = EXCLUDED.ativo,
-    atualizado_em = CURRENT_TIMESTAMP;
-
 -- Credenciais de desenvolvimento. Troque-as ou remova-as antes de produção.
 -- Senha: 123456
-INSERT INTO public.tb_usuarios_gestao (id_empresa, nome, cpf, telefone, email, senha, ativo)
-SELECT e.id, 'João da Padaria', '11111111111', '11988888881', 'joao@paoquente.com.br',
-       '$2a$10$Wdisu5NesYrQ4eMAQdt9SekdU5QWTx7LWj/N2j8H/qabj/PaX7d.W', TRUE
-FROM public.tb_empresas_gestao e
-WHERE e.schema = 'schema_pao_quente'
-ON CONFLICT (email) DO NOTHING;
-
-INSERT INTO public.tb_usuarios_gestao (id_empresa, nome, cpf, telefone, email, senha, ativo)
-SELECT e.id, 'Maria do Mercado', '22222222222', '11988888882', 'maria@mercadinho.com.br',
-       '$2a$10$Wdisu5NesYrQ4eMAQdt9SekdU5QWTx7LWj/N2j8H/qabj/PaX7d.W', TRUE
-FROM public.tb_empresas_gestao e
-WHERE e.schema = 'schema_mercadinho'
-ON CONFLICT (email) DO NOTHING;
+INSERT INTO public.tb_usuarios_gestao (nome, username, cpf, telefone, email, senha, ativo)
+VALUES ('Administrador', 'admin', '11111111111', '11988888881', 'admin@exemplo.com',
+        '$2a$10$Wdisu5NesYrQ4eMAQdt9SekdU5QWTx7LWj/N2j8H/qabj/PaX7d.W', TRUE)
+ON CONFLICT (username) DO NOTHING;
 
 COMMIT;

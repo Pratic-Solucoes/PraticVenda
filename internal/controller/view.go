@@ -73,6 +73,23 @@ func (c *ViewController) RenderizarContasPagarPage(w http.ResponseWriter, r *htt
 	}
 }
 
+func (c *ViewController) RenderizarContasReceberPage(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles(
+		"web/template/pages/contas_receber.html",
+		"web/template/components/sidebar.html",
+		"web/template/components/modalContaReceber.html",
+		"web/template/components/modalCategoriaCredito.html",
+		"web/template/components/modalReceberConta.html",
+	)
+	if err != nil {
+		http.Error(w, "Erro interno ao renderizar página", http.StatusInternalServerError)
+		return
+	}
+	if err := tmpl.Execute(w, nil); err != nil {
+		http.Error(w, "Erro interno", http.StatusInternalServerError)
+	}
+}
+
 func (c *ViewController) RenderizarClientesPage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles(
 		"web/template/pages/clientes.html",
@@ -146,6 +163,35 @@ func (c *ViewController) RenderizarConfiguracaoUsuarioPage(w http.ResponseWriter
 		fmt.Printf("Erro ao executar template de configuração do usuário: %v\n", err)
 		http.Error(w, "Erro interno", http.StatusInternalServerError)
 		return
+	}
+}
+
+func (c *ViewController) RenderizarConfiguracaoCaixaPage(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles(
+		"web/template/pages/configuracao_caixa.html",
+		"web/template/components/sidebar.html",
+		"web/template/components/toastContainer.html",
+	)
+	if err != nil {
+		fmt.Printf("Erro ao renderizar página de configuração de caixa: %v\n", err)
+		http.Error(w, "Erro interno ao renderizar página", http.StatusInternalServerError)
+		return
+	}
+
+	if err := tmpl.Execute(w, nil); err != nil {
+		fmt.Printf("Erro ao executar template de configuração de caixa: %v\n", err)
+		http.Error(w, "Erro interno", http.StatusInternalServerError)
+	}
+}
+
+func (c *ViewController) RenderizarConfiguracaoPDVPage(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("web/template/pages/configuracao_pdv.html", "web/template/components/sidebar.html", "web/template/components/toastContainer.html")
+	if err != nil {
+		http.Error(w, "Erro interno ao renderizar página", http.StatusInternalServerError)
+		return
+	}
+	if err := tmpl.Execute(w, nil); err != nil {
+		http.Error(w, "Erro interno", http.StatusInternalServerError)
 	}
 }
 
@@ -247,6 +293,17 @@ func (c *ViewController) RenderizarEntradaEstoquePage(w http.ResponseWriter, r *
 	}
 }
 
+func (c *ViewController) RenderizarSaidaEstoquePage(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("web/template/pages/saida_estoque.html", "web/template/components/sidebar.html")
+	if err != nil {
+		http.Error(w, "Erro ao renderizar página", http.StatusInternalServerError)
+		return
+	}
+	if err := tmpl.Execute(w, nil); err != nil {
+		http.Error(w, "Erro ao renderizar página", http.StatusInternalServerError)
+	}
+}
+
 func (c *ViewController) RenderizarCondicoesPagamentoPage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles(
 		"web/template/pages/condicoes_pagamento.html",
@@ -263,19 +320,5 @@ func (c *ViewController) RenderizarCondicoesPagamentoPage(w http.ResponseWriter,
 		fmt.Printf("Erro ao executar template de condições de pagamento: %v\n", err)
 		http.Error(w, "Erro interno", http.StatusInternalServerError)
 		return
-	}
-}
-
-func (c *ViewController) RenderizarAdministrativoPage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("web/template/pages/administrativo.html")
-	if err != nil {
-		fmt.Printf("Erro ao renderizar página administrativa: %v\n", err)
-		http.Error(w, "Erro interno ao renderizar página", http.StatusInternalServerError)
-		return
-	}
-
-	if err := tmpl.Execute(w, nil); err != nil {
-		fmt.Printf("Erro ao executar template administrativo: %v\n", err)
-		http.Error(w, "Erro interno", http.StatusInternalServerError)
 	}
 }

@@ -2,8 +2,8 @@
 <form>
     <div id="loginFeedback" class="alert alert-danger d-none mb-3" role="alert" aria-live="assertive"></div>
     <div class="mb-3">
-        <label for="entrada_email" class="form-label login-label fw-semibold"><i class="bi bi-person me-1"></i> Usuário</label>
-        <input type="text" class="form-control login-input" id="entrada_email" placeholder="Seu usuário" required>
+        <label for="entrada_username" class="form-label login-label fw-semibold"><i class="bi bi-person me-1"></i> Usuário</label>
+        <input type="text" class="form-control login-input" id="entrada_username" placeholder="Seu usuário" autocomplete="username" required>
     </div>
     <div class="mb-4">
         <label for="entrada_senha" class="form-label login-label fw-semibold"><i class="bi bi-lock me-1"></i> Senha</label>
@@ -18,8 +18,5 @@
         <button type="button" class="btn login-btn-voltar"><i class="bi bi-arrow-left me-1"></i> Voltar</button>
         <button type="submit" class="btn login-btn-entrar text-white flex-grow-1" data-login="padrao"><i class="bi bi-box-arrow-in-right me-1"></i> Entrar</button>
     </div>
-    <button type="submit" class="btn btn-link w-100 mt-3 text-decoration-none" data-login="administrativo">
-        <i class="bi bi-shield-lock me-1"></i> Entrar como admin
-    </button>
 </form>
 {{end}}

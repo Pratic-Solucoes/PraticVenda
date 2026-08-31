@@ -13,26 +13,27 @@ type UsuarioRepository struct {
 func (r *UsuarioRepository) CriarUsuario(ctx context.Context, tx *sql.Tx, usuario *model.UsuarioCriar) (*model.UsuarioBasico, error) {
 	var id int64
 	err := tx.QueryRowContext(ctx, `
-		INSERT INTO tb_usuarios_gestao (nome, email, senha)
-		VALUES ($1, $2, $3)
+		INSERT INTO tb_usuarios_gestao (nome, username, email, senha)
+		VALUES ($1, $2, $3, $4)
 		RETURNING id;
-	`, usuario.Nome, usuario.Email, usuario.Senha).Scan(&id)
+	`, usuario.Nome, usuario.Username, usuario.Email, usuario.Senha).Scan(&id)
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &model.UsuarioBasico{
-		ID:    id,
-		Nome:  usuario.Nome,
-		Email: usuario.Email,
+		ID:       id,
+		Nome:     usuario.Nome,
+		Username: usuario.Username,
+		Email:    usuario.Email,
 	}, nil
 }
 
 func (r *UsuarioRepository) BuscarUsuarioPorID(ctx context.Context, usuarioID int) (*model.Usuario, error) {
 	var usuario model.Usuario
-	err := r.db.QueryRowContext(ctx, `select id, nome, email, telefone from tb_usuarios_gestao where id = $1`, usuarioID).Scan(
-		&usuario.ID, &usuario.Nome, &usuario.Email, &usuario.Telefone)
+	err := r.db.QueryRowContext(ctx, `select id, nome, username, email, telefone from tb_usuarios_gestao where id = $1`, usuarioID).Scan(
+		&usuario.ID, &usuario.Nome, &usuario.Username, &usuario.Email, &usuario.Telefone)
 	if err != nil {
 		return nil, err
 	}

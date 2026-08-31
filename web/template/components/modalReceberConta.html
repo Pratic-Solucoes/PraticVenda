@@ -1,0 +1,14 @@
+{{define "modalReceberConta"}}
+<div class="modal fade" id="modalReceberConta" tabindex="-1" aria-labelledby="modalReceberContaLabel" aria-hidden="true">
+  <div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title" id="modalReceberContaLabel">Registrar recebimento</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button></div>
+    <div class="modal-body"><form id="formReceberConta"><input type="hidden" id="receber_conta_id">
+      <div class="mb-3"><label class="form-label text-muted fw-bold">Saldo da parcela</label><input id="receber_saldo_restante" class="form-control bg-light" disabled></div>
+      <div class="mb-3"><label for="receber_valor" class="form-label text-success fw-bold">Valor recebido (R$) *</label><input id="receber_valor" type="number" min="0.01" step="0.01" class="form-control border-success" required></div>
+      <div class="mb-3"><label for="receber_forma_pagamento" class="form-label">Forma de pagamento utilizada *</label><select id="receber_forma_pagamento" class="form-select" required></select></div>
+      <div class="alert alert-info mb-0"><i class="bi bi-info-circle me-1"></i> Se o valor recebido for menor que o saldo, esta parcela será quitada e uma nova parcela será gerada com o valor restante.</div>
+    </form></div>
+    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" form="formReceberConta" class="btn btn-success"><i class="bi bi-check-circle me-1"></i> Confirmar recebimento</button></div>
+  </div></div>
+</div>
+{{end}}

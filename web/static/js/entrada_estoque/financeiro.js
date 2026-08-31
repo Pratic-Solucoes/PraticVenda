@@ -2,6 +2,8 @@ import { getToken } from '../utils/auth.js';
 import { showError } from '../utils/showError.js';
 import { getTotalGeralEntrada, getIdFornecedorSelecionado } from './formEntrada.js';
 
+let parcelas = [];
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function formatDataBR(date) {
@@ -12,6 +14,28 @@ function formatDataBR(date) {
 function formatDateInput(date) {
     const d = date instanceof Date ? date : new Date();
     return d.toISOString().slice(0, 10);
+}
+
+function moeda(valor) { return Number(valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+
+function renderizarParcelas() {
+    const body = document.getElementById('finParcelasBody');
+    if (!body) return;
+    body.innerHTML = parcelas.map((parcela, indice) => `<tr><td>${indice + 1}</td><td><input class="form-control form-control-sm fin-parcela-data" data-indice="${indice}" type="date" value="${parcela.dt_vencimento}"></td><td><input class="form-control form-control-sm text-end fin-parcela-valor" data-indice="${indice}" type="number" min="0.01" step="0.01" value="${parcela.valor.toFixed(2)}"></td><td><button class="btn btn-sm btn-outline-danger fin-remover-parcela" data-indice="${indice}" type="button" ${parcelas.length === 1 ? 'disabled' : ''}><i class="bi bi-trash"></i></button></td></tr>`).join('');
+    document.querySelectorAll('.fin-parcela-data').forEach(input => input.onchange = () => { parcelas[input.dataset.indice].dt_vencimento = input.value; });
+    document.querySelectorAll('.fin-parcela-valor').forEach(input => input.oninput = () => { parcelas[input.dataset.indice].valor = Number(input.value || 0); atualizarTotalParcelas(); });
+    document.querySelectorAll('.fin-remover-parcela').forEach(botao => botao.onclick = () => { parcelas.splice(botao.dataset.indice, 1); renderizarParcelas(); atualizarTotalParcelas(); });
+    atualizarTotalParcelas();
+}
+
+function atualizarTotalParcelas() {
+    const totalEntrada = getTotalGeralEntrada();
+    const totalParcelas = parcelas.reduce((total, parcela) => total + Number(parcela.valor || 0), 0);
+    document.getElementById('finTotalParcelas').textContent = moeda(totalParcelas);
+    const diferenca = totalEntrada - totalParcelas;
+    const aviso = document.getElementById('finDiferencaParcelas');
+    aviso.textContent = Math.abs(diferenca) < 0.005 ? 'Valores conferem com o total da entrada.' : `Falta distribuir ${moeda(diferenca)} nas parcelas.`;
+    aviso.className = Math.abs(diferenca) < 0.005 ? 'small text-success' : 'small text-danger';
 }
 
 async function carregarFornecedoresModal() {
@@ -72,6 +96,9 @@ function preencherModalFinanceiro() {
     const valorEl = document.getElementById('fin_valor');
     if (valorEl) valorEl.value = getTotalGeralEntrada().toFixed(2);
 
+    parcelas = [{ dt_vencimento: formatDateInput(hoje), valor: getTotalGeralEntrada() }];
+    renderizarParcelas();
+
     // Data de entrada = hoje
     const dtEntradaEl = document.getElementById('fin_dt_entrada');
     if (dtEntradaEl) dtEntradaEl.value = formatDateInput(hoje);
@@ -104,39 +131,31 @@ async function enviarFinanceiro(e) {
         return;
     }
 
-    const valor = parseFloat(document.getElementById('fin_valor').value);
-    if (!valor || valor <= 0) {
-        showError('Informe um valor válido para o lançamento.');
+    const idCategoria = parseInt(document.getElementById('fin_id_categoria').value);
+    if (!idCategoria) {
+        showError('Selecione uma categoria para o lançamento.');
         return;
     }
+	const totalEntrada = getTotalGeralEntrada();
+	const totalParcelas = parcelas.reduce((total, parcela) => total + Number(parcela.valor || 0), 0);
+	if (!parcelas.length || parcelas.some(parcela => !parcela.dt_vencimento || parcela.valor <= 0) || Math.abs(totalEntrada - totalParcelas) >= 0.005) {
+		showError('Informe vencimento e valor de cada parcela. A soma deve ser igual ao total da entrada.');
+		return;
+	}
 
-    const payload = {
+    const dadosComuns = {
         id_fornecedor:      idFornecedor,
-        id_categoria:       parseInt(document.getElementById('fin_id_categoria').value) || null,
+        id_categoria:       idCategoria,
         descricao:          document.getElementById('fin_descricao').value.trim(),
         nr_documento:       document.getElementById('fin_nr_documento').value.trim() || null,
         nr_nota_fiscal:     document.getElementById('fin_nr_nota_fiscal').value.trim() || null,
-        valor,
         dt_entrada:         document.getElementById('fin_dt_entrada').value,
-        dt_vencimento:      document.getElementById('fin_dt_vencimento').value,
-        nr_parcela:         parseInt(document.getElementById('fin_nr_parcela').value) || 1,
-        nr_total_parcelas:  parseInt(document.getElementById('fin_nr_total_parcelas').value) || 1,
     };
 
     try {
-        const res = await fetch('/api/contas-pagar', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify(payload),
-        });
-
-        if (!res.ok) {
-            const data = await res.json();
-            showError(data.erro || 'Erro ao lançar conta a pagar.');
-            return;
+        for (let indice = 0; indice < parcelas.length; indice += 1) {
+            const res = await fetch('/api/contas-pagar', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ ...dadosComuns, valor_original: parcelas[indice].valor, dt_vencimento: parcelas[indice].dt_vencimento, nr_parcela: indice + 1, nr_total_parcelas: parcelas.length }) });
+            if (!res.ok) { const data = await res.json(); throw new Error(data.erro || 'Erro ao lançar conta a pagar.'); }
         }
 
         // Fechar modal
@@ -147,13 +166,14 @@ async function enviarFinanceiro(e) {
 
     } catch (err) {
         console.error(err);
-        showError('Erro interno ao comunicar com o servidor.');
+        showError(err.message || 'Erro interno ao comunicar com o servidor.');
     }
 }
 
 // ─── Setup ───────────────────────────────────────────────────────────────────
 
 export function setupFinanceiro() {
+	document.getElementById('btnAdicionarParcela')?.addEventListener('click', () => { parcelas.push({ dt_vencimento: formatDateInput(new Date()), valor: 0 }); renderizarParcelas(); });
     // Botão "Gerar Financeiro" abre o modal e pré-preenche
     document.getElementById('btnGerarFinanceiro')?.addEventListener('click', () => {
         const totalEntrada = getTotalGeralEntrada();

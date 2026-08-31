@@ -12,10 +12,10 @@ type FormaPagamentoRepository struct {
 
 func (r *FormaPagamentoRepository) Criar(ctx context.Context, tx *sql.Tx, fp *model.FormaPagamento) (*model.FormaPagamento, error) {
 
-	query := `insert into tb_formas_pagamento(descricao) values ($1) returning id`
+	query := `insert into tb_formas_pagamento(descricao,tipo) values ($1,COALESCE(NULLIF($2,''),'CARTAO')) returning id`
 
 	var id uint64
-	err := tx.QueryRowContext(ctx, query, fp.Descricao).Scan(&id)
+	err := tx.QueryRowContext(ctx, query, fp.Descricao, fp.Tipo).Scan(&id)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func (r *FormaPagamentoRepository) Criar(ctx context.Context, tx *sql.Tx, fp *mo
 }
 
 func (r *FormaPagamentoRepository) Listar(ctx context.Context, tx *sql.Tx) ([]model.FormaPagamento, error) {
-	query := `select id, descricao from tb_formas_pagamento order by id`
+	query := `select id, descricao, tipo from tb_formas_pagamento order by id`
 	rows, err := tx.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (r *FormaPagamentoRepository) Listar(ctx context.Context, tx *sql.Tx) ([]mo
 
 	for rows.Next() {
 		var fp model.FormaPagamento
-		if err := rows.Scan(&fp.ID, &fp.Descricao); err != nil {
+		if err := rows.Scan(&fp.ID, &fp.Descricao, &fp.Tipo); err != nil {
 			return nil, err
 		}
 		formas = append(formas, fp)
@@ -48,10 +48,10 @@ func (r *FormaPagamentoRepository) Listar(ctx context.Context, tx *sql.Tx) ([]mo
 
 func (r *FormaPagamentoRepository) BuscarPorID(ctx context.Context, tx *sql.Tx, idFp int64) (*model.FormaPagamento, error) {
 
-	query := `select id, descricao from tb_formas_pagamento where id = $1`
+	query := `select id, descricao, tipo from tb_formas_pagamento where id = $1`
 
 	var fp model.FormaPagamento
-	err := tx.QueryRowContext(ctx, query, idFp).Scan(&fp.ID, &fp.Descricao)
+	err := tx.QueryRowContext(ctx, query, idFp).Scan(&fp.ID, &fp.Descricao, &fp.Tipo)
 	if err != nil {
 		return nil, err
 	}
@@ -61,10 +61,10 @@ func (r *FormaPagamentoRepository) BuscarPorID(ctx context.Context, tx *sql.Tx, 
 
 func (r *FormaPagamentoRepository) Atualizar(ctx context.Context, tx *sql.Tx, fp *model.FormaPagamento) (*model.FormaPagamento, error) {
 
-	query := `update tb_formas_pagamento set descricao = $1 where id = $2 returning id, descricao`
+	query := `update tb_formas_pagamento set descricao = $1, tipo = COALESCE(NULLIF($2,''), tipo) where id = $3 returning id, descricao, tipo`
 
 	var id uint64
-	err := tx.QueryRowContext(ctx, query, fp.Descricao, fp.ID).Scan(&id, &fp.Descricao)
+	err := tx.QueryRowContext(ctx, query, fp.Descricao, fp.Tipo, fp.ID).Scan(&id, &fp.Descricao, &fp.Tipo)
 	if err != nil {
 		return nil, err
 	}

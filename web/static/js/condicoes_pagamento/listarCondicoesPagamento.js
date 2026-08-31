@@ -47,18 +47,23 @@ function renderTabela(condicoes) {
     tbody.innerHTML = '';
     condicoes.forEach(c => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>#${c.id}</td>
-            <td class="text-start fw-bold">${c.descricao}</td>
-            <td>${c.qtd_parcelas}</td>
-            <td>${c.dias_primeiro_venc}</td>
-            <td>${c.intervalo_parcelas}</td>
-            <td>
-                <button class="btn btn-sm btn-outline-primary" title="Editar" onclick="abrirEditarCondicaoPagamento(${c.id})">
-                    <i class="bi bi-pencil"></i>
-                </button>
-            </td>
-        `;
+        const valores = [`#${c.id}`, c.descricao, c.qtd_parcelas, c.dias_primeiro_venc, c.intervalo_parcelas];
+        valores.forEach((valor, indice) => {
+            const td = document.createElement('td');
+            td.textContent = valor ?? '-';
+            if (indice === 1) td.className = 'text-start fw-bold';
+            tr.appendChild(td);
+        });
+
+        const tdAcoes = document.createElement('td');
+        const botaoEditar = document.createElement('button');
+        botaoEditar.type = 'button';
+        botaoEditar.className = 'btn btn-sm btn-outline-primary';
+        botaoEditar.title = 'Editar';
+        botaoEditar.innerHTML = '<i class="bi bi-pencil"></i>';
+        botaoEditar.addEventListener('click', () => window.abrirEditarCondicaoPagamento(c.id));
+        tdAcoes.appendChild(botaoEditar);
+        tr.appendChild(tdAcoes);
         tbody.appendChild(tr);
     });
 }

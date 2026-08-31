@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"gestao/internal/repository"
-	"gestao/utils/helpers"
 	"time"
 )
 
@@ -18,10 +17,10 @@ func NewDashboardService(repo *repository.DashboardRepository, db *sql.DB) *Dash
 }
 
 type ResumoDashboard struct {
-	TotalVencido     float64                     `json:"total_vencido"`
-	TotalSemana      float64                     `json:"total_semana"`
-	VendaDia         float64                     `json:"venda_dia"`
-	VendaMes         float64                     `json:"venda_mes"`
+	TotalVencido      float64                     `json:"total_vencido"`
+	TotalSemana       float64                     `json:"total_semana"`
+	VendaDia          float64                     `json:"venda_dia"`
+	VendaMes          float64                     `json:"venda_mes"`
 	DespesasCategoria []repository.CategoriaGasto `json:"despesas_categoria"`
 }
 
@@ -48,10 +47,6 @@ func (s *DashboardService) ObterResumo(ctx context.Context) (*ResumoDashboard, e
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
 
 	totalVencido, err := s.Repo.GetTotalDebitosAtrasados(ctx, tx)
 	if err != nil {

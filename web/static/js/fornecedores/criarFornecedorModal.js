@@ -12,7 +12,7 @@ export function setupCriarFornecedorModal() {
             razao_social: document.getElementById('modal_fornecedor_razao_social').value,
             cnpj: document.getElementById('modal_fornecedor_cnpj').value,
             inscricao_estadual: document.getElementById('modal_fornecedor_inscricao_estadual').value || null,
-            email: document.getElementById('modal_fornecedor_email').value
+            email: document.getElementById('modal_fornecedor_email').value.trim() || null
         };
 
         try {

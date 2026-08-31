@@ -34,8 +34,13 @@ func (c *ProdutoController) CriarProduto(w http.ResponseWriter, r *http.Request)
 
 func (c *ProdutoController) ListarProdutos(w http.ResponseWriter, r *http.Request) {
 	busca := r.URL.Query().Get("busca")
+	idFornecedor, err := strconv.ParseInt(r.URL.Query().Get("id_fornecedor"), 10, 64)
+	if r.URL.Query().Get("id_fornecedor") != "" && (err != nil || idFornecedor <= 0) {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "fornecedor inválido"})
+		return
+	}
 
-	produtos, err := c.service.Produtos.ListarProdutos(r.Context(), busca)
+	produtos, err := c.service.Produtos.ListarProdutos(r.Context(), busca, idFornecedor)
 	if err != nil {
 		resposta.Padrao(w, http.StatusInternalServerError, map[string]string{"erro": "erro ao listar produtos: " + err.Error()})
 		return
@@ -68,6 +73,40 @@ func (c *ProdutoController) ObterProduto(w http.ResponseWriter, r *http.Request)
 	}
 
 	resposta.Padrao(w, http.StatusOK, produto)
+}
+
+func (c *ProdutoController) ListarComposicao(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+	if err != nil || id <= 0 {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id de produto inválido"})
+		return
+	}
+	itens, err := c.service.Produtos.ListarComposicao(r.Context(), id)
+	if err != nil {
+		resposta.Padrao(w, http.StatusInternalServerError, map[string]string{"erro": err.Error()})
+		return
+	}
+	if itens == nil {
+		itens = []model.ItemComposicaoProduto{}
+	}
+	resposta.Padrao(w, http.StatusOK, itens)
+}
+
+func (c *ProdutoController) SalvarComposicao(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+	if err != nil || id <= 0 {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": "id de produto inválido"})
+		return
+	}
+	var itens []model.ItemComposicaoProduto
+	if err := requisicao.ProcessarRequisicao(w, r, &itens); err != nil {
+		return
+	}
+	if err := c.service.Produtos.SalvarComposicao(r.Context(), id, itens); err != nil {
+		resposta.Padrao(w, http.StatusBadRequest, map[string]string{"erro": err.Error()})
+		return
+	}
+	resposta.Padrao(w, http.StatusOK, map[string]string{"mensagem": "composição atualizada"})
 }
 
 func (c *ProdutoController) AtualizarProduto(w http.ResponseWriter, r *http.Request) {

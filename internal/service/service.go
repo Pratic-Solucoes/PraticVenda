@@ -8,18 +8,16 @@ import (
 )
 
 type Service struct {
-	Usuarios interface {
+	VendaPDV        *VendaPDVService
+	ConfiguracaoPDV *ConfiguracaoPDVService
+	Caixa           *CaixaService
+	Usuarios        interface {
 		CriarUsuario(ctx context.Context, usuario *model.UsuarioCriar) (*model.UsuarioBasico, error)
 		BuscarUsuarioPorID(ctx context.Context, usuarioID int) (*model.Usuario, error)
 		AlterarSenha(ctx context.Context, usuarioID int64, senhaAtual, senhaNova, senhaNovaConfirmacao string) error
 	}
 	Login interface {
-		Login(ctx context.Context, usuario *model.UsuarioLogin) (uint64, string, string, error)
-		LoginAdministrativo(ctx context.Context, usuario *model.UsuarioLogin) (uint64, string, error)
-	}
-	Admin interface {
-		CarregarOrganizacoes(ctx context.Context) ([]model.Organizacao, error)
-		CarregarUsuarios(ctx context.Context) ([]model.Usuario, error)
+		Login(ctx context.Context, usuario *model.UsuarioLogin) (uint64, string, error)
 	}
 	Clientes interface {
 		CriarCliente(ctx context.Context, c *model.Cliente) (*model.Cliente, error)
@@ -45,9 +43,24 @@ type Service struct {
 		PagarContaPagar(ctx context.Context, id int64, valorPagamento float64) error
 		EditarContaPagar(ctx context.Context, id int64, contaPagar *model.ContaPagarCriar) error
 	}
+	ContasReceber interface {
+		CriarContaReceber(context.Context, *model.ContaReceberCriar) error
+		ListarContasReceber(context.Context, string, string, string) ([]*model.ContaReceber, error)
+		ReceberConta(context.Context, int64, float64, int64) error
+	}
+	CondicoesPagamento interface {
+		Criar(ctx context.Context, cp *model.CondicaoPagamento) error
+		Listar(ctx context.Context) ([]model.CondicaoPagamento, error)
+		BuscarPorID(ctx context.Context, id int64) (*model.CondicaoPagamento, error)
+		Atualizar(ctx context.Context, cp *model.CondicaoPagamento) error
+	}
 	CategoriasContasPagar interface {
 		CriarCategoria(ctx context.Context, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error)
 		ListarCategorias(ctx context.Context) ([]model.CategoriaContaPagar, error)
+	}
+	CategoriasContasReceber interface {
+		CriarCategoria(context.Context, *model.CategoriaContaReceber) (*model.CategoriaContaReceber, error)
+		ListarCategorias(context.Context) ([]model.CategoriaContaReceber, error)
 	}
 	FormasPagamento interface {
 		Criar(ctx context.Context, fp *model.FormaPagamento) (*model.FormaPagamento, error)
@@ -62,22 +75,40 @@ type Service struct {
 	}
 	EntradaEstoque interface {
 		RegistrarEntrada(ctx context.Context, entrada *model.EntradaEstoque) error
+		ListarEntradas(ctx context.Context, filtro model.FiltroEntradaEstoque) ([]model.EntradaEstoque, error)
+		ObterEntrada(ctx context.Context, id uint64) (*model.EntradaEstoque, error)
+		EditarEntrada(ctx context.Context, entrada *model.EntradaEstoque) error
+		AprovarEntrada(ctx context.Context, id uint64, usuarioID int64) error
+		CancelarEntrada(ctx context.Context, id uint64, usuarioID int64) error
+	}
+	SaidaEstoque interface {
+		RegistrarSaida(ctx context.Context, saida *model.SaidaEstoque) error
+		ListarSaidas(ctx context.Context, filtro model.FiltroSaidaEstoque) ([]model.SaidaEstoque, error)
+		ObterSaida(ctx context.Context, id uint64) (*model.SaidaEstoque, error)
+		EditarSaida(ctx context.Context, saida *model.SaidaEstoque) error
+		AprovarSaida(ctx context.Context, id uint64, usuarioID int64) error
+		CancelarSaida(ctx context.Context, id uint64, usuarioID int64) error
 	}
 	Produtos interface {
 		CriarProduto(ctx context.Context, input *model.ProdutoInput) (*model.ProdutoCompleto, error)
-		ListarProdutos(ctx context.Context, busca string) ([]*model.ProdutoCompleto, error)
+		ListarProdutos(ctx context.Context, busca string, idFornecedor int64) ([]*model.ProdutoCompleto, error)
 		ObterProdutoPorID(ctx context.Context, id int64) (*model.ProdutoCompleto, error)
 		AtualizarProduto(ctx context.Context, id int64, input *model.ProdutoInput) error
 		ExcluirOuInativarProduto(ctx context.Context, id int64) (string, error)
 		VincularProdutoEstoque(ctx context.Context, idProduto, idEstoque int64, qtdMinima float64) error
 		DesvincularProdutoEstoque(ctx context.Context, idProduto, idEstoque int64) error
 		ListarGruposTributarios(ctx context.Context) ([]*model.GrupoTributario, error)
+		ListarComposicao(ctx context.Context, idProduto int64) ([]model.ItemComposicaoProduto, error)
+		SalvarComposicao(ctx context.Context, idProduto int64, itens []model.ItemComposicaoProduto) error
 	}
 	Dashboard *DashboardService
 }
 
 func NewService(repository *repository.Repository, db *sql.DB) *Service {
 	return &Service{
+		VendaPDV:        &VendaPDVService{db: db},
+		ConfiguracaoPDV: &ConfiguracaoPDVService{db: db},
+		Caixa:           &CaixaService{db: db},
 		Usuarios: &UsuarioService{
 			repository: repository,
 			db:         db,
@@ -86,7 +117,6 @@ func NewService(repository *repository.Repository, db *sql.DB) *Service {
 			repository: repository,
 			db:         db,
 		},
-		Admin: &AdminService{repository: repository},
 		Clientes: &ClienteService{
 			repository: repository,
 			db:         db,
@@ -99,7 +129,13 @@ func NewService(repository *repository.Repository, db *sql.DB) *Service {
 			repository: repository,
 			db:         db,
 		},
+		CategoriasContasReceber: &CategoriaContaReceberService{repository: repository, db: db},
 		ContasPagar: &ContaPagarService{
+			repository: repository,
+			db:         db,
+		},
+		ContasReceber: &ContaReceberService{repository: repository, db: db},
+		CondicoesPagamento: &CondicaoPagamentoService{
 			repository: repository,
 			db:         db,
 		},
@@ -115,6 +151,7 @@ func NewService(repository *repository.Repository, db *sql.DB) *Service {
 			repositorio: repository,
 			db:          db,
 		},
+		SaidaEstoque: &SaidaEstoqueService{repository: repository, db: db},
 		Produtos: &ProdutoService{
 			repository: repository,
 			db:         db,

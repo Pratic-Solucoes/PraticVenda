@@ -1,5 +1,8 @@
 import { obterItens, obterTotal } from './carrinho.js';
 
+let permitirAlterarPreco = false;
+export function configurarEdicaoPreco(permitido) { permitirAlterarPreco = permitido; }
+
 export function renderizarTabela() {
     const tbody = document.getElementById('tabela_pdv_body');
     const itens = obterItens();
@@ -27,7 +30,7 @@ export function renderizarTabela() {
             <td>
                 <input type="number" class="form-control form-control-sm text-center input-qtd mx-auto" style="width: 80px;" data-index="${index}" value="${item.quantidade}" min="1">
             </td>
-            <td>R$ ${(produtoObj.preco_venda || 0).toFixed(2).replace('.', ',')}</td>
+			<td>${permitirAlterarPreco ? `<input type="number" class="form-control form-control-sm text-center input-preco mx-auto" style="width: 100px;" data-index="${index}" value="${item.precoUnitario.toFixed(2)}" min="0" step="0.01">` : `R$ ${item.precoUnitario.toFixed(2).replace('.', ',')}`}</td>
             <td class="fw-bold text-success">R$ ${item.subtotal.toFixed(2).replace('.', ',')}</td>
             <td>
                 <button class="btn btn-sm btn-outline-danger btn-remover" data-index="${index}" title="Remover">

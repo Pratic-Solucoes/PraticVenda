@@ -78,10 +78,13 @@
                                             data-bs-target="#fiscal" type="button" role="tab" aria-controls="fiscal"
                                             aria-selected="false">Dados Fiscais</button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link fw-bold" id="estoques-tab" data-bs-toggle="tab"
+                                    <li class="nav-item" role="presentation" id="estoques-nav">
+										<button class="nav-link fw-bold" id="estoques-tab" data-bs-toggle="tab"
                                             data-bs-target="#estoques" type="button" role="tab" aria-controls="estoques"
                                             aria-selected="false">Estoques Vinculados</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link fw-bold" id="composicao-tab" data-bs-toggle="tab" data-bs-target="#composicao" type="button" role="tab">Ficha Técnica</button>
                                     </li>
                                 </ul>
 
@@ -98,14 +101,14 @@
                                                 <input type="text" class="form-control form-control-sm" id="prod_nome"
                                                     required>
                                             </div>
-                                            <div class="col-md-3">
+											<div class="col-md-3">
                                                 <label for="prod_codigo_interno"
                                                     class="form-label form-label-sm fw-semibold mb-1">Código Interno
                                                     Loja</label>
                                                 <input type="text" class="form-control form-control-sm"
                                                     id="prod_codigo_interno" placeholder="Ex: AUT-001">
                                             </div>
-                                            <div class="col-md-3">
+											<div class="col-md-3">
                                                 <label for="prod_codigo_barras"
                                                     class="form-label form-label-sm fw-semibold mb-1">Código de Barras
                                                     (EAN)</label>
@@ -113,20 +116,29 @@
                                                     id="prod_codigo_barras" placeholder="Ex: 7891234567890">
                                             </div>
 
-                                            <div class="col-md-3">
+											<div class="col-md-3" id="campo_fornecedores">
+											<label class="form-label form-label-sm fw-semibold mb-1">Fornecedores *</label>
+											<div id="prod_fornecedores" class="border rounded p-2" style="max-height: 130px; overflow-y: auto;"><span class="text-muted small">Carregando fornecedores...</span></div>
+											<div class="form-text">Selecione todos os fornecedores que podem fornecer este produto.</div>
+										</div>
+											<div class="col-md-3">
                                                 <label for="prod_preco_custo"
                                                     class="form-label form-label-sm fw-semibold mb-1">Preço de Custo
-                                                    (R$) *</label>
+                                                    (R$)</label>
                                                 <input type="number" step="0.0001" class="form-control form-control-sm"
-                                                    id="prod_preco_custo" value="0.0000" required>
+                                                    id="prod_preco_custo" value="0.0000">
                                             </div>
-                                            <div class="col-md-3">
-                                                <label for="prod_preco_venda"
+											<div class="col-md-3" id="campo_preco_venda">
+											<label for="prod_preco_venda"
                                                     class="form-label form-label-sm fw-semibold mb-1">Preço de Venda
                                                     (R$) *</label>
-                                                <input type="number" step="0.01" class="form-control form-control-sm"
+                                                <input type="number" step="0.01" min="0.01" class="form-control form-control-sm"
                                                     id="prod_preco_venda" value="0.00" required>
                                             </div>
+										<div class="col-md-3" id="campo_percentual_lucro">
+											<label for="prod_percentual_lucro" class="form-label form-label-sm fw-semibold mb-1">% de Lucro</label>
+											<input type="number" class="form-control form-control-sm" id="prod_percentual_lucro" readonly>
+										</div>
                                             <div class="col-md-3">
                                                 <label for="prod_unidade_estoque"
                                                     class="form-label form-label-sm fw-semibold mb-1">Unid. Estoque
@@ -163,6 +175,14 @@
                                                     <label class="form-check-label fw-semibold" for="prod_ativo">Produto
                                                         Ativo</label>
                                                 </div>
+										<div class="form-check mb-2 ms-3">
+											<input type="checkbox" class="form-check-input" id="prod_composto">
+											<label class="form-check-label fw-semibold" for="prod_composto">Produto composto</label>
+										</div>
+										<div class="form-check mb-2 ms-3">
+											<input type="checkbox" class="form-check-input" id="prod_materia_prima">
+											<label class="form-check-label fw-semibold" for="prod_materia_prima">Matéria-prima</label><div class="form-text">Controla estoque e custo, mas não pode ser vendida diretamente.</div>
+										</div>
                                             </div>
 
                                             <div class="col-md-12">
@@ -179,7 +199,7 @@
                                         <div class="row g-3">
                                             <div class="col-md-4">
                                                 <label for="prod_ncm"
-                                                    class="form-label form-label-sm fw-semibold mb-1">NCM *</label>
+                                                    class="form-label form-label-sm fw-semibold mb-1">NCM</label>
                                                 <input type="text" class="form-control form-control-sm" id="prod_ncm"
                                                     placeholder="Ex: 85171231">
                                             </div>
@@ -191,8 +211,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="prod_grupo_tributario"
-                                                    class="form-label form-label-sm fw-semibold mb-1">Grupo Tributário
-                                                    *</label>
+                                                    class="form-label form-label-sm fw-semibold mb-1">Grupo Tributário</label>
                                                 <select class="form-select form-select-sm" id="prod_grupo_tributario">
                                                     <option value="" disabled selected>Selecione um grupo...</option>
                                                 </select>
@@ -223,6 +242,14 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="composicao" role="tabpanel" aria-labelledby="composicao-tab">
+                                        <p class="text-muted small" id="avisoComposicao">Salve o produto primeiro para cadastrar sua ficha técnica.</p>
+                                        <div id="conteudoComposicao" class="d-none">
+                                            <div class="row g-2 align-items-end mb-3"><div class="col-md-7"><label class="form-label form-label-sm fw-semibold">Matéria-prima</label><select id="compProduto" class="form-select form-select-sm"></select></div><div class="col-md-3"><label class="form-label form-label-sm fw-semibold">Quantidade</label><input id="compQuantidade" type="number" step="0.001" min="0.001" class="form-control form-control-sm"></div><div class="col-md-2"><button type="button" id="btnAdicionarComponente" class="btn btn-outline-primary btn-sm w-100">Adicionar</button></div></div>
+                                            <table class="table table-sm align-middle"><thead class="table-light"><tr><th>Matéria-prima</th><th>Unidade</th><th class="text-end">Qtd.</th><th class="text-end">Custo</th><th></th></tr></thead><tbody id="listaComposicao"></tbody><tfoot><tr><th colspan="3" class="text-end">Custo calculado</th><th class="text-end" id="custoComposicao">R$ 0,00</th><th></th></tr></tfoot></table>
+                                            <button type="button" id="btnSalvarComposicao" class="btn btn-primary btn-sm">Salvar ficha técnica</button>
                                         </div>
                                     </div>
                                 </div>
@@ -296,7 +323,7 @@
         crossorigin="anonymous"></script>
 
     <!-- Módulo JS principal para Produtos -->
-    <script type="module" src="/static/js/produtos/main.js"></script>
+    <script type="module" src="/static/js/produtos/main.js?v=2"></script>
 </body>
 
 </html>

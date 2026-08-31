@@ -8,6 +8,10 @@ export function setupEditarCondicaoPagamento() {
     window.abrirEditarCondicaoPagamento = async function(id) {
         const token = getToken();
         try {
+            if (window.carregarFormasPagamentoParaCondicao) {
+                await window.carregarFormasPagamentoParaCondicao();
+            }
+
             const res = await fetch(`/api/condicoes-pagamento/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -60,6 +64,11 @@ export function setupEditarCondicaoPagamento() {
 
             const checkboxes = document.querySelectorAll('.fp-checkbox:checked');
             const formasPagamento = Array.from(checkboxes).map(cb => parseInt(cb.value, 10));
+
+            if (formasPagamento.length === 0) {
+                showError("Selecione ao menos uma forma de pagamento.");
+                return;
+            }
 
             const payload = {
                 descricao: document.getElementById('edit_cp_descricao').value,

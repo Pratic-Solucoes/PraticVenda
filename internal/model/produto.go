@@ -2,12 +2,18 @@ package model
 
 import (
 	"errors"
+	"strings"
 	"time"
 )
 
 // Produto representa os campos básicos de tb_produtos necessários para o estoque
 type Produto struct {
 	ID                int64     `json:"id" db:"id"`
+	Composto          bool      `json:"composto" db:"composto"`
+	MateriaPrima      bool      `json:"materia_prima" db:"materia_prima"`
+	IDFornecedor      int64     `json:"id_fornecedor" db:"id_fornecedor"`
+	IDsFornecedores   []int64   `json:"ids_fornecedores,omitempty"`
+	Fornecedor        string    `json:"fornecedor,omitempty" db:"fornecedor"`
 	CodigoBarras      *string   `json:"codigo_barras,omitempty" db:"codigo_barras"`
 	CodigoInternoLoja *string   `json:"codigo_interno_loja,omitempty" db:"codigo_interno_loja"`
 	Nome              string    `json:"nome" db:"nome"`
@@ -75,39 +81,79 @@ type ProdutoEstoqueInfo struct {
 	EstoqueMinimo float64 `json:"estoque_minimo"`
 }
 
+// ItemComposicaoProduto é uma matéria-prima consumida na venda de um produto composto.
+type ItemComposicaoProduto struct {
+	IDProdutoComponente int64   `json:"id_produto_componente"`
+	NomeProduto         string  `json:"nome_produto,omitempty"`
+	UnidadeEstoque      string  `json:"unidade_estoque,omitempty"`
+	Quantidade          float64 `json:"quantidade"`
+	PrecoCusto          float64 `json:"preco_custo,omitempty"`
+}
+
+func (i ItemComposicaoProduto) Validar(idProdutoComposto int64) error {
+	if i.IDProdutoComponente <= 0 || i.Quantidade <= 0 {
+		return errors.New("produto componente e quantidade são obrigatórios")
+	}
+	if i.IDProdutoComponente == idProdutoComposto {
+		return errors.New("um produto não pode fazer parte da própria composição")
+	}
+	return nil
+}
+
 // ProdutoInput DTO para criação e edição de produtos
 type ProdutoInput struct {
-	CodigoBarras      *string               `json:"codigo_barras"`
-	CodigoInternoLoja *string               `json:"codigo_interno_loja"`
-	Nome              string                `json:"nome"`
-	Descricao         *string               `json:"descricao"`
-	PrecoCusto        float64               `json:"preco_custo"`
-	PrecoVenda        float64               `json:"preco_venda"`
-	UnidadeEstoque    string                `json:"unidade_estoque"`
-	UnidadeVenda      string                `json:"unidade_venda"`
-	PesoBruto         float64               `json:"peso_bruto"`
-	PesoLiquido       float64               `json:"peso_liquido"`
-	Ncm               string                `json:"ncm"`
-	Cest              *string               `json:"cest"`
-	IDGrupoTributario int64                 `json:"id_grupo_tributario"`
-	Estoques          []ProdutoEstoqueInput `json:"estoques"`
+	Composto          bool                    `json:"composto"`
+	MateriaPrima      bool                    `json:"materia_prima"`
+	IDFornecedor      int64                   `json:"id_fornecedor"`
+	IDsFornecedores   []int64                 `json:"ids_fornecedores"`
+	CodigoBarras      *string                 `json:"codigo_barras"`
+	CodigoInternoLoja *string                 `json:"codigo_interno_loja"`
+	Nome              string                  `json:"nome"`
+	Descricao         *string                 `json:"descricao"`
+	PrecoCusto        float64                 `json:"preco_custo"`
+	PrecoVenda        float64                 `json:"preco_venda"`
+	UnidadeEstoque    string                  `json:"unidade_estoque"`
+	UnidadeVenda      string                  `json:"unidade_venda"`
+	PesoBruto         float64                 `json:"peso_bruto"`
+	PesoLiquido       float64                 `json:"peso_liquido"`
+	Ncm               string                  `json:"ncm"`
+	Cest              *string                 `json:"cest"`
+	IDGrupoTributario int64                   `json:"id_grupo_tributario"`
+	Estoques          []ProdutoEstoqueInput   `json:"estoques"`
+	Composicao        []ItemComposicaoProduto `json:"composicao"`
 }
 
 func (p *ProdutoInput) Validar() error {
+	p.Nome = strings.TrimSpace(p.Nome)
+	p.UnidadeEstoque = strings.TrimSpace(p.UnidadeEstoque)
+	p.UnidadeVenda = strings.TrimSpace(p.UnidadeVenda)
+
 	if p.Nome == "" {
 		return errors.New("o nome do produto é obrigatório")
 	}
-	if p.PrecoVenda < 0 {
-		return errors.New("o preço de venda não pode ser negativo")
+	if p.Composto && p.MateriaPrima {
+		return errors.New("um produto não pode ser composto e matéria-prima ao mesmo tempo")
+	}
+	if !p.Composto && len(p.IDsFornecedores) == 0 && p.IDFornecedor <= 0 {
+		return errors.New("vincule ao menos um fornecedor ao produto")
+	}
+	if p.UnidadeEstoque == "" {
+		return errors.New("a unidade de estoque é obrigatória")
+	}
+	if p.UnidadeVenda == "" {
+		return errors.New("a unidade de venda é obrigatória")
+	}
+	if !p.MateriaPrima && p.PrecoVenda <= 0 {
+		return errors.New("o preço de venda deve ser maior que zero")
 	}
 	if p.PrecoCusto < 0 {
 		return errors.New("o preço de custo não pode ser negativo")
 	}
-	if p.Ncm == "" {
-		return errors.New("o NCM do produto é obrigatório")
+	if !p.Composto && len(p.Estoques) == 0 {
+		return errors.New("vincule o produto a pelo menos um estoque")
 	}
-	if p.IDGrupoTributario <= 0 {
-		return errors.New("o grupo tributário é obrigatório")
+	if p.Composto && len(p.Composicao) == 0 {
+		return errors.New("adicione ao menos uma matéria-prima ao produto composto")
 	}
 	return nil
 }

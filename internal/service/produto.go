@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"gestao/internal/model"
 	"gestao/internal/repository"
-	"gestao/utils/helpers"
 )
 
 type ProdutoService struct {
@@ -26,11 +25,10 @@ func (s *ProdutoService) CriarProduto(ctx context.Context, input *model.ProdutoI
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
-
 	p := &model.Produto{
+		Composto:          input.Composto,
+		MateriaPrima:      input.MateriaPrima,
+		IDFornecedor:      fornecedorPrincipal(input),
 		CodigoBarras:      input.CodigoBarras,
 		CodigoInternoLoja: input.CodigoInternoLoja,
 		Nome:              input.Nome,
@@ -41,7 +39,7 @@ func (s *ProdutoService) CriarProduto(ctx context.Context, input *model.ProdutoI
 		UnidadeVenda:      input.UnidadeVenda,
 		PesoBruto:         input.PesoBruto,
 		PesoLiquido:       input.PesoLiquido,
-		Ativo:              true,
+		Ativo:             true,
 	}
 
 	f := &model.ProdutoFiscal{
@@ -54,12 +52,22 @@ func (s *ProdutoService) CriarProduto(ctx context.Context, input *model.ProdutoI
 	if err != nil {
 		return nil, err
 	}
+	if err = s.repository.Produtos.SincronizarFornecedores(ctx, tx, pCriado.ID, fornecedoresInput(input)); err != nil {
+		return nil, err
+	}
+	if input.Composto {
+		if err = s.repository.Produtos.SalvarComposicao(ctx, tx, pCriado.ID, input.Composicao); err != nil {
+			return nil, err
+		}
+	}
 
 	// Cria vínculos iniciais de estoque
-	for _, est := range input.Estoques {
-		err = s.repository.Produtos.VincularAoEstoque(ctx, tx, pCriado.ID, est.IDEstoque, est.EstoqueMinimo, est.Quantidade)
-		if err != nil {
-			return nil, fmt.Errorf("erro ao vincular estoque %d: %w", est.IDEstoque, err)
+	if !input.Composto {
+		for _, est := range input.Estoques {
+			err = s.repository.Produtos.VincularAoEstoque(ctx, tx, pCriado.ID, est.IDEstoque, est.EstoqueMinimo, est.Quantidade)
+			if err != nil {
+				return nil, fmt.Errorf("erro ao vincular estoque %d: %w", est.IDEstoque, err)
+			}
 		}
 	}
 
@@ -70,18 +78,14 @@ func (s *ProdutoService) CriarProduto(ctx context.Context, input *model.ProdutoI
 	return s.ObterProdutoPorID(ctx, pCriado.ID)
 }
 
-func (s *ProdutoService) ListarProdutos(ctx context.Context, busca string) ([]*model.ProdutoCompleto, error) {
+func (s *ProdutoService) ListarProdutos(ctx context.Context, busca string, idFornecedor int64) ([]*model.ProdutoCompleto, error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
-
-	produtos, err := s.repository.Produtos.ListarProdutos(ctx, tx, busca)
+	produtos, err := s.repository.Produtos.ListarProdutos(ctx, tx, busca, idFornecedor)
 	if err != nil {
 		return nil, err
 	}
@@ -109,10 +113,6 @@ func (s *ProdutoService) ObterProdutoPorID(ctx context.Context, id int64) (*mode
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
-
 	p, err := s.repository.Produtos.ObterProdutoPorID(ctx, tx, id)
 	if err != nil {
 		return nil, err
@@ -126,6 +126,10 @@ func (s *ProdutoService) ObterProdutoPorID(ctx context.Context, id int64) (*mode
 		return nil, err
 	}
 	p.Estoques = vinculos
+	p.IDsFornecedores, err = s.repository.Produtos.ListarFornecedoresProduto(ctx, tx, id)
+	if err != nil {
+		return nil, err
+	}
 
 	if err := tx.Commit(); err != nil {
 		return nil, err
@@ -145,10 +149,6 @@ func (s *ProdutoService) AtualizarProduto(ctx context.Context, id int64, input *
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return err
-	}
-
 	p, err := s.repository.Produtos.ObterProdutoPorID(ctx, tx, id)
 	if err != nil {
 		return err
@@ -158,6 +158,9 @@ func (s *ProdutoService) AtualizarProduto(ctx context.Context, id int64, input *
 	}
 
 	produtoUpdate := &model.Produto{
+		Composto:          input.Composto,
+		MateriaPrima:      input.MateriaPrima,
+		IDFornecedor:      fornecedorPrincipal(input),
 		CodigoBarras:      input.CodigoBarras,
 		CodigoInternoLoja: input.CodigoInternoLoja,
 		Nome:              input.Nome,
@@ -168,7 +171,7 @@ func (s *ProdutoService) AtualizarProduto(ctx context.Context, id int64, input *
 		UnidadeVenda:      input.UnidadeVenda,
 		PesoBruto:         input.PesoBruto,
 		PesoLiquido:       input.PesoLiquido,
-		Ativo:              p.Produto.Ativo, // Mantém o status ativo original do produto
+		Ativo:             p.Produto.Ativo, // Mantém o status ativo original do produto
 	}
 
 	fiscalUpdate := &model.ProdutoFiscal{
@@ -181,6 +184,18 @@ func (s *ProdutoService) AtualizarProduto(ctx context.Context, id int64, input *
 	err = s.repository.Produtos.AtualizarProduto(ctx, tx, id, produtoUpdate, fiscalUpdate)
 	if err != nil {
 		return err
+	}
+	if err = s.repository.Produtos.SincronizarFornecedores(ctx, tx, id, fornecedoresInput(input)); err != nil {
+		return err
+	}
+	if input.Composto {
+		if _, err = tx.ExecContext(ctx, `DELETE FROM tb_produtos_estoque WHERE id_produto=$1`, id); err != nil {
+			return err
+		}
+		if err = s.repository.Produtos.SalvarComposicao(ctx, tx, id, input.Composicao); err != nil {
+			return err
+		}
+		return tx.Commit()
 	}
 
 	// Sincronizar estoques
@@ -224,16 +239,30 @@ func (s *ProdutoService) AtualizarProduto(ctx context.Context, id int64, input *
 	return tx.Commit()
 }
 
+func fornecedoresInput(input *model.ProdutoInput) []int64 {
+	if input.Composto {
+		return []int64{}
+	}
+	if len(input.IDsFornecedores) > 0 {
+		return input.IDsFornecedores
+	}
+	return []int64{input.IDFornecedor}
+}
+
+func fornecedorPrincipal(input *model.ProdutoInput) int64 {
+	fornecedores := fornecedoresInput(input)
+	if len(fornecedores) == 0 {
+		return 0
+	}
+	return fornecedores[0]
+}
+
 func (s *ProdutoService) ExcluirOuInativarProduto(ctx context.Context, id int64) (string, error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return "", err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return "", err
-	}
 
 	p, err := s.repository.Produtos.ObterProdutoPorID(ctx, tx, id)
 	if err != nil {
@@ -277,10 +306,6 @@ func (s *ProdutoService) VincularProdutoEstoque(ctx context.Context, idProduto, 
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return err
-	}
-
 	err = s.repository.Produtos.VincularAoEstoque(ctx, tx, idProduto, idEstoque, qtdMinima, 0.0)
 	if err != nil {
 		return err
@@ -295,10 +320,6 @@ func (s *ProdutoService) DesvincularProdutoEstoque(ctx context.Context, idProdut
 		return err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return err
-	}
 
 	temMov, err := s.repository.Produtos.TemMovimentacaoNoEstoqueEspecifico(ctx, tx, idProduto, idEstoque)
 	if err != nil {
@@ -323,10 +344,6 @@ func (s *ProdutoService) ListarGruposTributarios(ctx context.Context) ([]*model.
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
-
 	grupos, err := s.repository.Produtos.ListarGruposTributarios(ctx, tx)
 	if err != nil {
 		return nil, err
@@ -337,4 +354,47 @@ func (s *ProdutoService) ListarGruposTributarios(ctx context.Context) ([]*model.
 	}
 
 	return grupos, nil
+}
+
+func (s *ProdutoService) ListarComposicao(ctx context.Context, idProduto int64) ([]model.ItemComposicaoProduto, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+	itens, err := s.repository.Produtos.ListarComposicao(ctx, tx, idProduto)
+	if err != nil {
+		return nil, err
+	}
+	return itens, tx.Commit()
+}
+
+func (s *ProdutoService) SalvarComposicao(ctx context.Context, idProduto int64, itens []model.ItemComposicaoProduto) error {
+	if idProduto <= 0 || len(itens) == 0 {
+		return errors.New("informe ao menos uma matéria-prima")
+	}
+	vistos := make(map[int64]struct{}, len(itens))
+	for _, item := range itens {
+		if err := item.Validar(idProduto); err != nil {
+			return err
+		}
+		if _, ok := vistos[item.IDProdutoComponente]; ok {
+			return errors.New("uma matéria-prima só pode constar uma vez")
+		}
+		vistos[item.IDProdutoComponente] = struct{}{}
+	}
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if produto, err := s.repository.Produtos.ObterProdutoPorID(ctx, tx, idProduto); err != nil {
+		return err
+	} else if produto == nil {
+		return errors.New("produto composto não encontrado")
+	}
+	if err := s.repository.Produtos.SalvarComposicao(ctx, tx, idProduto, itens); err != nil {
+		return err
+	}
+	return tx.Commit()
 }

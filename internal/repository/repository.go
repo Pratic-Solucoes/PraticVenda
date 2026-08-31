@@ -8,12 +8,7 @@ import (
 
 type Repository struct {
 	Login interface {
-		Login(ctx context.Context, email string) (uint64, string, string, string, error)
-		LoginAdministrativo(ctx context.Context, email string) (uint64, string, string, bool, error)
-	}
-	Admin interface {
-		CarregarOrganizacoes(ctx context.Context) ([]model.Organizacao, error)
-		CarregarUsuarios(ctx context.Context) ([]model.Usuario, error)
+		Login(ctx context.Context, username string) (uint64, string, string, error)
 	}
 	Usuarios interface {
 		CriarUsuario(ctx context.Context, tx *sql.Tx, usuario *model.UsuarioCriar) (*model.UsuarioBasico, error)
@@ -46,6 +41,18 @@ type Repository struct {
 		EditarContaPagar(ctx context.Context, tx *sql.Tx, id int64, contaPagar *model.ContaPagarCriar) error
 		BuscarPorID(ctx context.Context, tx *sql.Tx, ID int64) (*model.ContaPagar, error)
 	}
+	ContasReceber interface {
+		CriarParcelas(context.Context, *sql.Tx, *model.ContaReceberCriar, string, []float64, []string) error
+		Listar(context.Context, *sql.Tx, string, string, string) ([]*model.ContaReceber, error)
+		BuscarPorID(context.Context, *sql.Tx, int64) (*model.ContaReceber, error)
+		Receber(context.Context, *sql.Tx, int64, float64, int64) error
+	}
+	CondicoesPagamento interface {
+		Criar(ctx context.Context, tx *sql.Tx, cp *model.CondicaoPagamento) error
+		Listar(ctx context.Context, tx *sql.Tx) ([]model.CondicaoPagamento, error)
+		BuscarPorID(ctx context.Context, tx *sql.Tx, id int64) (*model.CondicaoPagamento, error)
+		Atualizar(ctx context.Context, tx *sql.Tx, cp *model.CondicaoPagamento) error
+	}
 	FormasPagamento interface {
 		Criar(ctx context.Context, tx *sql.Tx, fp *model.FormaPagamento) (*model.FormaPagamento, error)
 		Listar(ctx context.Context, tx *sql.Tx) ([]model.FormaPagamento, error)
@@ -56,6 +63,10 @@ type Repository struct {
 		CriarCategoria(ctx context.Context, tx *sql.Tx, c *model.CategoriaContaPagar) (*model.CategoriaContaPagar, error)
 		ListarCategorias(ctx context.Context, tx *sql.Tx) ([]model.CategoriaContaPagar, error)
 	}
+	CategoriasContasReceber interface {
+		CriarCategoria(context.Context, *sql.Tx, *model.CategoriaContaReceber) (*model.CategoriaContaReceber, error)
+		ListarCategorias(context.Context, *sql.Tx) ([]model.CategoriaContaReceber, error)
+	}
 	Estoques interface {
 		CriarEstoque(ctx context.Context, tx *sql.Tx, e *model.Estoque) (*model.Estoque, error)
 		ListarEstoques(ctx context.Context, tx *sql.Tx) ([]*model.Estoque, error)
@@ -63,12 +74,28 @@ type Repository struct {
 	}
 	EntradaEstoque interface {
 		RegistrarEntrada(ctx context.Context, tx *sql.Tx, entrada *model.EntradaEstoque) error
+		SalvarItensEntrada(ctx context.Context, tx *sql.Tx, entrada *model.EntradaEstoque) error
 		RegistrarProdutosEntrada(ctx context.Context, tx *sql.Tx, entrada *model.EntradaEstoque) error
+		ListarEntradasEstoque(ctx context.Context, tx *sql.Tx, filtro model.FiltroEntradaEstoque) ([]model.EntradaEstoque, error)
+		ObterEntrada(ctx context.Context, tx *sql.Tx, id uint64) (*model.EntradaEstoque, error)
+		AtualizarEntrada(ctx context.Context, tx *sql.Tx, entrada *model.EntradaEstoque) error
+		AprovarEntrada(ctx context.Context, tx *sql.Tx, id uint64, usuarioID int64) error
+		CancelarEntrada(ctx context.Context, tx *sql.Tx, id uint64, usuarioID int64) error
+		ValidarProdutosFornecedor(ctx context.Context, tx *sql.Tx, idFornecedor uint64, produtos []model.ProdutoEntradaEstoque) error
+	}
+	SaidaEstoque interface {
+		RegistrarSaida(ctx context.Context, tx *sql.Tx, saida *model.SaidaEstoque) error
+		SalvarItens(ctx context.Context, tx *sql.Tx, saida *model.SaidaEstoque) error
+		Listar(ctx context.Context, tx *sql.Tx, filtro model.FiltroSaidaEstoque) ([]model.SaidaEstoque, error)
+		Obter(ctx context.Context, tx *sql.Tx, id uint64) (*model.SaidaEstoque, error)
+		Atualizar(ctx context.Context, tx *sql.Tx, saida *model.SaidaEstoque) error
+		Aprovar(ctx context.Context, tx *sql.Tx, id uint64, usuarioID int64) error
+		CancelarComUsuario(ctx context.Context, tx *sql.Tx, id uint64, usuario int64) error
 	}
 	Produtos interface {
 		CriarProduto(ctx context.Context, tx *sql.Tx, p *model.Produto, f *model.ProdutoFiscal) (*model.Produto, error)
 		AtualizarProduto(ctx context.Context, tx *sql.Tx, id int64, p *model.Produto, f *model.ProdutoFiscal) error
-		ListarProdutos(ctx context.Context, tx *sql.Tx, busca string) ([]*model.ProdutoCompleto, error)
+		ListarProdutos(ctx context.Context, tx *sql.Tx, busca string, idFornecedor int64) ([]*model.ProdutoCompleto, error)
 		ObterProdutoPorID(ctx context.Context, tx *sql.Tx, id int64) (*model.ProdutoCompleto, error)
 		ExcluirProduto(ctx context.Context, tx *sql.Tx, id int64) error
 		InativarProduto(ctx context.Context, tx *sql.Tx, id int64) error
@@ -78,6 +105,10 @@ type Repository struct {
 		DesvincularDoEstoque(ctx context.Context, tx *sql.Tx, idProduto, idEstoque int64) error
 		BuscarEstoqueVinculos(ctx context.Context, tx *sql.Tx, idProduto int64) ([]model.ProdutoEstoqueInfo, error)
 		ListarGruposTributarios(ctx context.Context, tx *sql.Tx) ([]*model.GrupoTributario, error)
+		ListarComposicao(ctx context.Context, tx *sql.Tx, idProduto int64) ([]model.ItemComposicaoProduto, error)
+		SalvarComposicao(ctx context.Context, tx *sql.Tx, idProduto int64, itens []model.ItemComposicaoProduto) error
+		SincronizarFornecedores(ctx context.Context, tx *sql.Tx, idProduto int64, ids []int64) error
+		ListarFornecedoresProduto(ctx context.Context, tx *sql.Tx, idProduto int64) ([]int64, error)
 	}
 	Dashboard *DashboardRepository
 }
@@ -85,9 +116,6 @@ type Repository struct {
 func NewRepository(db *sql.DB) *Repository {
 	return &Repository{
 		Login: &LoginRepository{
-			db: db,
-		},
-		Admin: &AdminRepository{
 			db: db,
 		},
 		Usuarios: &UsuarioRepository{
@@ -102,7 +130,12 @@ func NewRepository(db *sql.DB) *Repository {
 		CategoriasContasPagar: &CategoriaContaPagarRepository{
 			db: db,
 		},
+		CategoriasContasReceber: &CategoriaContaReceberRepository{db: db},
 		ContasPagar: &ContaPagarRepository{
+			db: db,
+		},
+		ContasReceber: &ContaReceberRepository{db: db},
+		CondicoesPagamento: &CondicaoPagamentoRepository{
 			db: db,
 		},
 		FormasPagamento: &FormaPagamentoRepository{
@@ -114,6 +147,7 @@ func NewRepository(db *sql.DB) *Repository {
 		EntradaEstoque: &EntradaEstoqueRepository{
 			db: db,
 		},
+		SaidaEstoque: &SaidaEstoqueRepository{db: db},
 		Produtos: &ProdutoRepository{
 			db: db,
 		},

@@ -10,6 +10,7 @@ export function setupCriarFormaPagamento() {
         e.preventDefault();
         const token = getToken();
         const descricao = document.getElementById('forma_pagamento_descricao').value;
+		const tipo = document.getElementById('forma_pagamento_tipo').value;
 
         try {
             const res = await fetch('/api/formas-pagamento', {
@@ -18,7 +19,7 @@ export function setupCriarFormaPagamento() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ descricao })
+				body: JSON.stringify({ descricao, tipo })
             });
 
             if (!res.ok) {

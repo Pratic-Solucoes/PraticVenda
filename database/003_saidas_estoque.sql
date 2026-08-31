@@ -1,0 +1,5 @@
+BEGIN;
+CREATE TABLE IF NOT EXISTS tb_saidas_estoque (id BIGSERIAL PRIMARY KEY,id_estoque BIGINT NOT NULL REFERENCES tb_estoques(id),id_usuario BIGINT NOT NULL REFERENCES public.tb_usuarios_gestao(id),valor_total DECIMAL(10,2) NOT NULL DEFAULT 0,status VARCHAR(20) NOT NULL DEFAULT 'ABERTO' CHECK(status IN ('ABERTO','CONCLUIDA','CANCELADA')),criado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS tb_produtos_saidas_estoque (id BIGSERIAL PRIMARY KEY,id_saida_estoque BIGINT NOT NULL REFERENCES tb_saidas_estoque(id) ON DELETE CASCADE,id_produto BIGINT NOT NULL REFERENCES tb_produtos(id),valor_unitario DECIMAL(10,2) NOT NULL,valor_custo DECIMAL(10,2) NOT NULL,valor_total DECIMAL(10,2) NOT NULL,quantidade DECIMAL(10,3) NOT NULL CHECK(quantidade>0));
+INSERT INTO tb_categoria_movimento_estoque(nome) VALUES ('SAIDA DE ESTOQUE') ON CONFLICT(nome) DO NOTHING;
+COMMIT;

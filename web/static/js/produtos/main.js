@@ -1,6 +1,6 @@
 import { checkAuth } from '../utils/auth.js';
-import { carregarProdutos } from './listarProdutos.js';
-import { setupGerenciarProduto, abrirFormularioNovo, fecharFormulario } from './gerenciarProduto.js';
+import { carregarProdutos } from './listarProdutos.js?v=2';
+import { setupGerenciarProduto, abrirFormularioNovo, fecharFormulario } from './gerenciarProduto.js?v=2';
 
 document.addEventListener('DOMContentLoaded', () => {
     if (!checkAuth()) return;

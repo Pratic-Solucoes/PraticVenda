@@ -7,11 +7,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// Usuario representa a entidade principal que reflete a tabela tb_usuarios_gestao
+// Usuario representa a entidade principal que reflete a tabela de usuários.
 type Usuario struct {
 	ID           int64     `json:"id" db:"id"`
-	IDEmpresa    int64     `json:"id_empresa" db:"id_empresa"`
 	Nome         string    `json:"nome" db:"nome"`
+	Username     string    `json:"username" db:"username"`
 	CPF          *string   `json:"cpf,omitempty" db:"cpf"`
 	Telefone     *string   `json:"telefone,omitempty" db:"telefone"`
 	Email        string    `json:"email" db:"email"`
@@ -24,19 +24,21 @@ type Usuario struct {
 // DTOs (Data Transfer Objects) - Usados no tráfego da API
 
 type UsuarioCriar struct {
-	Nome  string `json:"nome"`
-	Email string `json:"email"`
-	Senha string `json:"senha"`
+	Nome     string `json:"nome"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Senha    string `json:"senha"`
 }
 
 type UsuarioLogin struct {
-	Email string `json:"email"`
-	Senha string `json:"senha"`
+	Username string `json:"username"`
+	Senha    string `json:"senha"`
 }
 
 type UsuarioBasico struct {
 	ID       int64  `json:"id"`
 	Nome     string `json:"nome"`
+	Username string `json:"username"`
 	Telefone string `json:"telefone"`
 	Email    string `json:"email"`
 }
@@ -47,8 +49,8 @@ func (u *UsuarioCriar) Validar() error {
 	if u.Nome == "" {
 		erros = append(erros, errors.New("o nome não foi informado"))
 	}
-	if u.Email == "" {
-		erros = append(erros, errors.New("o email não foi informado"))
+	if u.Username == "" {
+		erros = append(erros, errors.New("o username não foi informado"))
 	}
 	if u.Senha == "" {
 		erros = append(erros, errors.New("a senha não foi informada"))
@@ -72,8 +74,8 @@ func (u *UsuarioCriar) HashSenha() error {
 // Validar verifica se os dados de login são válidos
 func (u *UsuarioLogin) Validar() error {
 	var erros []error
-	if u.Email == "" {
-		erros = append(erros, errors.New("o email não foi informado"))
+	if u.Username == "" {
+		erros = append(erros, errors.New("o username não foi informado"))
 	}
 	if u.Senha == "" {
 		erros = append(erros, errors.New("a senha não foi informada"))

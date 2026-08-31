@@ -6,7 +6,6 @@ import (
 	"errors"
 	"gestao/internal/model"
 	"gestao/internal/repository"
-	"gestao/utils/helpers"
 )
 
 type CategoriaContaPagarService struct {
@@ -25,10 +24,6 @@ func (s *CategoriaContaPagarService) CriarCategoria(ctx context.Context, c *mode
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
-
 	categoriaCriada, err := s.repository.CategoriasContasPagar.CriarCategoria(ctx, tx, c)
 	if err != nil {
 		return nil, err
@@ -46,10 +41,6 @@ func (s *CategoriaContaPagarService) ListarCategorias(ctx context.Context) ([]mo
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
 
 	categorias, err := s.repository.CategoriasContasPagar.ListarCategorias(ctx, tx)
 	if err != nil {

@@ -1,0 +1,20 @@
+{{define "modalContaReceber"}}
+<div class="modal fade" id="modalContaReceber" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">Novo crédito</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body"><form id="formContaReceber">
+      <div class="row g-3">
+        <div class="col-md-6"><label class="form-label">Cliente *</label><select class="form-select" id="cr_cliente" required></select></div>
+        <div class="col-md-6"><label class="form-label">Categoria de crédito *</label><select class="form-select" id="cr_categoria" required></select></div>
+        <div class="col-12"><label class="form-label">Descrição *</label><input id="cr_descricao" class="form-control" required></div>
+        <div class="col-md-4"><label class="form-label">Valor total *</label><input id="cr_valor" type="number" min="0.01" step="0.01" class="form-control" required></div>
+        <div class="col-md-4"><label class="form-label">Data de emissão *</label><input id="cr_emissao" type="date" class="form-control" required></div>
+        <div class="col-md-4"><label class="form-label">Condição *</label><select class="form-select" id="cr_condicao" required></select></div>
+        <div class="col-md-6"><label class="form-label">Forma de pagamento *</label><select class="form-select" id="cr_forma" required></select></div>
+        <div class="col-md-6"><label class="form-label">Parcelamento</label><div id="cr_resumo_parcelas" class="form-control bg-light">Selecione uma condição</div></div>
+      </div>
+    </form></div>
+    <div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" type="submit" form="formContaReceber">Gerar parcelas</button></div>
+  </div></div>
+</div>
+{{end}}

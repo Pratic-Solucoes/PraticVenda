@@ -6,11 +6,18 @@ import { showError } from '../utils/showError.js';
 /** @type {{ idProduto: number, nome: string, quantidade: number, valorUnitario: number, icmsSt: number, ipi: number, desconto: number, rateio: number, valorCusto: number, valorTotal: number }[]} */
 let itensDaEntrada = [];
 
+/** ID da entrada aberta sendo editada; nulo quando o formulário cria uma nova. */
+let entradaEmEdicaoId = null;
+
 /** Produto atualmente carregado no card de busca */
 let produtoSelecionado = null;
 
 /** Timer para debounce da busca por digitação */
 let debounceTimer = null;
+
+function idFornecedorSelecionado() {
+    return document.getElementById('entrada_id_fornecedor')?.value || '';
+}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -190,8 +197,10 @@ async function buscarSugestoesProduto(termo) {
     }
 
     const token = getToken();
+	const fornecedor = idFornecedorSelecionado();
+	if (!fornecedor) { fecharDropdown(); return; }
     try {
-        const res = await fetch(`/api/produtos?busca=${encodeURIComponent(termo)}`, {
+        const res = await fetch(`/api/produtos?busca=${encodeURIComponent(termo)}&id_fornecedor=${encodeURIComponent(fornecedor)}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) { fecharDropdown(); return; }
@@ -213,9 +222,11 @@ async function buscarProduto() {
         return;
     }
 
+	const fornecedor = idFornecedorSelecionado();
+	if (!fornecedor) { showError('Selecione o fornecedor antes de buscar produtos.'); return; }
     const token = getToken();
     try {
-        const res = await fetch(`/api/produtos?busca=${encodeURIComponent(busca)}`, {
+        const res = await fetch(`/api/produtos?busca=${encodeURIComponent(busca)}&id_fornecedor=${encodeURIComponent(fornecedor)}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -388,6 +399,9 @@ function resetarFormEntrada() {
     fecharDropdown();
     esconderCardProduto();
     renderizarTabelaItens();
+	entradaEmEdicaoId = null;
+	document.querySelector('#collapseFormEntrada .card-header h5').innerHTML = '<i class="bi bi-box-arrow-in-down me-2"></i> Nova Entrada de Estoque';
+	document.getElementById('btnSalvarEntrada').innerHTML = '<i class="bi bi-floppy me-1"></i> Salvar (Em Aberto)';
 }
 
 // ─── Envio para a API ────────────────────────────────────────────────────────
@@ -415,8 +429,9 @@ async function enviarEntrada(status) {
     const token = getToken();
 
     try {
-        const res = await fetch(`/api/estoques/${idEstoque}/entrada`, {
-            method: 'POST',
+		const editando = entradaEmEdicaoId !== null;
+        const res = await fetch(editando ? `/api/entradas-estoque/${entradaEmEdicaoId}` : '/api/entradas-estoque', {
+            method: editando ? 'PUT' : 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -437,7 +452,7 @@ async function enviarEntrada(status) {
         }
 
         // Feedback visual de sucesso
-        const msg = status === 'CONCLUIDA'
+		const msg = editando ? 'Entrada de estoque atualizada com sucesso!' : status === 'CONCLUIDA'
             ? 'Entrada de estoque concluída com sucesso!'
             : 'Entrada salva em aberto com sucesso!';
 
@@ -448,11 +463,36 @@ async function enviarEntrada(status) {
             document.getElementById('collapseFormEntrada')
         ).hide();
         resetarFormEntrada();
+		window.dispatchEvent(new CustomEvent('entradas-atualizadas'));
 
     } catch (err) {
         console.error('Erro ao enviar entrada:', err);
         showError('Erro interno ao registrar entrada. Tente novamente.');
     }
+}
+
+/** Preenche o formulário com uma entrada aberta retornada pela API para edição. */
+export async function abrirEntradaParaEdicao(entrada) {
+	if (entrada.status !== 'ABERTO') {
+		showError('Apenas entradas em aberto podem ser editadas.');
+		return;
+	}
+	await Promise.all([carregarEstoquesSelect('entrada_id_estoque'), carregarFornecedoresSelect('entrada_id_fornecedor')]);
+	entradaEmEdicaoId = entrada.id;
+	document.getElementById('entrada_id_estoque').value = entrada.id_estoque;
+	document.getElementById('entrada_id_fornecedor').value = entrada.id_fornecedor;
+	document.getElementById('entrada_despesa_adicional').value = entrada.despesa_adicional || 0;
+	itensDaEntrada = (entrada.produtos || []).map(item => ({
+		idProduto: item.id_produto, nome: item.nome_produto || `Produto #${item.id_produto}`,
+		quantidade: item.quantidade, valorUnitario: item.valor_unitario, icmsSt: item.valor_icms_st || 0,
+		ipi: item.valor_ipi || 0, desconto: item.valor_desconto || 0, rateio: item.rateio_despesa_adicional || 0,
+		valorCusto: item.valor_custo, valorTotal: item.valor_total,
+	}));
+	recalcularRateios();
+	document.querySelector('#collapseFormEntrada .card-header h5').innerHTML = `<i class="bi bi-pencil-square me-2"></i> Editar Entrada #${entrada.id}`;
+	document.getElementById('btnSalvarEntrada').innerHTML = '<i class="bi bi-save me-1"></i> Salvar Alterações';
+	bootstrap.Collapse.getOrCreateInstance(document.getElementById('collapseFormEntrada')).show();
+	document.getElementById('collapseFormEntrada').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ─── Setup Principal ─────────────────────────────────────────────────────────
@@ -511,6 +551,18 @@ export function setupFormEntrada() {
     });
     document.getElementById('btnBuscarProdutoEntrada')?.addEventListener('click', buscarProduto);
 
+	document.getElementById('entrada_id_fornecedor')?.addEventListener('change', () => {
+		produtoSelecionado = null;
+		document.getElementById('entrada_busca_produto').value = '';
+		fecharDropdown();
+		esconderCardProduto();
+		if (itensDaEntrada.length) {
+			itensDaEntrada = [];
+			recalcularRateios();
+			showError('Os itens foram removidos. Adicione produtos do novo fornecedor selecionado.');
+		}
+	});
+
     // Recalcular ao mudar campos do card
     ['ps_quantidade', 'ps_valor_unitario', 'ps_icms_st', 'ps_ipi', 'ps_desconto'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', recalcularCamposCard);
@@ -540,6 +592,7 @@ export function setupFormEntrada() {
 
 export function montarPayload(status) {
     return {
+		id_estoque: parseInt(document.getElementById('entrada_id_estoque').value) || null,
         id_fornecedor: parseInt(document.getElementById('entrada_id_fornecedor').value) || null,
         despesa_adicional: getDespesaAdicional(),
         status,

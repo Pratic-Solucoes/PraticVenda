@@ -1,0 +1,5 @@
+BEGIN;
+
+ALTER TABLE tb_produtos ALTER COLUMN id_fornecedor DROP NOT NULL;
+
+COMMIT;

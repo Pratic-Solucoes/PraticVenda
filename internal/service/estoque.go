@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"gestao/internal/model"
 	"gestao/internal/repository"
-	"gestao/utils/helpers"
 )
 
 type EstoqueService struct {
@@ -23,10 +22,6 @@ func (s *EstoqueService) CriarEstoque(ctx context.Context, input *model.EstoqueC
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
 
 	e := &model.Estoque{
 		Nome:      input.Nome,
@@ -53,10 +48,6 @@ func (s *EstoqueService) ListarEstoques(ctx context.Context) ([]*model.Estoque, 
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
-
 	estoques, err := s.repository.Estoques.ListarEstoques(ctx, tx)
 	if err != nil {
 		return nil, err
@@ -75,10 +66,6 @@ func (s *EstoqueService) ListarProdutosDoEstoque(ctx context.Context, idEstoque 
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
 
 	produtos, err := s.repository.Estoques.ListarProdutosDoEstoque(ctx, tx, idEstoque)
 	if err != nil {

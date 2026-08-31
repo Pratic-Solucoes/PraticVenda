@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"gestao/internal/model"
 	"gestao/internal/repository"
-	"gestao/utils/helpers"
 )
 
 type FornecedorService struct {
@@ -19,10 +18,6 @@ func (s *FornecedorService) ListarFornecedores(ctx context.Context, busca string
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
 
 	fornecedores, err := s.repository.Fornecedores.ListarFornecedores(ctx, tx, busca)
 	if err != nil {
@@ -47,10 +42,6 @@ func (s *FornecedorService) CriarFornecedor(ctx context.Context, f *model.Fornec
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
-
 	fornecedorCriado, err := s.repository.Fornecedores.CriarFornecedor(ctx, tx, f)
 	if err != nil {
 		return nil, err
@@ -69,10 +60,6 @@ func (s *FornecedorService) ObterFornecedorPorID(ctx context.Context, id int64) 
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
 
 	fornecedor, err := s.repository.Fornecedores.ObterFornecedorPorID(ctx, tx, id)
 	if err != nil {
@@ -94,10 +81,6 @@ func (s *FornecedorService) AtualizarFornecedor(ctx context.Context, id int64, f
 		return err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return err
-	}
 
 	err = s.repository.Fornecedores.AtualizarFornecedor(ctx, tx, id, f)
 	if err != nil {

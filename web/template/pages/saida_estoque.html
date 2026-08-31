@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/static/css/styleLayout.css">
+    <link rel="stylesheet" href="/static/css/app.css">
+    <title>Saída de Estoque</title>
+</head>
+<body>
+<div id="app-wrapper">
+    {{template "sidebar" .}}
+    <main id="main-content">
+        <div id="topbar"><div class="topbar-title">Gestão de Estoque</div></div>
+        <section id="page-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div><h2 class="fs-4 mb-1">Saída de Estoque</h2><p class="text-muted mb-0">Registre e aprove retiradas para baixar o saldo.</p></div>
+                <button class="btn btn-primary fw-bold" id="btnNovaSaida"><i class="bi bi-plus-circle me-1"></i>Nova Saída</button>
+            </div>
+            <div class="card shadow-sm border-0 rounded-4 mb-4 d-none" id="formSaida">
+                <div class="card-header bg-white p-4 border-0 d-flex justify-content-between">
+                    <div><h5 class="mb-1 text-primary fw-bold" id="tituloSaida"><i class="bi bi-box-arrow-up-right me-2"></i>Nova Saída</h5><small class="text-muted">O saldo só é alterado depois da aprovação.</small></div>
+                    <button class="btn-close" id="btnCancelarSaida" aria-label="Fechar"></button>
+                </div>
+                <div class="card-body p-4 pt-0">
+                    <div class="row g-3 align-items-end border-bottom pb-4 mb-4">
+                        <div class="col-md-5"><label class="form-label fw-semibold">Estoque de origem *</label><select class="form-select" id="saidaEstoque"></select></div>
+                        <div class="col-md-5"><label class="form-label fw-semibold">Produto *</label><select class="form-select" id="saidaProduto"></select><div class="form-text" id="saldoProduto">Selecione um estoque.</div></div>
+                        <div class="col-md-2"><label class="form-label fw-semibold">Quantidade *</label><input class="form-control" id="saidaQuantidade" type="number" min="0.001" step="0.001"></div>
+                    </div>
+                    <button class="btn btn-outline-primary fw-bold" id="btnAdicionarItem"><i class="bi bi-plus-lg me-1"></i>Adicionar item</button>
+                    <div class="table-responsive mt-3"><table class="table align-middle"><thead class="table-light"><tr><th>Produto</th><th class="text-center">Saldo disponível</th><th class="text-center">Quantidade</th><th class="text-end">Valor unitário</th><th class="text-end">Total</th><th></th></tr></thead><tbody id="itensSaida"><tr><td colspan="6" class="text-center text-muted py-4">Nenhum item adicionado.</td></tr></tbody></table></div>
+                    <div class="d-flex justify-content-between align-items-center border-top pt-3"><strong>Total: <span id="totalSaida" class="text-primary">R$ 0,00</span></strong><div class="d-flex gap-2"><button class="btn btn-outline-primary fw-bold" id="btnSalvarSaida"><i class="bi bi-floppy me-1"></i><span id="textoSalvarSaida">Salvar em aberto</span></button><button class="btn btn-primary fw-bold" id="btnConcluirSaida"><i class="bi bi-check-circle me-1"></i>Salvar e concluir</button></div></div>
+                </div>
+            </div>
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-white p-4 border-0"><div class="d-flex flex-wrap gap-2 justify-content-between align-items-center"><h5 class="mb-0 fw-bold">Saídas registradas</h5><div class="d-flex gap-2"><select class="form-select form-select-sm" id="filtroStatus"><option value="">Todos os status</option><option value="ABERTO">Em aberto</option><option value="CONCLUIDA">Concluídas</option><option value="CANCELADA">Canceladas</option></select><input class="form-control form-control-sm" id="filtroData" type="date"><button class="btn btn-sm btn-outline-secondary" id="btnLimparFiltros">Limpar</button></div></div></div>
+                <div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead class="table-light"><tr><th>#</th><th>Estoque</th><th>Total</th><th>Status</th><th>Data</th><th class="text-end">Ações</th></tr></thead><tbody id="listaSaidas"></tbody></table></div>
+            </div>
+        </section>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="/static/js/saida_estoque/main.js"></script>
+</body>
+</html>

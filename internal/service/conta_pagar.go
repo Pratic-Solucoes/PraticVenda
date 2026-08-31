@@ -6,7 +6,6 @@ import (
 	"errors"
 	"gestao/internal/model"
 	"gestao/internal/repository"
-	"gestao/utils/helpers"
 )
 
 type ContaPagarService struct {
@@ -25,10 +24,6 @@ func (s *ContaPagarService) CriarContaPagar(ctx context.Context, contaPagar *mod
 	}
 	defer tx.Rollback()
 
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return err
-	}
-
 	err = s.repository.ContasPagar.CriarContaPagar(ctx, tx, contaPagar)
 	if err != nil {
 		return err
@@ -42,10 +37,6 @@ func (s *ContaPagarService) ListarContasPagar(ctx context.Context, busca, vencim
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return nil, err
-	}
 
 	contasPagar, err := s.repository.ContasPagar.ListarContasPagar(ctx, tx, busca, vencimento, status)
 	if err != nil {
@@ -64,10 +55,6 @@ func (s *ContaPagarService) PagarContaPagar(ctx context.Context, id int64, valor
 		return err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return err
-	}
 
 	conta, err := s.repository.ContasPagar.BuscarPorID(ctx, tx, id)
 	if err != nil {
@@ -103,10 +90,6 @@ func (s *ContaPagarService) EditarContaPagar(ctx context.Context, id int64, cont
 		return err
 	}
 	defer tx.Rollback()
-
-	if err := helpers.SetSchema(ctx, tx); err != nil {
-		return err
-	}
 
 	err = s.repository.ContasPagar.EditarContaPagar(ctx, tx, id, contaPagar)
 	if err != nil {
